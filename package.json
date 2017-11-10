@@ -1,0 +1,30 @@
+{
+  "name": "wiki2reveal",
+  "version": "1.0.0",
+  "description": "Converts Wiki Source Text to RevealJS Presentation including Download the online source",
+  "main": "main.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niebert/Wiki2Reveal.git"
+  },
+  "keywords": [
+    "MediaWiki",
+    "RevealJS",
+    "Download",
+    "Document",
+    "Converter"
+  ],
+  "author": "Engelbert Niehaus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/niebert/Wiki2Reveal/issues"
+  },
+  "homepage": "https://github.com/niebert/Wiki2Reveal#readme"
+}

@@ -23,7 +23,29 @@ The call retrieves the article about ___Swarm intelligence___ from the english  
 
 
 ## Generate an AJAX Call in HTML5 Environment
+```
+$.ajax({
+        // request type ( GET or POST )
+	type: "GET",
 
+        // the URL to which the request is sent
+    // http://en.wikiversity.org/w/index.php?title=Swarm_intelligence&action=raw
+	url:  "http://en.wikiversity.org/w/index.php",
+
+        // data to be sent to the server
+	//data: { action:'query', format:'json', lgname:'foo', lgpassword:'foobar' },
+  data: { action:'raw',title:'Swarm_intelligence' },
+
+        // The type of data that you're expecting back from the server
+        // e.g. 'json','text','script','html','xml',...
+        dataType: 'text',
+
+        // Function to be called if the request succeeds
+	success: function( jsondata ){
+		alert( jsondata.result );
+	}
+});
+```
 
 ## Use Tools for the repository
 * [Grunt](https://gruntjs.com/getting-started) to automate code generation from modular javascript libraries to a WebApp in the folder ___/docs___. The folder ___/docs___ is used to access the WebApp directly in your browser by the URL

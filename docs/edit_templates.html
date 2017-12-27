@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Templates</title>
+    <!--link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet"-->
+    <!-- JQUERY MOBILE Integration -->
+    <meta charset="UTF-8">
+    <script>
+    </script>
+  </head>
+  <body>
+    <h3>
+      Reveal Template:
+      <input type="checkbox" name="checkEditor" id="checkEditor" onclick="toggleCheck('inputEDITOR',this.checked)" hidden="hidden"> --
+      <button onclick="saveEditorContent()"> Save </button>
+    </h3>
+    <textarea id="tplReveal" rows="15" ></textarea>
+    <hr>
+    <h3>
+      Reveal Slide:
+      <button onclick="saveEditorContent()"> Save </button>
+    </h3>
+    <textarea id="tplRevealSlide" rows="15" ></textarea>
+    <hr>
+    <h3>
+      Path Reveal:
+      <button onclick="saveEditorOutContent()"> Save </button>
+    </h3>
+    <input type="text" name="pathReveal" id="pathReveal" value="reveal/"> --
+    <hr>
+    <h3>
+      Path MathJax:
+      <button onclick="saveEditorOutContent()"> Save </button>
+    </h3>
+    <input type="text" name="pathMathJax" id="pathMathJax" value="mathjax/"> --
+  </body>
+</html>

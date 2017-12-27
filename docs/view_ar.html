@@ -1,0 +1,76 @@
+<!doctype HTML>
+<html>
+<title>AR.js - LinkParam</title>
+<script>
+  var vDataJSON = {
+    "marker" : "hiro",
+    "aframetpl" : "<a-scene> {{{arobjects}}} </a-scene>",
+    "artpl" : "<a-scene><a-marker id=\"mymarker\" preset=\"{{marker}}\">{{{arobjects}}} <a-entity camera></a-entity></a-marker></a-scene>",
+    "objecttpl" : "<{{tagname}} position=\"{{position}}\" material=\"color: {{color}};opacity:{{opacity}}\" width=\"{{scale}}\" height=\"{{scale}}\" depth=\"{{scale}}\"></{{tagname}}>"
+  };
+</script>
+<!-- Overwrite Templates
+ Templates above will be overwritten with definition in template.js setting from DB file
+ i.e templates stored in JSON format loaded into vDataJSON
+-->
+<script src="db/templates.js"></script>
+<!-- the following default data is loaded into JSON id "initdata" in vDataJSON -->
+<script src="db/data.js"></script>
+<!--
+<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"> </script>
+<script src="js/aframe-v0.7.1.min.js"></script>
+<script src="js/aframe-ar.min.js"></script>
+<script src="js/aframe-v0.7.1.js"></script>
+<script src="js/aframe-ar.js"></script>
+-->
+<script src="js/handlebars.js"></script>
+<script src="js/linkparam.js"></script>
+<script src="js/viewar.js"></script>
+<script>
+//-------------------------------------------------------
+// LINK PARAMETER: Evaluation link parameter in JSON Path
+//----MARKER load ------
+console.log("AR Template index.html: "+vDataJSON["artpl"]);
+var vID = "marker";
+var vLinkParam = new LinkParam();
+vLinkParam.init(document);
+if (vLinkParam.exists(vID)) {
+  console.log("Parameter '"+vID+"' exists");
+  //--- Overwrite the default value in marker, jsondata ---
+  var vMarker = vLinkParam.getValue(vID);
+  // a Marker may consist of characters only - remove all other chars for security
+  vMarker = vMarker.replace(/[^A-Za-z]/g,"");
+  vDataJSON[vID] = vMarker;
+};
+//----JSONDATA load into "initdata"------
+vID = "jsondata";
+if (vLinkParam.exists(vID)) {
+    console.log("Parameter '"+vID+"' exists");
+    //--- Overwrite the default value in marker, jsondata ---
+    console.log("vDataJSON['"+vID+"']\n"+vLinkParam.getValue(vID));
+    vDataJSON["jsondata"] = parseJSON3D(vLinkParam.getValue(vID));
+} else {
+    console.log("Use initdata of 3D objects for '"+vID+"'");
+    vDataJSON["jsondata"] = vDataJSON["initdata"];
+};
+//-------------------------------------------------------
+// setTimeout("inject3Dmodel('artpl',vDataJSON['jsondata'],vDataJSON['marker'])",1000);
+</script>
+  <body id="htmlbody" style='margin : 0px; overflow: hidden;'>
+    <!--
+    <a-scene>
+  	<a-marker id="mymarker" preset="hiro">
+      <a-box position='0 0.5 0' material='color: blue;opacity:0.5'></a-box>
+  	</a-marker>
+  	<a-entity camera></a-entity>
+    </a-scene>
+    -->
+  </body>
+<script>
+   console.log("Create AR template with Marker '"+vDataJSON['marker']+"'");
+   inject3Dmodel('artpl',vDataJSON);
+</script>
+<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"> </script>
+</html>

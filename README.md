@@ -12,6 +12,8 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
   - [NodeJS Module: nodemw](#nodejs-module-nodemw)
   - [Alternative Javascript MediaWiki libraries](#alternative-javascript-mediawiki-libraries)
   - [Generate an AJAX Call in HTML5 Environment](#generate-an-ajax-call-in-html5-environment)
+  - [WikiDownloader](#wikidownloader)
+    - [Download Example HTML](#download-example-html)
 - [Browserify and Watchify](#browserify-and-watchify)
   - [Global Installation of Browserify, Watchify, UglifyJS and DocToc](#global-installation-of-browserify-watchify-uglifyjs-and-doctoc)
   - [Package Installation of Browserify and Watchify - Alternative](#package-installation-of-browserify-and-watchify---alternative)

@@ -8,6 +8,7 @@
     <script>
       wtf.from_api("Swarm intelligence", "enwikiversity", function(markup){// Callback function after success
         console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+        // store result in textarea
         document.getElementById("wikimarkup").value = markup;
       })
     </script>

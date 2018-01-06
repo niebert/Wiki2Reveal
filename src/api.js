@@ -166,6 +166,8 @@ module.exports = (function() {
 
 			if (response.statusCode !== 200) {
 				self.logger.error('Request to API failed: HTTP status code was %d for <%s>', response.statusCode || 'unknown', options.url);
+				self.logger.debug('Body: %s', body);
+
 				self.logger.data(new Error().stack);
 
 				callback(new Error(`Request to API failed: HTTP status code was ${response.statusCode}`));
@@ -256,10 +258,18 @@ module.exports = (function() {
 			this.queue.push(function(done) {
 				self.info("Fetching <%s> (as %s)...", url, encoding);
 
-				request({
+				const options = {
 					url,
-					encoding: (encoding === 'binary') ? null : encoding 
-				}, function (error, response, body) {
+					method: 'GET',
+					proxy: self.proxy || false,
+					jar: self.jar,
+					encoding: (encoding === 'binary') ? null : encoding,
+					headers: {
+					  'User-Agent': self.userAgent
+					}
+				};
+
+				request(options, function (error, response, body) {
 					if (!error && response.statusCode === 200) {
 						self.info('<%s>: fetched %s kB', url, (body.length/1024).toFixed(2));
 						callback(null, body);

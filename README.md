@@ -88,6 +88,32 @@ $.ajax({
 	}
 });
 ```
+### WikiDownloader
+`wtf_wikipedia.js` seems to be the an appropriate library to download the MediaWiki markup source from any Wiki Product from the Wiki Foundation:
+
+#### Download Example HTML
+The following in example is stored in `test/wtf_wikipedia.html` that uses the library `test/js/wtf_wikipedia.js`.
+```html
+<html>
+  <head>
+    <title>wtf_wikipedia</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="js/wtf_wikipedia.js"></script>
+  </head>
+  <body style="margin:10px;">
+    <script>
+      wtf.from_api("Swarm intelligence", "enwikiversity", function(markup){// Callback function after success
+        console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+        // store result in textarea
+        document.getElementById("wikimarkup").value = markup;
+      })
+    </script>
+    <b>Download Wiki-Markup:</b></br>
+    <textarea id="wikimarkup" rows="35" cols="120">
+    </textarea>
+  </body>
+</html>
+```
 
 ## Browserify and Watchify
 Browserify and Watchify are used in this repository to control the WebApp-javascript development with the required Javascript libraries installed with [NPM Node.js](https://docs.npmjs.com/getting-started/installing-node) and similar framework world that greatly improve your javascript workflow: Using them, you no longer need to micro-manage your script tags but instead you just declare the libraries each of your client-side modules is using - or you can even create your own reusable modules! Also, installing (or updating) javascript libraries is as easy as running a single command!

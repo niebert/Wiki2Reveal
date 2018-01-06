@@ -10,9 +10,11 @@
   "scripts": {
     "doc": "doctoc README.md",
     "watch": "watchify src/main.js -o dist/wiki2reveal.js -v",
-    "buildsrc": "browserify src/main.js -o dist/wiki2reveal.js -v",
+    "build": "browserify src/main.js -o dist/wiki2reveal.js -v",
     "buildmin": "browserify src/main.js  | uglifyjs -c warnings=false > dist/wiki2reveal.min.js",
-    "buildrequest": "browserify request4browser.js  | uglifyjs -mc warnings=false > dist/request4browser.min.js",
+    "build_request": "browserify src/request4browser.js -o dist/request4browser.js",
+    "watch_request": "watchify   src/request4browser.js -o dist/request4browser.js",
+    "buildmin_request": "browserify src/request4browser.js  | uglifyjs -mc warnings=false > dist/request4browser.min.js",
     "test": "node-lint dist/wiki2reveal.js",
     "compress": "uglifyjs dist/wiki2reveal.js -o docs/js/wiki2reveal.min.js"
   },

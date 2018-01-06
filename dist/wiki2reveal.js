@@ -13221,7 +13221,7 @@ module.exports = {
       pbkdf: bcrypt_pbkdf
 };
 
-},{"tweetnacl":175}],54:[function(require,module,exports){
+},{"tweetnacl":171}],54:[function(require,module,exports){
 function Caseless (dict) {
   this.dict = dict || {}
 }
@@ -20097,7 +20097,7 @@ module.exports = {
 };
 
 }).call(this,{"isBuffer":require("../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":308,"./utils":105,"assert-plus":48,"crypto":261,"http":376,"jsprim":113,"sshpk":159,"util":387}],105:[function(require,module,exports){
+},{"../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":308,"./utils":105,"assert-plus":48,"crypto":261,"http":376,"jsprim":113,"sshpk":155,"util":387}],105:[function(require,module,exports){
 // Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var assert = require('assert-plus');
@@ -20211,7 +20211,7 @@ module.exports = {
   }
 };
 
-},{"assert-plus":48,"sshpk":159,"util":387}],106:[function(require,module,exports){
+},{"assert-plus":48,"sshpk":155,"util":387}],106:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -20303,7 +20303,7 @@ module.exports = {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./utils":105,"assert-plus":48,"buffer":251,"crypto":261,"sshpk":159}],107:[function(require,module,exports){
+},{"./utils":105,"assert-plus":48,"buffer":251,"crypto":261,"sshpk":155}],107:[function(require,module,exports){
 module.exports      = isTypedArray
 isTypedArray.strict = isStrictTypedArray
 isTypedArray.loose  = isLooseTypedArray
@@ -22858,7 +22858,7 @@ function mergeObjects(provided, overrides, defaults)
 	return (rv);
 }
 
-},{"assert-plus":48,"extsprintf":75,"json-schema":111,"util":387,"verror":182}],114:[function(require,module,exports){
+},{"assert-plus":48,"extsprintf":75,"json-schema":111,"util":387,"verror":178}],114:[function(require,module,exports){
 module.exports={
   "application/1d-interleaved-parityfec": {
     "source": "iana"
@@ -30079,1792 +30079,6 @@ module.exports = compare;
 
 
 },{}],118:[function(require,module,exports){
-(function (process,Buffer){
-/**
- * Helper "class" for accessing MediaWiki API and handling cookie-based session
- */
-module.exports = (function() {
-	'use strict';
-
-	// introspect package.json to get module version
-	const VERSION = require('../package').version;
-
-	const
-		// @see https://github.com/caolan/async
-		async = require('async'),
-		// @see https://github.com/mikeal/request
-		request = require('request');
-
-	const api = function(options) {
-		this.protocol = options.protocol || 'http';
-		this.port = options.port || (this.protocol === 'https' ? 443 : 80);
-		this.server = options.server;
-		this.path = options.path;
-		this.proxy = options.proxy;
-		this.jar = request.jar(); // create new cookie jar for each instance
-
-		this.debug = options.debug;
-
-		// set up logging
-		const winston = require('winston');
-		this.logger = new (winston.Logger)();
-
-		// console logging
-		if (this.debug) {
-			this.logger.add(winston.transports.Console, {
-				level: 'debug'
-			});
-		}
-
-		this.logger.cli();
-
-		// file logging
-		const path = require('path'),
-			fs = require('fs'),
-			logDir = path.dirname(process.argv[1]) + '/log/',
-			logFile = logDir + path.basename(process.argv[1], '.js') + '.log';
-
-		if (fs.existsSync(logDir)) {
-			this.logger.add(winston.transports.File, {
-				colorize: true,
-				filename: logFile,
-				json: false,
-				level: this.debug ? 'debug' : 'info'
-			});
-		}
-
-		// requests queue
-		// @see https://github.com/caolan/async#queue
-		const concurrency = options.concurrency || 3; // how many tasks (i.e. requests) to run in parallel
-		this.queue = async.queue(function(task, callback) {
-			// process the task (and call the provided callback once it's completed)
-			task(callback);
-		}, concurrency);
-
-		// HTTP client
-		this.formatUrl = require('url').format;
-
-		this.userAgent = options.userAgent || (`nodemw v${VERSION} (node.js ${process.version}; ${process.platform} ${process.arch})`);
-		this.version = VERSION;
-
-		// debug info
-		this.info(process.argv.join(' '));
-		this.info(this.userAgent);
-		this.info(`Using <${this.protocol}://${this.server}:${this.port}${this.path}/api.php> as API entry point`);
-		this.info('----');
-	};
-
-	const doRequest = function(params, callback, method, done) {
-		const self = this,
-			// store requested action - will be used when parsing a response
-			actionName = params.action,
-			// "request" options
-			options = {
-				method: method || 'GET',
-				proxy: this.proxy || false,
-				jar: this.jar,
-				headers: {
-					'User-Agent': this.userAgent
-				}
-			};
-
-		// HTTP request parameters
-		params = params || {};
-
-		// force JSON format
-		params.format = 'json';
-
-		// handle uploads
-		if (method === 'UPLOAD') {
-			options.method = 'POST';
-
-			const CRLF = "\r\n",
-				postBody = [],
-				boundary = `nodemw${Math.random().toString().substr(2)}`;
-
-			// encode each field
-			Object.keys(params).forEach(function(fieldName) {
-				const value = params[fieldName];
-
-				postBody.push(`--${boundary}`);
-				postBody.push(CRLF);
-
-				if (typeof value === 'string') {
-					// properly encode UTF8 in binary-safe POST data
-					postBody.push(`Content-Disposition: form-data; name="${fieldName}"`);
-					postBody.push(CRLF);
-					postBody.push(CRLF);
-					postBody.push(new Buffer(value, 'utf8'));
-				}
-				else {
-					// send attachment
-					postBody.push(`Content-Disposition: form-data; name="${fieldName}"; filename="foo"`);
-					postBody.push(CRLF);
-					postBody.push(CRLF);
-					postBody.push(value);
-				}
-
-				postBody.push(CRLF);
-			});
-
-			postBody.push(`--${boundary}--`);
-
-			// encode post data
-			options.headers['content-type'] = `multipart/form-data; boundary=${boundary}`;
-			options.body = postBody;
-
-			params = {};
-		}
-
-		// form an URL to API
-		options.url = this.formatUrl({
-			protocol: this.protocol,
-			port: this.port,
-			hostname: this.server,
-			pathname: this.path + '/api.php',
-			query: (options.method === 'GET') ? params : {}
-		});
-
-		// POST all parameters (avoid "request string too long" errors)
-		if (method === 'POST') {
-			options.form = params;
-		}
-
-		this.logger.debug('API action: %s', actionName);
-		this.logger.debug('%s <%s>', options.method, options.url);
-		if (options.form) {
-			this.logger.debug('POST fields: %s', Object.keys(options.form).join(', '));
-		}
-
-		request(options, function(error, response, body) {
-			response = response || {};
-
-			if (error) {
-				self.logger.error('Request to API failed: %s', error);
-				callback(new Error(`Request to API failed: ${error}`));
-				done();
-				return;
-			}
-
-			if (response.statusCode !== 200) {
-				self.logger.error('Request to API failed: HTTP status code was %d for <%s>', response.statusCode || 'unknown', options.url);
-				self.logger.debug('Body: %s', body);
-
-				self.logger.data(new Error().stack);
-
-				callback(new Error(`Request to API failed: HTTP status code was ${response.statusCode}`));
-				done();
-				return;
-			}
-
-			// parse response
-			let data,
-				info,
-				next;
-
-			try {
-				data = JSON.parse(body);
-				info = data && data[actionName];
-
-				// acfrom=Zeppelin Games
-				next = data && data['query-continue'] && data['query-continue'][params.list || params.prop];
-
-				// handle the new continuing queries introduced in MW 1.21 (and to be made default in MW 1.26)
-				// issue #64
-				// @see https://www.mediawiki.org/wiki/API:Query#Continuing_queries
-				if (!next) {
-					// cmcontinue=page|5820414e44205920424f534f4e53|12253446, continue=-||
-					next = data && data['continue'];
-				}
-			}
-			catch(e) {
-				self.logger.error('Error parsing JSON response: %s',  body);
-				self.logger.data(body);
-
-				callback(new Error('Error parsing JSON response'));
-				done();
-				return;
-			}
-
-			//if (!callback) data.error = {info: 'foo'}; // debug
-
-			if (data && !data.error) {
-				if (next) {
-					self.logger.debug("There's more data");
-					self.logger.debug(next);
-				}
-
-				callback(null, info, next, data);
-			}
-			else if (data.error) {
-				self.logger.error('Error returned by API: %s',  data.error.info);
-				self.logger.data(data.error);
-
-				callback(new Error(`Error returned by API: ${data.error.info}`));
-			}
-			done();
-		});
-	};
-
-	// public interface
-	api.prototype = {
-		log() {
-			this.logger.log.apply(this.logger, arguments);
-		},
-
-		info() {
-			this.logger.info.apply(this.logger, arguments);
-		},
-
-		warn(msg, extra) {
-			this.logger.warn.apply(this.logger, arguments);
-		},
-
-		error(msg, extra) {
-			this.logger.error.apply(this.logger, arguments);
-		},
-
-		// adds request to the queue
-		call(params, callback, method) {
-			this.queue.push(done => {
-				doRequest.apply(this, [params, callback, method, done]);
-			});
-		},
-
-		// fetch an external resource
-		fetchUrl(url, callback, encoding) {
-			const self = this;
-			encoding = encoding || 'utf-8';
-
-			// add a request to the queue
-			this.queue.push(function(done) {
-				self.info("Fetching <%s> (as %s)...", url, encoding);
-
-				const options = {
-					url,
-					method: 'GET',
-					proxy: self.proxy || false,
-					jar: self.jar,
-					encoding: (encoding === 'binary') ? null : encoding,
-					headers: {
-					  'User-Agent': self.userAgent
-					}
-				};
-
-				request(options, function (error, response, body) {
-					if (!error && response.statusCode === 200) {
-						self.info('<%s>: fetched %s kB', url, (body.length/1024).toFixed(2));
-						callback(null, body);
-					}
-					else {
-						if (!error) {
-							error = new Error(`HTTP status ${response.statusCode}`);
-						}
-
-						self.error(`Failed to fetch <${url}>`);
-						self.error(error.message);
-						callback(error, body);
-					}
-
-					done();
-				});
-			});
-		}
-	};
-
-	return api;
-}());
-
-}).call(this,require('_process'),require("buffer").Buffer)
-},{"../package":121,"_process":339,"async":49,"buffer":251,"fs":201,"path":332,"request":129,"url":382,"winston":183}],119:[function(require,module,exports){
-(function (process,Buffer){
-/**
- * Defines bot API
- */
-module.exports = (function() {
-	'use strict';
-
-	const Api = require('./api'),
-		_ = require('underscore'),
-		async = require('async'),
-		fs = require('fs'),
-		querystring = require('querystring');
-
-	// the upper limit for bots (will be reduced by MW for users without a bot right)
-	const API_LIMIT = 5000;
-
-	// get the object being the first key/value entry of a given object
-	const getFirstItem = function(obj) {
-		const key = Object.keys(obj).shift();
-		return obj[key];
-	};
-
-	// bot public API
-	const bot = function(params) {
-		let env = process.env,
-			options;
-
-		// read configuration from the file
-		if (typeof params === 'string') {
-			let configFile,
-				configParsed;
-
-			try {
-				configFile = fs.readFileSync(params, 'utf-8');
-				configParsed = JSON.parse(configFile);
-			}
-			catch(e) {
-				throw new Error(`Loading config failed: ${e.message}`);
-			}
-
-			if (typeof configParsed === 'object') {
-				options = configParsed;
-			}
-		}
-		// configuration provided as an object
-		else if (typeof params === 'object') {
-			options = params;
-		}
-
-		if (!params) {
-			throw new Error('No configuration was provided!');
-		}
-
-		this.protocol = options.protocol;
-		this.server = options.server;
-
-		const protocol = options.protocol || 'http';
-		this.api = new Api({
-			protocol,
-			port: options.port,
-			server: options.server,
-			path: options.path || '',
-			proxy: options.proxy,
-			userAgent: options.userAgent,
-			concurrency: options.concurrency,
-			debug: (options.debug === true || env.DEBUG === '1')
-		});
-
-		this.version = this.api.version;
-
-		// store options
-		this.options = options;
-
-		// in dry-run mode? (issue #48)
-		this.dryRun = (options.dryRun === true || env.DRY_RUN === '1');
-
-		if (this.dryRun) {
-			this.log('Running in dry-run mode');
-		}
-
-		// bind provider-specific "namespaces"
-		this.wikia.call = this.wikia.call.bind(this);
-	};
-
-	bot.prototype = {
-		log() {
-			this.api.info.apply(this.api, arguments);
-		},
-
-		logData(obj) {
-			this.api.logger.data(JSON.stringify(obj, undefined, 2));
-		},
-
-		error() {
-			this.api.error.apply(this.api, arguments);
-		},
-
-		getConfig(key, def) {
-			return this.options[key] || def;
-		},
-
-		setConfig(key, val) {
-			this.options[key] = val;
-		},
-
-		getRand() {
-			return Math.random().toString().split('.').pop();
-		},
-
-		getAll(params, key, callback) {
-			let self = this,
-				res = [],
-				// @see https://www.mediawiki.org/wiki/API:Query#Continuing_queries
-				continueParams = {
-					'continue': ''
-				};
-
-			async.whilst(
-				() => true, // run as long as there's more data
-				function(callback) {
-					self.api.call(_.extend(params, continueParams), function(err, data, next) {
-						if (err) {
-							callback(err);
-						}
-						else {
-							// append batch data
-							const batchData = (typeof key === 'function') ? key(data) : data[key];
-
-							res = res.concat(batchData);
-
-							// more pages?
-							continueParams = next;
-							callback(next ? null : true);
-						}
-					});
-				},
-				function(err) {
-					if (err instanceof Error) {
-						callback(err);
-					}
-					else {
-						callback(null, res);
-					}
-				}
-			);
-		},
-
-		logIn(username, password, callback /* or just callback */) {
-			const self = this;
-
-			// username and password params can be omitted
-			if (typeof username !== 'string') {
-				callback = username;
-
-				// use data from config
-				username = this.options.username;
-				password = this.options.password;
-			}
-
-			// assign domain if applicable
-			var domain = this.options.domain || '';
-
-			this.log('Obtaining login token...');
-
-			const logInCallback = function(err, data) {
-				if (!err && typeof data.lgusername !== 'undefined') {
-					self.log(`Logged in as ${data.lgusername}`);
-					callback(null, data);
-				}
-				else if (typeof data.reason === 'undefined') {
-					self.error('Logging in failed');
-					self.error(data.result);
-					callback(err || new Error(`Logging in failed: ${data.result}`));
-				}
-				else {
-					self.error('Logging in failed');
-					self.error(data.result);
-					self.error(data.reason);
-					callback(err || new Error(`Logging in failed: ${data.result} - ${data.reason}`));
-				}
-			};
-
-			// request a token
-			this.api.call({
-				action: 'login',
-				lgname: username,
-				lgpassword: password,
-				lgdomain: domain
-			}, function(err, data) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				if (data.result === 'NeedToken') {
-					const token = data.token;
-
-					self.log(`Got token ${token}`);
-
-					// log in using a token
-					self.api.call({
-						action: 'login',
-						lgname: username,
-						lgpassword: password,
-						lgtoken: token,
-						lgdomain: domain
-					}, logInCallback, 'POST');
-				} else {
-					logInCallback(err, data);
-				}
-			}, 'POST');
-		},
-
-		getCategories(prefix, callback){
-			if(typeof prefix === 'function') {
-				callback = prefix;
-			}
-
-			this.getAll(
-				{
-					action: 'query',
-					list: 'allcategories',
-					acprefix : prefix || '',
-					aclimit: API_LIMIT
-				},
-				data=>data.allcategories.map(cat => cat['*']),
-				callback
-			);
-		},
-
-		getUsers(data, callback){
-			if(typeof data === 'function') {
-				callback = data;
-			}
-
-			data = data || {};
-
-			this.api.call({
-				action: 'query',
-				list: 'allusers',
-				auprefix : data.prefix || '',
-				auwitheditsonly: data.witheditsonly || false,
-				aulimit: API_LIMIT
-			}, function(err, data){
-				callback(err, data && data.allusers || []);
-			});
-		},
-
-		getAllPages(callback) {
-			this.log("Getting all pages...");
-			this.getAll(
-				{
-					action: 'query',
-					list: 'allpages',
-					apfilterredir: 'nonredirects', // do not include redirects
-					aplimit: API_LIMIT
-				},
-				'allpages',
-				callback
-			);
-		},
-
-		getPagesInCategory(category, callback) {
-			category = `Category:${category}`;
-			this.log(`Getting pages from ${category}...`);
-
-			this.getAll(
-				{
-					action: 'query',
-					list: 'categorymembers',
-					cmtitle: category,
-					cmlimit: API_LIMIT
-				},
-				'categorymembers',
-				callback
-			);
-		},
-
-		getPagesInNamespace(namespace, callback) {
-			this.log(`Getting pages in namespace ${namespace}`);
-
-			this.getAll(
-				{
-					action: 'query',
-					list: 'allpages',
-					apnamespace: namespace,
-					apfilterredir: 'nonredirects', // do not include redirects
-					aplimit: API_LIMIT
-				},
-				'allpages',
-				callback
-			);
-		},
-
-		getPagesByPrefix(prefix, callback) {
-			this.log(`Getting pages by ${prefix} prefix...`);
-
-			this.api.call({
-				action: 'query',
-				list: 'allpages',
-				apprefix: prefix,
-				aplimit: API_LIMIT
-			}, function(err, data) {
-				callback(err, data && data.allpages || []);
-			});
-		},
-
-		getPagesTranscluding (template, callback) {
-			this.log(`Getting pages from ${template}...`);
-
-			this.getAll(
-				{
-					action: 'query',
-					prop: 'transcludedin',
-					titles: template
-				},
-				data => getFirstItem(getFirstItem(data)).transcludedin,
-				callback
-			);
-		},
-
-		getArticle(title, redirect, callback) {
-			let params = {
-				action: 'query',
-				prop: 'revisions',
-				rvprop: 'content',
-				rand: this.getRand()
-			};
-
-			if (typeof redirect === 'function') {
-				callback = redirect;
-				redirect = undefined;
-			}
-
-			// @see https://www.mediawiki.org/wiki/API:Query#Resolving_redirects
-			if (redirect === true) {
-				params.redirects = '';
-			}
-
-			// both page ID or title can be provided
-			if (typeof title === 'number') {
-				this.log(`Getting content of article #${title}...`);
-				params.pageids = title;
-			}
-			else {
-				this.log(`Getting content of ${title}...`);
-				params.titles = title;
-			}
-
-			this.api.call(params, function(err, data) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				const page = getFirstItem(data.pages),
-					revision = page.revisions && page.revisions.shift(),
-					content = revision && revision['*'],
-					redirectInfo = data.redirects && data.redirects.shift() || undefined;
-
-				callback(null, content, redirectInfo);
-			});
-		},
-
-		getArticleRevisions(title, callback) {
-			const params = {
-				action: 'query',
-				prop: 'revisions',
-				rvprop: ['ids', 'timestamp', 'size', 'flags', 'comment', 'user'].join('|'),
-				rvdir: 'newer', // order by timestamp asc
-				rvlimit: API_LIMIT
-			};
-
-			// both page ID or title can be provided
-			if (typeof title === 'number') {
-				this.log(`Getting revisions of article #${title}...`);
-				params.pageids = title;
-			}
-			else {
-				this.log(`Getting revisions of ${title}...`);
-				params.titles = title;
-			}
-
-			this.getAll(
-				params,
-				function(batch) {
-					const page = getFirstItem(batch.pages);
-					return page.revisions;
-				},
-				callback
-			);
-		},
-
-		getArticleCategories(title, callback) {
-			this.api.call({
-				action: 'query',
-				prop: 'categories',
-				cllimit: API_LIMIT,
-				titles: title
-			}, function(err, data) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				if(data === null)
-				{
-					callback(new Error(`"${title}" page does not exist`));
-					return;
-				}
-
-				const page = getFirstItem(data.pages);
-
-				callback(
-					null,
-					(page.categories || []).map(cat =>
-						// { ns: 14, title: 'Kategoria:XX wiek' }
-						cat.title
-					)
-				);
-			});
-		},
-
-		search(keyword, callback) {
-			this.getAll(
-				{
-					action: 'query',
-					list: 'search',
-					srsearch: keyword,
-					srprop: 'timestamp',
-					srlimit: 5000
-				},
-				'search',
-				callback
-			);
-		},
-
-		// get token required to perform a given action
-		getToken(title, action, callback) {
-			this.log(`Getting ${action} token (for ${title})...`);
-
-			this.getMediaWikiVersion(((err, version) => {
-				let compare = require('node-version-compare'),
-					params,
-					useTokenApi = compare(version, '1.24.0') > -1;
-
-				// @see https://www.mediawiki.org/wiki/API:Tokens (for MW 1.24+)
-				if (useTokenApi) {
-					params = {
-						action: 'query',
-						meta: 'tokens',
-						type: 'csrf'
-					};
-				}
-				else {
-					params = {
-						action: 'query',
-						prop: 'info',
-						intoken: action,
-						titles: title
-					};
-				}
-
-				this.api.call(params, ((err, data, next, raw) => {
-					let token;
-
-					if (err) {
-						callback(err);
-						return;
-					}
-
-					if (useTokenApi) {
-						token = data.tokens.csrftoken.toString(); // MW 1.24+
-					} else {
-						token = getFirstItem(data.pages)[ action + 'token']; // older MW version
-					}
-
-					if (!token) {
-						const msg = raw.warnings.info['*'];
-						this.log(`getToken: ${msg}`);
-						err = new Error(`Can't get "${action}" token for "${title}" page - ${msg}`);
-						token = undefined;
-					}
-
-					callback(err, token);
-				}));
-			}));
-		},
-
-		// this should only be used internally (see #84)
-		doEdit(type, title, summary, params, callback) {
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Edit
-			this.getToken(title, 'edit', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log(`Editing '${title}' with a summary '${summary}' (${type})...`);
-
-				const editParams = _.extend({
-					action: 'edit',
-					bot: '',
-					title,
-					summary,
-					token
-				}, params);
-
-				self.api.call(editParams, function(err, data) {
-					if (!err && data.result && data.result === "Success") {
-						self.log("Rev #%d created for '%s'", data.newrevid, data.title);
-						callback(null, data);
-					}
-					else {
-						callback(err || data);
-					}
-				}, 'POST');
-			});
-		},
-
-		edit(title, content, summary, minor, callback) {
-			let params = {
-				text: content
-			};
-
-			if (typeof minor === 'function') {
-				callback = minor;
-				minor = undefined;
-			}
-
-			if (minor)
-				params.minor = '';
-			else
-				params.notminor = '';
-
-			this.doEdit('edit', title, summary, params, callback);
-		},
-
-		append(title, content, summary, callback) {
-			let params = {
-				appendtext: content
-			};
-
-			this.doEdit('append', title, summary, params, callback);
-		},
-
-		prepend(title, content, summary, callback) {
-			let params = {
-				prependtext: content
-			};
-
-			this.doEdit('prepend', title, summary, params, callback);
-		},
-
-
-		addFlowTopic(title, subject, content, callback) {
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Flow
-			this.getToken(title, 'flow', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log(`Adding a topic to page '${title}' with subject '${subject}'...`);
-
-				const params = {
-					action: 'flow',
-					submodule: 'new-topic',
-					page: title,
-					nttopic: subject,
-					ntcontent: content,
-					ntformat: 'wikitext',
-					bot: '',
-					token: token
-				};
-
-				self.api.call(params, function(err, data) {
-					if (!err && data['new-topic'] && data['new-topic'].status && data['new-topic'].status === "ok") {
-						self.log("Workflow '%s' created on '%s'", data['new-topic'].workflow, title);
-						callback(null, data);
-					}
-					else {
-						callback(err);
-					}
-				}, 'POST');
-			});
-		},
-
-		'delete'(title, reason, callback) {
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Delete
-			this.getToken(title, 'delete', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log("Deleting '%s' because '%s'...", title, reason);
-
-				self.api.call({
-					action: 'delete',
-					title,
-					reason,
-					token
-				}, function(err, data) {
-					if (!err && data.title && data.reason) {
-						callback(null, data);
-					}
-					else {
-						callback(err);
-					}
-				}, 'POST');
-			});
-		},
-
-		purge(titles, callback) {
-			// @see https://www.mediawiki.org/wiki/API:Purge
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			const params = {
-				action: 'purge'
-			};
-
-			if (typeof titles === 'string' && titles.indexOf('Category:') === 0) {
-				// @see https://docs.moodle.org/archive/pl/api.php?action=help&modules=purge
-				// @see https://docs.moodle.org/archive/pl/api.php?action=help&modules=query%2Bcategorymembers
-				// since MW 1.21 - @see https://github.com/wikimedia/mediawiki/commit/62216932c197f1c248ca2d95bc230f87a79ccd71
-				this.log("Purging all articles in category '%s'...", titles);
-				params.generator = 'categorymembers';
-				params.gcmtitle = titles;
-			}
-			else {
-				// cast a single item to an array
-				titles = Array.isArray(titles) ? titles : [titles];
-
-				// both page IDs or titles can be provided
-				if (typeof titles[0] === 'number') {
-					this.log("Purging the list of article IDs: #%s...", titles.join(', #'));
-					params.pageids = titles.join('|');
-				}
-				else {
-					this.log("Purging the list of articles: '%s'...", titles.join("', '"));
-					params.titles = titles.join('|');
-				}
-			}
-
-			this.api.call(
-				params,
-				function(err, data) {
-					if (!err) {
-						data.forEach(function(page) {
-							if (typeof page.purged !== 'undefined') {
-								self.log('Purged "%s"', page.title);
-							}
-						});
-					}
-
-					callback(err, data);
-				},
-				'POST'
-			);
-		},
-
-		sendEmail(username, subject, text, callback) {
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Email
-			this.getToken(`User:${username}`, 'email', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log("Sending an email to '%s' with subject '%s'...", username, subject);
-
-				self.api.call({
-					action: 'emailuser',
-					target: username,
-					subject,
-					text,
-					ccme: '',
-					token
-				}, function(err, data) {
-					if (!err && data.result && data.result === "Success") {
-						self.log("Email sent");
-						callback(null, data);
-					}
-					else {
-						callback(err);
-					}
-				}, 'POST');
-			});
-		},
-
-		getUserContribs(options, callback){
-			options = options || {};
-
-			this.api.call({
-				action: 'query',
-				list: 'usercontribs',
-				ucuser: options.user,
-				ucstart: options.start,
-				uclimit: API_LIMIT,
-				ucnamespace: options.namespace || ''
-			}, function(err, data, next) {
-				callback(err, data && data.usercontribs || [], next && next.ucstart || false);
-			});
-		},
-
-		whoami(callback) {
-			// @see http://www.mediawiki.org/wiki/API:Meta#userinfo_.2F_ui
-			const props =[
-				'groups',
-				'rights',
-				'ratelimits',
-				'editcount',
-				'realname',
-				'email'
-			];
-
-			this.api.call({
-				action: 'query',
-				meta: 'userinfo',
-				uiprop: props.join('|')
-			}, function(err, data) {
-				if (!err && data && data.userinfo) {
-					callback(null, data.userinfo);
-				}
-				else {
-					callback(err);
-				}
-			});
-		},
-
-		whois(username, callback) {
-			this.whoare([username], function(err, usersinfo) {
-				callback(err, usersinfo && usersinfo[0]);
-			});
-		},
-
-		whoare(usernames, callback) {
-			// @see https://www.mediawiki.org/wiki/API:Users
-			const props =[
-				'blockinfo',
-				'groups',
-				'implicitgroups',
-				'rights',
-				'editcount',
-				'registration',
-				'emailable',
-				'gender'
-			];
-
-			this.api.call({
-				action: 'query',
-				list: 'users',
-				ususers: usernames.join('|'),
-				usprop: props.join('|')
-			}, function(err, data) {
-				if (!err && data && data.users) {
-					callback(null, data.users);
-				}
-				else {
-					callback(err);
-				}
-			});
-		},
-
-		createAccount(username, password, callback) {
-			// @see https://www.mediawiki.org/wiki/API:Account_creation
-			const self = this;
-			this.log(`creating account ${username}`);
-			this.api.call({
-				action: 'query',
-				meta: 'tokens',
-				type: 'createaccount'
-			}, function(err, data ) {
-					self.api.call({
-					action: 'createaccount',
-					createreturnurl: `${self.api.protocol}://${self.api.server}:${self.api.port}/`,
-					createtoken: data.tokens.createaccounttoken,
-					username: username,
-					password: password,
-					retype: password,
-				}, function(err, data ) {
-						if (err) {
-							callback(err);
-							return;
-						}
-						callback(data);
-					}, 'POST');
-			});
-		},
-
-		move(from, to, summary, callback) {
-			const self = this;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Move
-			this.getToken(from, 'move', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log("Moving '%s' to '%s' because '%s'...", from, to, summary);
-
-				self.api.call({
-					action: 'move',
-					from,
-					to,
-					bot: '',
-					reason: summary,
-					token
-				}, function(err, data) {
-					if (!err && data.from && data.to && data.reason) {
-						callback(null, data);
-					}
-					else {
-						callback(err);
-					}
-				}, 'POST');
-			});
-		},
-
-		getImages(start, callback) {
-			this.api.call({
-				action: 'query',
-				list: 'allimages',
-				aifrom: start,
-				ailimit: API_LIMIT
-			}, function(err, data, next) {
-				callback(err, ((data && data.allimages) || []), ((next && next.aifrom) || false));
-			});
-		},
-
-		getImagesFromArticle(title, callback) {
-			this.api.call({
-				action: 'query',
-				prop: 'images',
-				titles: title
-			}, function(err, data) {
-				const page = getFirstItem(data && data.pages || []);
-				callback(err, (page && page.images) || []);
-			});
-		},
-
-		getImageUsage(filename, callback) {
-			this.api.call({
-				action: 'query',
-				list: 'imageusage',
-				iutitle: filename,
-				iulimit: API_LIMIT
-			}, function(err, data) {
-				callback(err, (data && data.imageusage) || []);
-			});
-		},
-
-		getImageInfo(filename, callback) {
-			const props = [
-				'timestamp',
-				'user',
-				'metadata',
-				'size',
-				'url'
-			];
-
-			this.api.call({
-				action: 'query',
-				titles: filename,
-				prop: 'imageinfo',
-				iiprop: props.join('|')
-			}, function(err, data) {
-				const image = getFirstItem(data && data.pages || []),
-					imageinfo = image && image.imageinfo && image.imageinfo[0];
-
-				// process EXIF metadata into key / value structure
-				if (!err && imageinfo && imageinfo.metadata) {
-					imageinfo.exif = {};
-
-					imageinfo.metadata.forEach(function(entry) {
-						imageinfo.exif[ entry.name ] = entry.value;
-					});
-				}
-
-				callback(err, imageinfo);
-			});
-		},
-
-		getLog(type, start, callback) {
-			let params = {
-				action: 'query',
-				list: 'logevents',
-				lestart: start,
-				lelimit: API_LIMIT
-			};
-
-			if (type.indexOf('/') > 0) {
-				// Filter log entries to only this type.
-				params.leaction = type;
-			}
-			else {
-				// Filter log actions to only this action. Overrides letype. In the list of possible values,
-				// values with the asterisk wildcard such as action/* can have different strings after the slash (/).
-				params.letype = type;
-			}
-
-			this.api.call(params, function(err, data, next) {
-				if (next && next.lecontinue) {
-					// 20150101124329|22700494
-					next = next.lecontinue.split('|').shift();
-				}
-
-				callback(err, ((data && data.logevents) || []), next);
-			});
-		},
-
-		expandTemplates(text, title, callback) {
-			this.api.call({
-				action: 'expandtemplates',
-				text,
-				title,
-				generatexml: 1
-			}, function(err, data, next, raw) {
-				const xml = getFirstItem(raw.parsetree);
-				callback(err, xml);
-			}, 'POST');
-		},
-
-		parse(text, title, callback) {
-			this.api.call({
-				action: 'parse',
-				text,
-				title,
-				contentmodel: 'wikitext',
-				generatexml: 1
-			}, function(err, data, next, raw) {
-				if (err) {
-					callback(err);
-					return;
-                                }
-				const xml = getFirstItem(raw.parse.text);
-				const images = raw.parse.images;
-				callback(err, xml, images);
-			}, 'POST');
-		},
-
-		getRecentChanges(start, callback) {
-			const props = [
-				'title',
-				'timestamp',
-				'comments',
-				'user',
-				'flags',
-				'sizes'
-			];
-
-			this.api.call({
-				action: 'query',
-				list: 'recentchanges',
-				rcprop: props.join('|'),
-				rcstart: start || '',
-				rclimit: API_LIMIT
-			}, function(err, data, next) {
-				callback(err, ((data && data.recentchanges) || []), ((next && next.rcstart) || false));
-			});
-		},
-
-		getSiteInfo(props, callback) {
-			// @see http://www.mediawiki.org/wiki/API:Siteinfo
-			if (typeof props === 'string') {
-				props = [props];
-			}
-
-			this.api.call({
-				action: 'query',
-				meta: 'siteinfo',
-				siprop: props.join('|')
-			}, function(err, data) {
-				callback(err, data);
-			});
-		},
-
-		getSiteStats(callback) {
-			const prop = 'statistics';
-
-			this.getSiteInfo(prop, function(err, info) {
-				callback(err, info && info[prop]);
-			});
-		},
-
-		getMediaWikiVersion(callback) {
-			// cache it for each instance of the client
-			// we will call it multiple times for features detection
-			if (typeof this._mwVersion !== 'undefined') {
-				callback(null, this._mwVersion);
-				return;
-			}
-
-			this.getSiteInfo(['general'], ((err, info) => {
-				let version;
-
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				version = info && info.general && info.general.generator; // e.g. "MediaWiki 1.27.0-wmf.19"
-				version = version.match(/[\d.]+/)[0]; // 1.27.0
-
-				this.log('Detected MediaWiki v%s', version);
-
-				// cache it
-				this._mwVersion = version;
-				callback(null, this._mwVersion);
-			}));
-		},
-
-		getQueryPage(queryPage, callback) {
-			// @see http://www.mediawiki.org/wiki/API:Querypage
-			this.api.call({
-				action: 'query',
-				list: 'querypage',
-				qppage: queryPage,
-				qplimit: API_LIMIT
-			}, (err, data) => {
-				if (!err && data && data.querypage) {
-					this.log('%s data was generated %s', queryPage, data.querypage.cachedtimestamp);
-					callback(null, data.querypage.results || []);
-				}
-				else {
-					callback(err, []);
-				}
-			});
-		},
-
-		upload(filename, content, extraParams, callback) {
-			let self = this,
-				params = {
-					action: 'upload',
-					ignorewarnings: '',
-					filename,
-					file: (typeof content === 'string') ? new Buffer(content, 'binary') : content,
-					text: ''
-				},
-				key;
-
-			if (this.dryRun) {
-				callback(new Error('In dry-run mode'));
-				return;
-			}
-
-			if (typeof extraParams === 'object') {
-				params = _.extend(params, extraParams);
-			}
-			else { // it's summary (comment)
-				params.comment = extraParams;
-			}
-
-			// @see http://www.mediawiki.org/wiki/API:Upload
-			this.getToken(`File:${filename}`, 'edit', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log('Uploading %s kB as File:%s...', (content.length/1024).toFixed(2), filename);
-
-				params.token = token;
-				self.api.call(params, function(err, data) {
-					if (data && data.result && data.result === 'Success') {
-						self.log('Uploaded as <%s>', data.imageinfo.descriptionurl);
-						callback(null, data);
-					}
-					else {
-						callback(err);
-					}
-				}, 'UPLOAD' /* fake method to set a proper content type for file uploads */);
-			});
-		},
-
-		uploadByUrl(filename, url, summary, callback) {
-			const self = this;
-
-			this.api.fetchUrl(url, function(error, content) {
-				if (error) {
-					callback(error, content);
-					return;
-				}
-
-				self.upload(filename, content, summary, callback);
-			}, 'binary' /* use binary-safe fetch */);
-		},
-
-		// Wikia-specific API entry-point
-		uploadVideo(fileName, url, callback) {
-			const self = this,
-				parseVideoUrl = require('./utils').parseVideoUrl,
-				parsed = parseVideoUrl(url);
-
-			if (parsed === null) {
-				callback(new Error('Not supported URL provided'));
-				return;
-			}
-
-			let provider = parsed[0], videoId = parsed[1];
-
-			this.getToken(`File:${fileName}`, 'edit', function(err, token) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				self.log('Uploading <%s> (%s provider with video ID %s)', url, provider, videoId);
-
-				self.api.call({
-					action: 'addmediapermanent',
-					title: fileName,
-					provider: provider,
-					videoId: videoId,
-					token: token
-				}, callback, 'POST' /* The addmediapermanent module requires a POST request */);
-			});
-		},
-
-		getExternalLinks (title, callback) {
-				this.api.call({
-					action: 'query',
-					prop: 'extlinks',
-					titles: title,
-					ellimit: API_LIMIT
-				}, function(err, data) {
-					callback(err, (data && getFirstItem(data.pages).extlinks) || []);
-			});
-		},
-
-		getBacklinks(title, callback) {
-			this.api.call({
-				action: 'query',
-				list: 'backlinks',
-				blnamespace: 0,
-				bltitle: title,
-				bllimit: API_LIMIT
-			}, function(err, data) {
-				callback(err, (data && data.backlinks) || []);
-			});
-		},
-
-		// utils section
-		getTemplateParamFromXml(tmplXml, paramName) {
-			paramName = paramName.
-				trim().
-				replace('-', '\\-');
-
-			const re = new RegExp(`<part><name>${paramName}\\s*<\/name>=<value>([^>]+)<\/value>`),
-				matches = tmplXml.match(re);
-
-			return matches && matches[1].trim() || false;
-		},
-
-		fetchUrl(url, callback, encoding) {
-			this.api.fetchUrl(url, callback, encoding);
-		},
-
-		diff(prev, current) {
-			let colors = require('ansicolors'),
-				jsdiff = require('diff'),
-				diff = jsdiff.diffChars(prev, current),
-				res = '';
-
-			diff.forEach(function(part) {
-				const color = part.added ? 'green' :
-					part.removed ? 'red' : 'brightBlack';
-
-				res += colors[color](part.value);
-			});
-
-			return res;
-		}
-	};
-
-	// Wikia-specific methods (issue #56)
-	// @see http://www.wikia.com/api/v1
-	bot.prototype.wikia = {
-		API_PREFIX: '/api/v1',
-
-		call(path, params, callback) {
-			let url = this.api.protocol + '://' + this.api.server + this.wikia.API_PREFIX + path;
-
-			if (typeof params === 'function') {
-				callback = params;
-				this.log('Wikia API call:', path);
-			}
-			else if (typeof params === 'object') {
-				url += `?${querystring.stringify(params)}`;
-				this.log('Wikia API call:', path, params);
-			}
-
-			this.fetchUrl(url, function(err, res) {
-				const data = JSON.parse(res);
-				callback(err, data);
-			});
-		},
-
-		getWikiVariables(callback) {
-			this.call('/Mercury/WikiVariables', function(err, res) {
-				callback(err, res.data);
-			});
-		},
-
-		getUser(ids, callback) {
-			this.getUsers([ids], function(err, users) {
-				callback(err, users && users[0]);
-			});
-		},
-
-		getUsers(ids, callback) {
-			this.call('/User/Details', {
-				ids: ids.join(','),
-				size: 50
-			},function(err, res) {
-				callback(err, res.items);
-			});
-		}
-	};
-
-	return bot;
-}());
-
-}).call(this,require('_process'),require("buffer").Buffer)
-},{"./api":118,"./utils":120,"_process":339,"ansicolors":41,"async":49,"buffer":251,"diff":70,"fs":201,"node-version-compare":117,"querystring":349,"underscore":176}],120:[function(require,module,exports){
-/**
- * Helper functions
- */
-'use strict';
-
-module.exports = {
-	parseVideoUrl(url) {
-		function getIdFromUrl(url, re) {
-			let matches = url.match(re);
-			return (matches && matches[1]) || null;
-		}
-
-		let id;
-
-		// https://www.youtube.com/watch?v=24X9FpeSASY
-		// http://stackoverflow.com/questions/5830387/how-to-find-all-youtube-video-ids-in-a-string-using-a-regex/5831191#5831191
-		if (url.indexOf('youtube.com/') > -1) {
-			id = getIdFromUrl(url, /\/watch\?v=([A-Z0-9_-]+)/i);
-
-			return id ? ['youtube', id] : null;
-		}
-
-		// https://vimeo.com/27986705
-		if (url.indexOf('vimeo.com/') > -1) {
-			id = getIdFromUrl(url, /\/([0-9]+)/);
-
-			return id ? ['vimeo', id] : null;
-		}
-
-		return null;
-	}
-};
-
-},{}],121:[function(require,module,exports){
-module.exports={
-  "_args": [
-    [
-      {
-        "raw": "nodemw",
-        "scope": null,
-        "escapedName": "nodemw",
-        "name": "nodemw",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "/Users/niehaus/Nextcloud/Javascript/WikiConverter/Wiki2Reveal"
-    ]
-  ],
-  "_from": "nodemw@latest",
-  "_id": "nodemw@0.12.0",
-  "_inCache": true,
-  "_location": "/nodemw",
-  "_nodeVersion": "6.12.0",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/nodemw-0.12.0.tgz_1510939950017_0.09464966785162687"
-  },
-  "_npmUser": {
-    "name": "macbre",
-    "email": "maciej.brencz@gmail.com"
-  },
-  "_npmVersion": "3.10.10",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "nodemw",
-    "scope": null,
-    "escapedName": "nodemw",
-    "name": "nodemw",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/nodemw/-/nodemw-0.12.0.tgz",
-  "_shasum": "80109cc5e884d0c33a35dec8707da1cd8d907f64",
-  "_shrinkwrap": null,
-  "_spec": "nodemw",
-  "_where": "/Users/niehaus/Nextcloud/Javascript/WikiConverter/Wiki2Reveal",
-  "author": {
-    "name": "macbre",
-    "email": "maciej.brencz@gmail.com",
-    "url": "http://macbre.net"
-  },
-  "bugs": {
-    "url": "https://github.com/macbre/nodemw/issues"
-  },
-  "contributors": [
-    {
-      "name": "macbre",
-      "url": "https://github.com/macbre"
-    },
-    {
-      "name": "ValentinBrclz",
-      "url": "https://github.com/ValentinBrclz"
-    },
-    {
-      "name": "webmajstr",
-      "url": "https://github.com/webmajstr"
-    },
-    {
-      "name": "marcinpl87",
-      "url": "https://github.com/marcinpl87"
-    },
-    {
-      "name": "hakubo",
-      "url": "https://github.com/hakubo"
-    },
-    {
-      "name": "kcivey",
-      "url": "https://github.com/kcivey"
-    },
-    {
-      "name": "Fannon",
-      "url": "https://github.com/Fannon"
-    },
-    {
-      "name": "cr0wst",
-      "url": "https://github.com/cr0wst"
-    },
-    {
-      "name": "SanyM",
-      "url": "https://github.com/SanyM"
-    },
-    {
-      "name": "lagleki",
-      "url": "https://github.com/lagleki"
-    },
-    {
-      "name": "Krenair",
-      "url": "https://github.com/Krenair"
-    },
-    {
-      "name": "Tarang",
-      "url": "https://github.com/Tarang"
-    },
-    {
-      "name": "acrisci",
-      "url": "https://github.com/acrisci"
-    },
-    {
-      "name": "chrisalcantara",
-      "url": "https://github.com/chrisalcantara"
-    },
-    {
-      "name": "divdavem",
-      "url": "https://github.com/divdavem"
-    },
-    {
-      "name": "maxkueng",
-      "url": "https://github.com/maxkueng"
-    },
-    {
-      "name": "stdob",
-      "url": "https://github.com/stdob"
-    }
-  ],
-  "dependencies": {
-    "ansicolors": "0.3.x",
-    "async": "^2.1.4",
-    "diff": "^3.1.0",
-    "node-version-compare": "^1.0.1",
-    "request": "^2.79.0",
-    "underscore": "1.8.x",
-    "winston": "^2.3.0"
-  },
-  "description": "MediaWiki API client written in node.js",
-  "devDependencies": {
-    "csv-string": "2.3.x",
-    "esnext": "^3.0.8",
-    "jshint": "^2.9.4",
-    "vows": "0.8.x"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "80109cc5e884d0c33a35dec8707da1cd8d907f64",
-    "tarball": "https://registry.npmjs.org/nodemw/-/nodemw-0.12.0.tgz"
-  },
-  "engines": {
-    "node": ">=0.6"
-  },
-  "gitHead": "1482b0c1b0b5474cd00852f00cac244392faad74",
-  "homepage": "https://github.com/macbre/nodemw#readme",
-  "jshintConfig": {
-    "node": true,
-    "esversion": 6,
-    "-W030": false,
-    "-W084": false
-  },
-  "keywords": [
-    "mediawiki",
-    "wiki",
-    "api",
-    "nodejs",
-    "wikia",
-    "fandom"
-  ],
-  "license": "BSD",
-  "main": "./lib/bot",
-  "maintainers": [
-    {
-      "name": "macbre",
-      "email": "maciej.brencz@gmail.com"
-    }
-  ],
-  "name": "nodemw",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/macbre/nodemw.git"
-  },
-  "scripts": {
-    "lint": "jshint lib/api.js lib/bot.js examples/ test/",
-    "test": "vows --spec"
-  },
-  "version": "0.12.0"
-}
-
-},{}],122:[function(require,module,exports){
 var crypto = require('crypto')
   , qs = require('querystring')
   ;
@@ -32002,7 +30216,7 @@ exports.rfc3986 = rfc3986
 exports.generateBase = generateBase
 
 
-},{"crypto":261,"querystring":349}],123:[function(require,module,exports){
+},{"crypto":261,"querystring":349}],119:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.12.2
 (function() {
@@ -32042,7 +30256,7 @@ exports.generateBase = generateBase
 
 
 }).call(this,require('_process'))
-},{"_process":339}],124:[function(require,module,exports){
+},{"_process":339}],120:[function(require,module,exports){
 'use strict';
 
 var replace = String.prototype.replace;
@@ -32062,7 +30276,7 @@ module.exports = {
     RFC3986: 'RFC3986'
 };
 
-},{}],125:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 var stringify = require('./stringify');
@@ -32075,7 +30289,7 @@ module.exports = {
     stringify: stringify
 };
 
-},{"./formats":124,"./parse":126,"./stringify":127}],126:[function(require,module,exports){
+},{"./formats":120,"./parse":122,"./stringify":123}],122:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -32251,7 +30465,7 @@ module.exports = function (str, opts) {
     return utils.compact(obj);
 };
 
-},{"./utils":128}],127:[function(require,module,exports){
+},{"./utils":124}],123:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -32463,7 +30677,7 @@ module.exports = function (object, opts) {
     return joined.length > 0 ? prefix + joined : '';
 };
 
-},{"./formats":124,"./utils":128}],128:[function(require,module,exports){
+},{"./formats":120,"./utils":124}],124:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty;
@@ -32667,7 +30881,7 @@ exports.isBuffer = function isBuffer(obj) {
     return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
 };
 
-},{}],129:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 // Copyright 2010-2012 Mikeal Rogers
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -32824,7 +31038,7 @@ Object.defineProperty(request, 'debug', {
   }
 })
 
-},{"./lib/cookies":131,"./lib/helpers":134,"./request":140,"extend":74}],130:[function(require,module,exports){
+},{"./lib/cookies":127,"./lib/helpers":130,"./request":136,"extend":74}],126:[function(require,module,exports){
 'use strict'
 
 var caseless = require('caseless')
@@ -32993,7 +31207,7 @@ Auth.prototype.onResponse = function (response) {
 
 exports.Auth = Auth
 
-},{"./helpers":134,"caseless":54,"uuid":177}],131:[function(require,module,exports){
+},{"./helpers":130,"caseless":54,"uuid":173}],127:[function(require,module,exports){
 'use strict'
 
 var tough = require('tough-cookie')
@@ -33033,7 +31247,7 @@ exports.jar = function (store) {
   return new RequestJar(store)
 }
 
-},{"tough-cookie":167}],132:[function(require,module,exports){
+},{"tough-cookie":163}],128:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -33116,7 +31330,7 @@ function getProxyFromURI (uri) {
 module.exports = getProxyFromURI
 
 }).call(this,require('_process'))
-},{"_process":339}],133:[function(require,module,exports){
+},{"_process":339}],129:[function(require,module,exports){
 'use strict'
 
 var fs = require('fs')
@@ -33323,7 +31537,7 @@ Har.prototype.options = function (options) {
 
 exports.Har = Har
 
-},{"extend":74,"fs":201,"har-validator":100,"querystring":349}],134:[function(require,module,exports){
+},{"extend":74,"fs":201,"har-validator":100,"querystring":349}],130:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -33393,7 +31607,7 @@ exports.version = version
 exports.defer = defer
 
 }).call(this,require('_process'))
-},{"_process":339,"crypto":261,"json-stringify-safe":112,"safe-buffer":141}],135:[function(require,module,exports){
+},{"_process":339,"crypto":261,"json-stringify-safe":112,"safe-buffer":137}],131:[function(require,module,exports){
 'use strict'
 
 var uuid = require('uuid')
@@ -33507,7 +31721,7 @@ Multipart.prototype.onRequest = function (options) {
 
 exports.Multipart = Multipart
 
-},{"combined-stream":66,"isstream":108,"safe-buffer":141,"uuid":177}],136:[function(require,module,exports){
+},{"combined-stream":66,"isstream":108,"safe-buffer":137,"uuid":173}],132:[function(require,module,exports){
 'use strict'
 
 var url = require('url')
@@ -33657,7 +31871,7 @@ OAuth.prototype.onRequest = function (_oauth) {
 
 exports.OAuth = OAuth
 
-},{"caseless":54,"crypto":261,"oauth-sign":122,"qs":125,"safe-buffer":141,"url":382,"uuid":177}],137:[function(require,module,exports){
+},{"caseless":54,"crypto":261,"oauth-sign":118,"qs":121,"safe-buffer":137,"url":382,"uuid":173}],133:[function(require,module,exports){
 'use strict'
 
 var qs = require('qs')
@@ -33709,7 +31923,7 @@ Querystring.prototype.unescape = querystring.unescape
 
 exports.Querystring = Querystring
 
-},{"qs":125,"querystring":349}],138:[function(require,module,exports){
+},{"qs":121,"querystring":349}],134:[function(require,module,exports){
 'use strict'
 
 var url = require('url')
@@ -33865,7 +32079,7 @@ Redirect.prototype.onResponse = function (response) {
 
 exports.Redirect = Redirect
 
-},{"url":382}],139:[function(require,module,exports){
+},{"url":382}],135:[function(require,module,exports){
 'use strict'
 
 var url = require('url')
@@ -34042,7 +32256,7 @@ Tunnel.defaultProxyHeaderWhiteList = defaultProxyHeaderWhiteList
 Tunnel.defaultProxyHeaderExclusiveList = defaultProxyHeaderExclusiveList
 exports.Tunnel = Tunnel
 
-},{"tunnel-agent":174,"url":382}],140:[function(require,module,exports){
+},{"tunnel-agent":170,"url":382}],136:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -35598,7 +33812,7 @@ Request.prototype.toJSON = requestToJSON
 module.exports = Request
 
 }).call(this,require('_process'))
-},{"./lib/auth":130,"./lib/cookies":131,"./lib/getProxyFromURI":132,"./lib/har":133,"./lib/helpers":134,"./lib/multipart":135,"./lib/oauth":136,"./lib/querystring":137,"./lib/redirect":138,"./lib/tunnel":139,"_process":339,"aws-sign2":50,"aws4":51,"caseless":54,"extend":74,"forever-agent":78,"form-data":79,"hawk":101,"http":376,"http-signature":102,"https":304,"is-typedarray":107,"isstream":108,"mime-types":116,"performance-now":123,"safe-buffer":141,"stream":375,"stringstream":166,"url":382,"util":387,"zlib":249}],141:[function(require,module,exports){
+},{"./lib/auth":126,"./lib/cookies":127,"./lib/getProxyFromURI":128,"./lib/har":129,"./lib/helpers":130,"./lib/multipart":131,"./lib/oauth":132,"./lib/querystring":133,"./lib/redirect":134,"./lib/tunnel":135,"_process":339,"aws-sign2":50,"aws4":51,"caseless":54,"extend":74,"forever-agent":78,"form-data":79,"hawk":101,"http":376,"http-signature":102,"https":304,"is-typedarray":107,"isstream":108,"mime-types":116,"performance-now":119,"safe-buffer":137,"stream":375,"stringstream":162,"url":382,"util":387,"zlib":249}],137:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -35662,7 +33876,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":251}],142:[function(require,module,exports){
+},{"buffer":251}],138:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -35834,7 +34048,7 @@ module.exports = {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":251}],143:[function(require,module,exports){
+},{"buffer":251}],139:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2016 Joyent, Inc.
 
@@ -36215,7 +34429,7 @@ Certificate._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./errors":146,"./fingerprint":147,"./formats/openssh-cert":149,"./formats/x509":157,"./formats/x509-pem":156,"./identity":158,"./key":160,"./private-key":161,"./signature":162,"./utils":164,"assert-plus":48,"buffer":251,"crypto":261,"util":387}],144:[function(require,module,exports){
+},{"./algs":138,"./errors":142,"./fingerprint":143,"./formats/openssh-cert":145,"./formats/x509":153,"./formats/x509-pem":152,"./identity":154,"./key":156,"./private-key":157,"./signature":158,"./utils":160,"assert-plus":48,"buffer":251,"crypto":261,"util":387}],140:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -36630,7 +34844,7 @@ function generateECDSA(curve) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./key":160,"./private-key":161,"./utils":164,"assert-plus":48,"buffer":251,"crypto":261,"ecc-jsbn":71,"ecc-jsbn/lib/ec":72,"jsbn":109,"tweetnacl":175}],145:[function(require,module,exports){
+},{"./algs":138,"./key":156,"./private-key":157,"./utils":160,"assert-plus":48,"buffer":251,"crypto":261,"ecc-jsbn":71,"ecc-jsbn/lib/ec":72,"jsbn":109,"tweetnacl":171}],141:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -36730,7 +34944,7 @@ Signer.prototype.sign = function () {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./signature":162,"assert-plus":48,"buffer":251,"stream":375,"tweetnacl":175,"util":387}],146:[function(require,module,exports){
+},{"./signature":158,"assert-plus":48,"buffer":251,"stream":375,"tweetnacl":171,"util":387}],142:[function(require,module,exports){
 // Copyright 2015 Joyent, Inc.
 
 var assert = require('assert-plus');
@@ -36816,7 +35030,7 @@ module.exports = {
 	CertificateParseError: CertificateParseError
 };
 
-},{"assert-plus":48,"util":387}],147:[function(require,module,exports){
+},{"assert-plus":48,"util":387}],143:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -36981,7 +35195,7 @@ Fingerprint._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./certificate":143,"./errors":146,"./key":160,"./utils":164,"assert-plus":48,"buffer":251,"crypto":261}],148:[function(require,module,exports){
+},{"./algs":138,"./certificate":139,"./errors":142,"./key":156,"./utils":160,"assert-plus":48,"buffer":251,"crypto":261}],144:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -37058,7 +35272,7 @@ function write(key, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../key":160,"../private-key":161,"../utils":164,"./pem":150,"./rfc4253":153,"./ssh":155,"assert-plus":48,"buffer":251}],149:[function(require,module,exports){
+},{"../key":156,"../private-key":157,"../utils":160,"./pem":146,"./rfc4253":149,"./ssh":151,"assert-plus":48,"buffer":251}],145:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -37384,7 +35598,7 @@ function getCertType(key) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../certificate":143,"../identity":158,"../key":160,"../private-key":161,"../signature":162,"../ssh-buffer":163,"../utils":164,"./rfc4253":153,"assert-plus":48,"buffer":251,"crypto":261}],150:[function(require,module,exports){
+},{"../algs":138,"../certificate":139,"../identity":154,"../key":156,"../private-key":157,"../signature":158,"../ssh-buffer":159,"../utils":160,"./rfc4253":149,"assert-plus":48,"buffer":251,"crypto":261}],146:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -37574,7 +35788,7 @@ function write(key, options, type) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../errors":146,"../key":160,"../private-key":161,"../utils":164,"./pkcs1":151,"./pkcs8":152,"./rfc4253":153,"./ssh-private":154,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261}],151:[function(require,module,exports){
+},{"../algs":138,"../errors":142,"../key":156,"../private-key":157,"../utils":160,"./pkcs1":147,"./pkcs8":148,"./rfc4253":149,"./ssh-private":150,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261}],147:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -37898,7 +36112,7 @@ function writePkcs1ECDSAPrivate(der, key) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../key":160,"../private-key":161,"../utils":164,"./pem":150,"./pkcs8":152,"asn1":47,"assert-plus":48,"buffer":251}],152:[function(require,module,exports){
+},{"../algs":138,"../key":156,"../private-key":157,"../utils":160,"./pem":146,"./pkcs8":148,"asn1":47,"assert-plus":48,"buffer":251}],148:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -38407,7 +36621,7 @@ function writePkcs8ECDSAPrivate(key, der) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../key":160,"../private-key":161,"../utils":164,"./pem":150,"asn1":47,"assert-plus":48,"buffer":251}],153:[function(require,module,exports){
+},{"../algs":138,"../key":156,"../private-key":157,"../utils":160,"./pem":146,"asn1":47,"assert-plus":48,"buffer":251}],149:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -38557,7 +36771,7 @@ function write(key, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../key":160,"../private-key":161,"../ssh-buffer":163,"../utils":164,"assert-plus":48,"buffer":251}],154:[function(require,module,exports){
+},{"../algs":138,"../key":156,"../private-key":157,"../ssh-buffer":159,"../utils":160,"assert-plus":48,"buffer":251}],150:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -38822,7 +37036,7 @@ function write(key, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../errors":146,"../key":160,"../private-key":161,"../ssh-buffer":163,"../utils":164,"./pem":150,"./rfc4253":153,"asn1":47,"assert-plus":48,"bcrypt-pbkdf":53,"buffer":251,"crypto":261}],155:[function(require,module,exports){
+},{"../algs":138,"../errors":142,"../key":156,"../private-key":157,"../ssh-buffer":159,"../utils":160,"./pem":146,"./rfc4253":149,"asn1":47,"assert-plus":48,"bcrypt-pbkdf":53,"buffer":251,"crypto":261}],151:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -38940,7 +37154,7 @@ function write(key, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../key":160,"../private-key":161,"../utils":164,"./rfc4253":153,"./ssh-private":154,"assert-plus":48,"buffer":251}],156:[function(require,module,exports){
+},{"../key":156,"../private-key":157,"../utils":160,"./rfc4253":149,"./ssh-private":150,"assert-plus":48,"buffer":251}],152:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2016 Joyent, Inc.
 
@@ -39021,7 +37235,7 @@ function write(cert, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../certificate":143,"../identity":158,"../key":160,"../private-key":161,"../signature":162,"../utils":164,"./pem":150,"./x509":157,"asn1":47,"assert-plus":48,"buffer":251}],157:[function(require,module,exports){
+},{"../algs":138,"../certificate":139,"../identity":154,"../key":156,"../private-key":157,"../signature":158,"../utils":160,"./pem":146,"./x509":153,"asn1":47,"assert-plus":48,"buffer":251}],153:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -39751,7 +37965,7 @@ function writeBitField(setBits, bitIndex) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"../algs":142,"../certificate":143,"../identity":158,"../key":160,"../private-key":161,"../signature":162,"../utils":164,"./pem":150,"./pkcs8":152,"asn1":47,"assert-plus":48,"buffer":251}],158:[function(require,module,exports){
+},{"../algs":138,"../certificate":139,"../identity":154,"../key":156,"../private-key":157,"../signature":158,"../utils":160,"./pem":146,"./pkcs8":148,"asn1":47,"assert-plus":48,"buffer":251}],154:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -40032,7 +38246,7 @@ Identity._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./errors":146,"./fingerprint":147,"./signature":162,"./utils":164,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261,"util":387}],159:[function(require,module,exports){
+},{"./algs":138,"./errors":142,"./fingerprint":143,"./signature":158,"./utils":160,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261,"util":387}],155:[function(require,module,exports){
 // Copyright 2015 Joyent, Inc.
 
 var Key = require('./key');
@@ -40073,7 +38287,7 @@ module.exports = {
 	CertificateParseError: errs.CertificateParseError
 };
 
-},{"./certificate":143,"./errors":146,"./fingerprint":147,"./identity":158,"./key":160,"./private-key":161,"./signature":162}],160:[function(require,module,exports){
+},{"./certificate":139,"./errors":142,"./fingerprint":143,"./identity":154,"./key":156,"./private-key":157,"./signature":158}],156:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -40351,7 +38565,7 @@ Key._oldVersionDetect = function (obj) {
 };
 
 }).call(this,{"isBuffer":require("../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":308,"./algs":142,"./dhe":144,"./ed-compat":145,"./errors":146,"./fingerprint":147,"./formats/auto":148,"./formats/pem":150,"./formats/pkcs1":151,"./formats/pkcs8":152,"./formats/rfc4253":153,"./formats/ssh":155,"./formats/ssh-private":154,"./private-key":161,"./signature":162,"./utils":164,"assert-plus":48,"crypto":261}],161:[function(require,module,exports){
+},{"../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":308,"./algs":138,"./dhe":140,"./ed-compat":141,"./errors":142,"./fingerprint":143,"./formats/auto":144,"./formats/pem":146,"./formats/pkcs1":147,"./formats/pkcs8":148,"./formats/rfc4253":149,"./formats/ssh":151,"./formats/ssh-private":150,"./private-key":157,"./signature":158,"./utils":160,"assert-plus":48,"crypto":261}],157:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -40609,7 +38823,7 @@ PrivateKey._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./dhe":144,"./ed-compat":145,"./errors":146,"./fingerprint":147,"./formats/auto":148,"./formats/pem":150,"./formats/pkcs1":151,"./formats/pkcs8":152,"./formats/rfc4253":153,"./formats/ssh-private":154,"./key":160,"./signature":162,"./utils":164,"assert-plus":48,"buffer":251,"crypto":261,"tweetnacl":175,"util":387}],162:[function(require,module,exports){
+},{"./algs":138,"./dhe":140,"./ed-compat":141,"./errors":142,"./fingerprint":143,"./formats/auto":144,"./formats/pem":146,"./formats/pkcs1":147,"./formats/pkcs8":148,"./formats/rfc4253":149,"./formats/ssh-private":150,"./key":156,"./signature":158,"./utils":160,"assert-plus":48,"buffer":251,"crypto":261,"tweetnacl":171,"util":387}],158:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -40926,7 +39140,7 @@ Signature._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":142,"./errors":146,"./ssh-buffer":163,"./utils":164,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261}],163:[function(require,module,exports){
+},{"./algs":138,"./errors":142,"./ssh-buffer":159,"./utils":160,"asn1":47,"assert-plus":48,"buffer":251,"crypto":261}],159:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -41078,7 +39292,7 @@ SSHBuffer.prototype.write = function (buf) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"assert-plus":48,"buffer":251}],164:[function(require,module,exports){
+},{"assert-plus":48,"buffer":251}],160:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -41370,7 +39584,7 @@ function opensshCipherInfo(cipher) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./private-key":161,"assert-plus":48,"buffer":251,"crypto":261,"jsbn":109}],165:[function(require,module,exports){
+},{"./private-key":157,"assert-plus":48,"buffer":251,"crypto":261,"jsbn":109}],161:[function(require,module,exports){
 exports.get = function(belowFn) {
   var oldLimit = Error.stackTraceLimit;
   Error.stackTraceLimit = Infinity;
@@ -41508,7 +39722,7 @@ exports._createParsedCallSite = function(properties) {
   return new CallSite(properties);
 };
 
-},{}],166:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 (function (Buffer){
 var util = require('util')
 var Stream = require('stream')
@@ -41614,7 +39828,7 @@ function alignedWrite(buffer) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":251,"stream":375,"string_decoder":380,"util":387}],167:[function(require,module,exports){
+},{"buffer":251,"stream":375,"string_decoder":380,"util":387}],163:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -42957,7 +41171,7 @@ module.exports = {
   canonicalDomain: canonicalDomain
 };
 
-},{"../package.json":173,"./memstore":168,"./pathMatch":169,"./permuteDomain":170,"./pubsuffix":171,"./store":172,"net":201,"punycode":346,"url":382}],168:[function(require,module,exports){
+},{"../package.json":169,"./memstore":164,"./pathMatch":165,"./permuteDomain":166,"./pubsuffix":167,"./store":168,"net":201,"punycode":346,"url":382}],164:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -43129,7 +41343,7 @@ MemoryCookieStore.prototype.getAllCookies = function(cb) {
   cb(null, cookies);
 };
 
-},{"./pathMatch":169,"./permuteDomain":170,"./store":172,"util":387}],169:[function(require,module,exports){
+},{"./pathMatch":165,"./permuteDomain":166,"./store":168,"util":387}],165:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -43192,7 +41406,7 @@ function pathMatch (reqPath, cookiePath) {
 
 exports.pathMatch = pathMatch;
 
-},{}],170:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -43250,7 +41464,7 @@ function permuteDomain (domain) {
 
 exports.permuteDomain = permuteDomain;
 
-},{"./pubsuffix":171}],171:[function(require,module,exports){
+},{"./pubsuffix":167}],167:[function(require,module,exports){
 /****************************************************
  * AUTOMATICALLY GENERATED by generate-pubsuffix.js *
  *                  DO NOT EDIT!                    *
@@ -43350,7 +41564,7 @@ var index = module.exports.index = Object.freeze(
 
 // END of automatically generated file
 
-},{"punycode":346}],172:[function(require,module,exports){
+},{"punycode":346}],168:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -43423,7 +41637,7 @@ Store.prototype.getAllCookies = function(cb) {
   throw new Error('getAllCookies is not implemented (therefore jar cannot be serialized)');
 };
 
-},{}],173:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -43560,7 +41774,7 @@ module.exports={
   "version": "2.3.3"
 }
 
-},{}],174:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -43808,7 +42022,7 @@ if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
 exports.debug = debug // for test
 
 }).call(this,require('_process'))
-},{"_process":339,"assert":216,"events":288,"http":376,"https":304,"net":201,"safe-buffer":141,"tls":201,"util":387}],175:[function(require,module,exports){
+},{"_process":339,"assert":216,"events":288,"http":376,"https":304,"net":201,"safe-buffer":137,"tls":201,"util":387}],171:[function(require,module,exports){
 (function(nacl) {
 'use strict';
 
@@ -46198,7 +44412,7 @@ nacl.setPRNG = function(fn) {
 
 })(typeof module !== 'undefined' && module.exports ? module.exports : (self.nacl = self.nacl || {}));
 
-},{"crypto":220}],176:[function(require,module,exports){
+},{"crypto":220}],172:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -47748,7 +45962,7 @@ nacl.setPRNG = function(fn) {
   }
 }.call(this));
 
-},{}],177:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 var v1 = require('./v1');
 var v4 = require('./v4');
 
@@ -47758,7 +45972,7 @@ uuid.v4 = v4;
 
 module.exports = uuid;
 
-},{"./v1":180,"./v4":181}],178:[function(require,module,exports){
+},{"./v1":176,"./v4":177}],174:[function(require,module,exports){
 /**
  * Convert array of 16 byte values to UUID string format of the form:
  * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -47783,7 +45997,7 @@ function bytesToUuid(buf, offset) {
 
 module.exports = bytesToUuid;
 
-},{}],179:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 (function (global){
 // Unique ID creation requires a high quality random # generator.  In the
 // browser this is a little complicated due to unknown quality of Math.random()
@@ -47820,7 +46034,7 @@ if (!rng) {
 module.exports = rng;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],180:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 var rng = require('./lib/rng');
 var bytesToUuid = require('./lib/bytesToUuid');
 
@@ -47922,7 +46136,7 @@ function v1(options, buf, offset) {
 
 module.exports = v1;
 
-},{"./lib/bytesToUuid":178,"./lib/rng":179}],181:[function(require,module,exports){
+},{"./lib/bytesToUuid":174,"./lib/rng":175}],177:[function(require,module,exports){
 var rng = require('./lib/rng');
 var bytesToUuid = require('./lib/bytesToUuid');
 
@@ -47953,7 +46167,7 @@ function v4(options, buf, offset) {
 
 module.exports = v4;
 
-},{"./lib/bytesToUuid":178,"./lib/rng":179}],182:[function(require,module,exports){
+},{"./lib/bytesToUuid":174,"./lib/rng":175}],178:[function(require,module,exports){
 /*
  * verror.js: richer JavaScript errors
  */
@@ -48406,7 +46620,7 @@ WError.prototype.cause = function we_cause(c)
 	return (this.jse_cause);
 };
 
-},{"assert-plus":48,"core-util-is":67,"extsprintf":75,"util":387}],183:[function(require,module,exports){
+},{"assert-plus":48,"core-util-is":67,"extsprintf":75,"util":387}],179:[function(require,module,exports){
 /*
  * winston.js: Top-level include defining Winston.
  *
@@ -48572,7 +46786,7 @@ Object.defineProperty(winston, 'default', {
   }
 });
 
-},{"../package.json":199,"./winston/common":184,"./winston/config":185,"./winston/container":189,"./winston/exception":190,"./winston/logger":191,"./winston/transports":192,"./winston/transports/transport":197}],184:[function(require,module,exports){
+},{"../package.json":195,"./winston/common":180,"./winston/config":181,"./winston/container":185,"./winston/exception":186,"./winston/logger":187,"./winston/transports":188,"./winston/transports/transport":193}],180:[function(require,module,exports){
 (function (Buffer){
 /*
  * common.js: Internal helper and utility functions for winston
@@ -49075,7 +47289,7 @@ exports.stringArrayToSet = function (strArray, errMsg) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./config":185,"buffer":251,"crypto":261,"cycle":68,"fs":201,"stream":375,"string_decoder":380,"util":387}],185:[function(require,module,exports){
+},{"./config":181,"buffer":251,"crypto":261,"cycle":68,"fs":201,"stream":375,"string_decoder":380,"util":387}],181:[function(require,module,exports){
 /*
  * config.js: Default settings for all levels that winston knows about
  *
@@ -49145,7 +47359,7 @@ function mixin (target) {
   return target;
 };
 
-},{"./config/cli-config":186,"./config/npm-config":187,"./config/syslog-config":188,"colors/safe":65}],186:[function(require,module,exports){
+},{"./config/cli-config":182,"./config/npm-config":183,"./config/syslog-config":184,"colors/safe":65}],182:[function(require,module,exports){
 /*
  * cli-config.js: Config that conform to commonly used CLI logging levels.
  *
@@ -49182,7 +47396,7 @@ cliConfig.colors = {
   silly: 'magenta'
 };
 
-},{}],187:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 /*
  * npm-config.js: Config that conform to npm logging levels.
  *
@@ -49211,7 +47425,7 @@ npmConfig.colors = {
   silly: 'magenta'
 };
 
-},{}],188:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 /*
  * syslog-config.js: Config that conform to syslog logging levels.
  *
@@ -49244,7 +47458,7 @@ syslogConfig.colors = {
   debug: 'blue'
 };
 
-},{}],189:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 /*
  * container.js: Inversion of control container for winston logger instances
  *
@@ -49374,7 +47588,7 @@ Container.prototype._delete = function (id) {
 }
 
 
-},{"../winston":183,"./common":184,"util":387}],190:[function(require,module,exports){
+},{"../winston":179,"./common":180,"util":387}],186:[function(require,module,exports){
 (function (process){
 /*
  * exception.js: Utility methods for gathing information about uncaughtExceptions.
@@ -49434,7 +47648,7 @@ exception.getTrace = function (err) {
 };
 
 }).call(this,require('_process'))
-},{"_process":339,"os":315,"stack-trace":165}],191:[function(require,module,exports){
+},{"_process":339,"os":315,"stack-trace":161}],187:[function(require,module,exports){
 (function (process){
 /*
  * logger.js: Core logger object used by winston.
@@ -50167,7 +48381,7 @@ ProfileHandler.prototype.done = function (msg) {
 };
 
 }).call(this,require('_process'))
-},{"./common":184,"./config":185,"./exception":190,"_process":339,"async":198,"events":288,"stream":375,"util":387}],192:[function(require,module,exports){
+},{"./common":180,"./config":181,"./exception":186,"_process":339,"async":194,"events":288,"stream":375,"util":387}],188:[function(require,module,exports){
 /*
  * transports.js: Set of all transports Winston knows about
  *
@@ -50205,7 +48419,7 @@ Object.defineProperty(exports, 'Memory', {
   }
 });
 
-},{"./transports/console":193,"./transports/file":194,"./transports/http":195,"./transports/memory":196}],193:[function(require,module,exports){
+},{"./transports/console":189,"./transports/file":190,"./transports/http":191,"./transports/memory":192}],189:[function(require,module,exports){
 (function (process){
 /*
  * console.js: Transport for outputting to the console
@@ -50339,7 +48553,7 @@ Console.prototype.log = function (level, msg, meta, callback) {
 };
 
 }).call(this,require('_process'))
-},{"../common":184,"./transport":197,"_process":339,"events":288,"os":315,"util":387}],194:[function(require,module,exports){
+},{"../common":180,"./transport":193,"_process":339,"events":288,"os":315,"util":387}],190:[function(require,module,exports){
 (function (process){
 /*
  * file.js: Transport for outputting to a local log file
@@ -51028,7 +49242,7 @@ File.prototype._lazyDrain = function () {
 };
 
 }).call(this,require('_process'))
-},{"../common":184,"./transport":197,"_process":339,"async":198,"events":288,"fs":201,"isstream":108,"os":315,"path":332,"stream":375,"util":387,"zlib":249}],195:[function(require,module,exports){
+},{"../common":180,"./transport":193,"_process":339,"async":194,"events":288,"fs":201,"isstream":108,"os":315,"path":332,"stream":375,"util":387,"zlib":249}],191:[function(require,module,exports){
 (function (Buffer){
 var util = require('util'),
     winston = require('../../winston'),
@@ -51272,7 +49486,7 @@ Http.prototype.stream = function (options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"../../winston":183,"./transport":197,"buffer":251,"http":376,"https":304,"stream":375,"util":387}],196:[function(require,module,exports){
+},{"../../winston":179,"./transport":193,"buffer":251,"http":376,"https":304,"stream":375,"util":387}],192:[function(require,module,exports){
 var events = require('events'),
     util = require('util'),
     common = require('../common'),
@@ -51363,7 +49577,7 @@ Memory.prototype.clearLogs = function () {
   this.writeOutput = [];
 };
 
-},{"../common":184,"./transport":197,"events":288,"util":387}],197:[function(require,module,exports){
+},{"../common":180,"./transport":193,"events":288,"util":387}],193:[function(require,module,exports){
 /*
  * transport.js: Base Transport object for all Winston transports.
  *
@@ -51500,7 +49714,7 @@ Transport.prototype.logException = function (msg, meta, callback) {
   this.log(self.exceptionsLevel, msg, meta, function () { });
 };
 
-},{"events":288,"util":387}],198:[function(require,module,exports){
+},{"events":288,"util":387}],194:[function(require,module,exports){
 (function (process,global){
 /*!
  * async
@@ -52787,7 +51001,7 @@ Transport.prototype.logException = function (msg, meta, callback) {
 }());
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":339}],199:[function(require,module,exports){
+},{"_process":339}],195:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -52914,10 +51128,1651 @@ module.exports={
   "version": "2.4.0"
 }
 
-},{}],200:[function(require,module,exports){
-require("nodemw")
+},{}],196:[function(require,module,exports){
+module.exports={
+  "name": "wiki2reveal",
+  "version": "1.0.0",
+  "description": "Converts Wiki Source Text to RevealJS Presentation including Download the online source",
+  "main": "main.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "doc": "doctoc README.md",
+    "watch": "watchify src/main.js -o dist/wiki2reveal.js -v",
+    "build": "browserify src/main.js -o dist/wiki2reveal.js -v",
+    "buildmin": "browserify src/main.js  | uglifyjs -c warnings=false > dist/wiki2reveal.min.js",
+    "build_request": "browserify src/request4browser.js -o dist/request4browser.js",
+    "watch_request": "watchify   src/request4browser.js -o dist/request4browser.js",
+    "buildmin_request": "browserify src/request4browser.js  | uglifyjs -mc warnings=false > dist/request4browser.min.js",
+    "test": "node-lint dist/wiki2reveal.js",
+    "compress": "uglifyjs dist/wiki2reveal.js -o docs/js/wiki2reveal.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niebert/Wiki2Reveal.git"
+  },
+  "keywords": [
+    "MediaWiki",
+    "RevealJS",
+    "Download",
+    "Document",
+    "Converter"
+  ],
+  "author": "Engelbert Niehaus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/niebert/Wiki2Reveal/issues"
+  },
+  "homepage": "https://github.com/niebert/Wiki2Reveal#readme",
+  "dependencies": {
+    "nodemw": "^0.12.0"
+  }
+}
 
-},{"nodemw":119}],201:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
+(function (process,Buffer){
+/**
+ * Helper "class" for accessing MediaWiki API and handling cookie-based session
+ */
+module.exports = (function() {
+	'use strict';
+
+	// introspect package.json to get module version
+	const VERSION = require('../package').version;
+
+	const
+		// @see https://github.com/caolan/async
+		async = require('async'),
+		// @see https://github.com/mikeal/request
+		request = require('request');
+
+	const api = function(options) {
+		this.protocol = options.protocol || 'http';
+		this.port = options.port || (this.protocol === 'https' ? 443 : 80);
+		this.server = options.server;
+		this.path = options.path;
+		this.proxy = options.proxy;
+		this.jar = request.jar(); // create new cookie jar for each instance
+
+		this.debug = options.debug;
+
+		// set up logging
+		const winston = require('winston');
+		this.logger = new (winston.Logger)();
+
+		// console logging
+		if (this.debug) {
+			this.logger.add(winston.transports.Console, {
+				level: 'debug'
+			});
+		}
+
+		this.logger.cli();
+
+		// file logging
+		const path = require('path'),
+			fs = require('fs'),
+			logDir = path.dirname(process.argv[1]) + '/log/',
+			logFile = logDir + path.basename(process.argv[1], '.js') + '.log';
+
+		if (fs.existsSync(logDir)) {
+			this.logger.add(winston.transports.File, {
+				colorize: true,
+				filename: logFile,
+				json: false,
+				level: this.debug ? 'debug' : 'info'
+			});
+		}
+
+		// requests queue
+		// @see https://github.com/caolan/async#queue
+		const concurrency = options.concurrency || 3; // how many tasks (i.e. requests) to run in parallel
+		this.queue = async.queue(function(task, callback) {
+			// process the task (and call the provided callback once it's completed)
+			task(callback);
+		}, concurrency);
+
+		// HTTP client
+		this.formatUrl = require('url').format;
+
+		this.userAgent = options.userAgent || (`nodemw v${VERSION} (node.js ${process.version}; ${process.platform} ${process.arch})`);
+		this.version = VERSION;
+
+		// debug info
+		this.info(process.argv.join(' '));
+		this.info(this.userAgent);
+		this.info(`Using <${this.protocol}://${this.server}:${this.port}${this.path}/api.php> as API entry point`);
+		this.info('----');
+	};
+
+	const doRequest = function(params, callback, method, done) {
+		const self = this,
+			// store requested action - will be used when parsing a response
+			actionName = params.action,
+			// "request" options
+			options = {
+				method: method || 'GET',
+				proxy: this.proxy || false,
+				jar: this.jar,
+				headers: {
+					'User-Agent': this.userAgent
+				}
+			};
+
+		// HTTP request parameters
+		params = params || {};
+
+		// force JSON format
+		params.format = 'json';
+
+		// handle uploads
+		if (method === 'UPLOAD') {
+			options.method = 'POST';
+
+			const CRLF = "\r\n",
+				postBody = [],
+				boundary = `nodemw${Math.random().toString().substr(2)}`;
+
+			// encode each field
+			Object.keys(params).forEach(function(fieldName) {
+				const value = params[fieldName];
+
+				postBody.push(`--${boundary}`);
+				postBody.push(CRLF);
+
+				if (typeof value === 'string') {
+					// properly encode UTF8 in binary-safe POST data
+					postBody.push(`Content-Disposition: form-data; name="${fieldName}"`);
+					postBody.push(CRLF);
+					postBody.push(CRLF);
+					postBody.push(new Buffer(value, 'utf8'));
+				}
+				else {
+					// send attachment
+					postBody.push(`Content-Disposition: form-data; name="${fieldName}"; filename="foo"`);
+					postBody.push(CRLF);
+					postBody.push(CRLF);
+					postBody.push(value);
+				}
+
+				postBody.push(CRLF);
+			});
+
+			postBody.push(`--${boundary}--`);
+
+			// encode post data
+			options.headers['content-type'] = `multipart/form-data; boundary=${boundary}`;
+			options.body = postBody;
+
+			params = {};
+		}
+
+		// form an URL to API
+		options.url = this.formatUrl({
+			protocol: this.protocol,
+			port: this.port,
+			hostname: this.server,
+			pathname: this.path + '/api.php',
+			query: (options.method === 'GET') ? params : {}
+		});
+
+		// POST all parameters (avoid "request string too long" errors)
+		if (method === 'POST') {
+			options.form = params;
+		}
+
+		this.logger.debug('API action: %s', actionName);
+		this.logger.debug('%s <%s>', options.method, options.url);
+		if (options.form) {
+			this.logger.debug('POST fields: %s', Object.keys(options.form).join(', '));
+		}
+
+		request(options, function(error, response, body) {
+			response = response || {};
+
+			if (error) {
+				self.logger.error('Request to API failed: %s', error);
+				callback(new Error(`Request to API failed: ${error}`));
+				done();
+				return;
+			}
+
+			if (response.statusCode !== 200) {
+				self.logger.error('Request to API failed: HTTP status code was %d for <%s>', response.statusCode || 'unknown', options.url);
+				self.logger.debug('Body: %s', body);
+
+				self.logger.data(new Error().stack);
+
+				callback(new Error(`Request to API failed: HTTP status code was ${response.statusCode}`));
+				done();
+				return;
+			}
+
+			// parse response
+			let data,
+				info,
+				next;
+
+			try {
+				data = JSON.parse(body);
+				info = data && data[actionName];
+
+				// acfrom=Zeppelin Games
+				next = data && data['query-continue'] && data['query-continue'][params.list || params.prop];
+
+				// handle the new continuing queries introduced in MW 1.21 (and to be made default in MW 1.26)
+				// issue #64
+				// @see https://www.mediawiki.org/wiki/API:Query#Continuing_queries
+				if (!next) {
+					// cmcontinue=page|5820414e44205920424f534f4e53|12253446, continue=-||
+					next = data && data['continue'];
+				}
+			}
+			catch(e) {
+				self.logger.error('Error parsing JSON response: %s',  body);
+				self.logger.data(body);
+
+				callback(new Error('Error parsing JSON response'));
+				done();
+				return;
+			}
+
+			//if (!callback) data.error = {info: 'foo'}; // debug
+
+			if (data && !data.error) {
+				if (next) {
+					self.logger.debug("There's more data");
+					self.logger.debug(next);
+				}
+
+				callback(null, info, next, data);
+			}
+			else if (data.error) {
+				self.logger.error('Error returned by API: %s',  data.error.info);
+				self.logger.data(data.error);
+
+				callback(new Error(`Error returned by API: ${data.error.info}`));
+			}
+			done();
+		});
+	};
+
+	// public interface
+	api.prototype = {
+		log() {
+			this.logger.log.apply(this.logger, arguments);
+		},
+
+		info() {
+			this.logger.info.apply(this.logger, arguments);
+		},
+
+		warn(msg, extra) {
+			this.logger.warn.apply(this.logger, arguments);
+		},
+
+		error(msg, extra) {
+			this.logger.error.apply(this.logger, arguments);
+		},
+
+		// adds request to the queue
+		call(params, callback, method) {
+			this.queue.push(done => {
+				doRequest.apply(this, [params, callback, method, done]);
+			});
+		},
+
+		// fetch an external resource
+		fetchUrl(url, callback, encoding) {
+			const self = this;
+			encoding = encoding || 'utf-8';
+
+			// add a request to the queue
+			this.queue.push(function(done) {
+				self.info("Fetching <%s> (as %s)...", url, encoding);
+
+				const options = {
+					url,
+					method: 'GET',
+					proxy: self.proxy || false,
+					jar: self.jar,
+					encoding: (encoding === 'binary') ? null : encoding,
+					headers: {
+					  'User-Agent': self.userAgent
+					}
+				};
+
+				request(options, function (error, response, body) {
+					if (!error && response.statusCode === 200) {
+						self.info('<%s>: fetched %s kB', url, (body.length/1024).toFixed(2));
+						callback(null, body);
+					}
+					else {
+						if (!error) {
+							error = new Error(`HTTP status ${response.statusCode}`);
+						}
+
+						self.error(`Failed to fetch <${url}>`);
+						self.error(error.message);
+						callback(error, body);
+					}
+
+					done();
+				});
+			});
+		}
+	};
+
+	return api;
+}());
+
+}).call(this,require('_process'),require("buffer").Buffer)
+},{"../package":196,"_process":339,"async":49,"buffer":251,"fs":201,"path":332,"request":125,"url":382,"winston":179}],198:[function(require,module,exports){
+(function (process,Buffer){
+/**
+ * Defines bot API
+ */
+module.exports = (function() {
+	'use strict';
+
+	const Api = require('./api'),
+		_ = require('underscore'),
+		async = require('async'),
+		fs = require('fs'),
+		querystring = require('querystring');
+
+	// the upper limit for bots (will be reduced by MW for users without a bot right)
+	const API_LIMIT = 5000;
+
+	// get the object being the first key/value entry of a given object
+	const getFirstItem = function(obj) {
+		const key = Object.keys(obj).shift();
+		return obj[key];
+	};
+
+	// bot public API
+	const bot = function(params) {
+		let env = process.env,
+			options;
+
+		// read configuration from the file
+		if (typeof params === 'string') {
+			let configFile,
+				configParsed;
+
+			try {
+				configFile = fs.readFileSync(params, 'utf-8');
+				configParsed = JSON.parse(configFile);
+			}
+			catch(e) {
+				throw new Error(`Loading config failed: ${e.message}`);
+			}
+
+			if (typeof configParsed === 'object') {
+				options = configParsed;
+			}
+		}
+		// configuration provided as an object
+		else if (typeof params === 'object') {
+			options = params;
+		}
+
+		if (!params) {
+			throw new Error('No configuration was provided!');
+		}
+
+		this.protocol = options.protocol;
+		this.server = options.server;
+
+		const protocol = options.protocol || 'http';
+		this.api = new Api({
+			protocol,
+			port: options.port,
+			server: options.server,
+			path: options.path || '',
+			proxy: options.proxy,
+			userAgent: options.userAgent,
+			concurrency: options.concurrency,
+			debug: (options.debug === true || env.DEBUG === '1')
+		});
+
+		this.version = this.api.version;
+
+		// store options
+		this.options = options;
+
+		// in dry-run mode? (issue #48)
+		this.dryRun = (options.dryRun === true || env.DRY_RUN === '1');
+
+		if (this.dryRun) {
+			this.log('Running in dry-run mode');
+		}
+
+		// bind provider-specific "namespaces"
+		this.wikia.call = this.wikia.call.bind(this);
+	};
+
+	bot.prototype = {
+		log() {
+			this.api.info.apply(this.api, arguments);
+		},
+
+		logData(obj) {
+			this.api.logger.data(JSON.stringify(obj, undefined, 2));
+		},
+
+		error() {
+			this.api.error.apply(this.api, arguments);
+		},
+
+		getConfig(key, def) {
+			return this.options[key] || def;
+		},
+
+		setConfig(key, val) {
+			this.options[key] = val;
+		},
+
+		getRand() {
+			return Math.random().toString().split('.').pop();
+		},
+
+		getAll(params, key, callback) {
+			let self = this,
+				res = [],
+				// @see https://www.mediawiki.org/wiki/API:Query#Continuing_queries
+				continueParams = {
+					'continue': ''
+				};
+
+			async.whilst(
+				() => true, // run as long as there's more data
+				function(callback) {
+					self.api.call(_.extend(params, continueParams), function(err, data, next) {
+						if (err) {
+							callback(err);
+						}
+						else {
+							// append batch data
+							const batchData = (typeof key === 'function') ? key(data) : data[key];
+
+							res = res.concat(batchData);
+
+							// more pages?
+							continueParams = next;
+							callback(next ? null : true);
+						}
+					});
+				},
+				function(err) {
+					if (err instanceof Error) {
+						callback(err);
+					}
+					else {
+						callback(null, res);
+					}
+				}
+			);
+		},
+
+		logIn(username, password, callback /* or just callback */) {
+			const self = this;
+
+			// username and password params can be omitted
+			if (typeof username !== 'string') {
+				callback = username;
+
+				// use data from config
+				username = this.options.username;
+				password = this.options.password;
+			}
+
+			// assign domain if applicable
+			var domain = this.options.domain || '';
+
+			this.log('Obtaining login token...');
+
+			const logInCallback = function(err, data) {
+				if (!err && typeof data.lgusername !== 'undefined') {
+					self.log(`Logged in as ${data.lgusername}`);
+					callback(null, data);
+				}
+				else if (typeof data.reason === 'undefined') {
+					self.error('Logging in failed');
+					self.error(data.result);
+					callback(err || new Error(`Logging in failed: ${data.result}`));
+				}
+				else {
+					self.error('Logging in failed');
+					self.error(data.result);
+					self.error(data.reason);
+					callback(err || new Error(`Logging in failed: ${data.result} - ${data.reason}`));
+				}
+			};
+
+			// request a token
+			this.api.call({
+				action: 'login',
+				lgname: username,
+				lgpassword: password,
+				lgdomain: domain
+			}, function(err, data) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				if (data.result === 'NeedToken') {
+					const token = data.token;
+
+					self.log(`Got token ${token}`);
+
+					// log in using a token
+					self.api.call({
+						action: 'login',
+						lgname: username,
+						lgpassword: password,
+						lgtoken: token,
+						lgdomain: domain
+					}, logInCallback, 'POST');
+				} else {
+					logInCallback(err, data);
+				}
+			}, 'POST');
+		},
+
+		getCategories(prefix, callback){
+			if(typeof prefix === 'function') {
+				callback = prefix;
+			}
+
+			this.getAll(
+				{
+					action: 'query',
+					list: 'allcategories',
+					acprefix : prefix || '',
+					aclimit: API_LIMIT
+				},
+				data=>data.allcategories.map(cat => cat['*']),
+				callback
+			);
+		},
+
+		getUsers(data, callback){
+			if(typeof data === 'function') {
+				callback = data;
+			}
+
+			data = data || {};
+
+			this.api.call({
+				action: 'query',
+				list: 'allusers',
+				auprefix : data.prefix || '',
+				auwitheditsonly: data.witheditsonly || false,
+				aulimit: API_LIMIT
+			}, function(err, data){
+				callback(err, data && data.allusers || []);
+			});
+		},
+
+		getAllPages(callback) {
+			this.log("Getting all pages...");
+			this.getAll(
+				{
+					action: 'query',
+					list: 'allpages',
+					apfilterredir: 'nonredirects', // do not include redirects
+					aplimit: API_LIMIT
+				},
+				'allpages',
+				callback
+			);
+		},
+
+		getPagesInCategory(category, callback) {
+			category = `Category:${category}`;
+			this.log(`Getting pages from ${category}...`);
+
+			this.getAll(
+				{
+					action: 'query',
+					list: 'categorymembers',
+					cmtitle: category,
+					cmlimit: API_LIMIT
+				},
+				'categorymembers',
+				callback
+			);
+		},
+
+		getPagesInNamespace(namespace, callback) {
+			this.log(`Getting pages in namespace ${namespace}`);
+
+			this.getAll(
+				{
+					action: 'query',
+					list: 'allpages',
+					apnamespace: namespace,
+					apfilterredir: 'nonredirects', // do not include redirects
+					aplimit: API_LIMIT
+				},
+				'allpages',
+				callback
+			);
+		},
+
+		getPagesByPrefix(prefix, callback) {
+			this.log(`Getting pages by ${prefix} prefix...`);
+
+			this.api.call({
+				action: 'query',
+				list: 'allpages',
+				apprefix: prefix,
+				aplimit: API_LIMIT
+			}, function(err, data) {
+				callback(err, data && data.allpages || []);
+			});
+		},
+
+		getPagesTranscluding (template, callback) {
+			this.log(`Getting pages from ${template}...`);
+
+			this.getAll(
+				{
+					action: 'query',
+					prop: 'transcludedin',
+					titles: template
+				},
+				data => getFirstItem(getFirstItem(data)).transcludedin,
+				callback
+			);
+		},
+
+		getArticle(title, redirect, callback) {
+			let params = {
+				action: 'query',
+				prop: 'revisions',
+				rvprop: 'content',
+				rand: this.getRand()
+			};
+
+			if (typeof redirect === 'function') {
+				callback = redirect;
+				redirect = undefined;
+			}
+
+			// @see https://www.mediawiki.org/wiki/API:Query#Resolving_redirects
+			if (redirect === true) {
+				params.redirects = '';
+			}
+
+			// both page ID or title can be provided
+			if (typeof title === 'number') {
+				this.log(`Getting content of article #${title}...`);
+				params.pageids = title;
+			}
+			else {
+				this.log(`Getting content of ${title}...`);
+				params.titles = title;
+			}
+
+			this.api.call(params, function(err, data) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				const page = getFirstItem(data.pages),
+					revision = page.revisions && page.revisions.shift(),
+					content = revision && revision['*'],
+					redirectInfo = data.redirects && data.redirects.shift() || undefined;
+
+				callback(null, content, redirectInfo);
+			});
+		},
+
+		getArticleRevisions(title, callback) {
+			const params = {
+				action: 'query',
+				prop: 'revisions',
+				rvprop: ['ids', 'timestamp', 'size', 'flags', 'comment', 'user'].join('|'),
+				rvdir: 'newer', // order by timestamp asc
+				rvlimit: API_LIMIT
+			};
+
+			// both page ID or title can be provided
+			if (typeof title === 'number') {
+				this.log(`Getting revisions of article #${title}...`);
+				params.pageids = title;
+			}
+			else {
+				this.log(`Getting revisions of ${title}...`);
+				params.titles = title;
+			}
+
+			this.getAll(
+				params,
+				function(batch) {
+					const page = getFirstItem(batch.pages);
+					return page.revisions;
+				},
+				callback
+			);
+		},
+
+		getArticleCategories(title, callback) {
+			this.api.call({
+				action: 'query',
+				prop: 'categories',
+				cllimit: API_LIMIT,
+				titles: title
+			}, function(err, data) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				if(data === null)
+				{
+					callback(new Error(`"${title}" page does not exist`));
+					return;
+				}
+
+				const page = getFirstItem(data.pages);
+
+				callback(
+					null,
+					(page.categories || []).map(cat =>
+						// { ns: 14, title: 'Kategoria:XX wiek' }
+						cat.title
+					)
+				);
+			});
+		},
+
+		search(keyword, callback) {
+			this.getAll(
+				{
+					action: 'query',
+					list: 'search',
+					srsearch: keyword,
+					srprop: 'timestamp',
+					srlimit: 5000
+				},
+				'search',
+				callback
+			);
+		},
+
+		// get token required to perform a given action
+		getToken(title, action, callback) {
+			this.log(`Getting ${action} token (for ${title})...`);
+
+			this.getMediaWikiVersion(((err, version) => {
+				let compare = require('node-version-compare'),
+					params,
+					useTokenApi = compare(version, '1.24.0') > -1;
+
+				// @see https://www.mediawiki.org/wiki/API:Tokens (for MW 1.24+)
+				if (useTokenApi) {
+					params = {
+						action: 'query',
+						meta: 'tokens',
+						type: 'csrf'
+					};
+				}
+				else {
+					params = {
+						action: 'query',
+						prop: 'info',
+						intoken: action,
+						titles: title
+					};
+				}
+
+				this.api.call(params, ((err, data, next, raw) => {
+					let token;
+
+					if (err) {
+						callback(err);
+						return;
+					}
+
+					if (useTokenApi) {
+						token = data.tokens.csrftoken.toString(); // MW 1.24+
+					} else {
+						token = getFirstItem(data.pages)[ action + 'token']; // older MW version
+					}
+
+					if (!token) {
+						const msg = raw.warnings.info['*'];
+						this.log(`getToken: ${msg}`);
+						err = new Error(`Can't get "${action}" token for "${title}" page - ${msg}`);
+						token = undefined;
+					}
+
+					callback(err, token);
+				}));
+			}));
+		},
+
+		// this should only be used internally (see #84)
+		doEdit(type, title, summary, params, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Edit
+			this.getToken(title, 'edit', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log(`Editing '${title}' with a summary '${summary}' (${type})...`);
+
+				const editParams = _.extend({
+					action: 'edit',
+					bot: '',
+					title,
+					summary,
+					token
+				}, params);
+
+				self.api.call(editParams, function(err, data) {
+					if (!err && data.result && data.result === "Success") {
+						self.log("Rev #%d created for '%s'", data.newrevid, data.title);
+						callback(null, data);
+					}
+					else {
+						callback(err || data);
+					}
+				}, 'POST');
+			});
+		},
+
+		edit(title, content, summary, minor, callback) {
+			let params = {
+				text: content
+			};
+
+			if (typeof minor === 'function') {
+				callback = minor;
+				minor = undefined;
+			}
+
+			if (minor)
+				params.minor = '';
+			else
+				params.notminor = '';
+
+			this.doEdit('edit', title, summary, params, callback);
+		},
+
+		append(title, content, summary, callback) {
+			let params = {
+				appendtext: content
+			};
+
+			this.doEdit('append', title, summary, params, callback);
+		},
+
+		prepend(title, content, summary, callback) {
+			let params = {
+				prependtext: content
+			};
+
+			this.doEdit('prepend', title, summary, params, callback);
+		},
+
+
+		addFlowTopic(title, subject, content, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Flow
+			this.getToken(title, 'flow', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log(`Adding a topic to page '${title}' with subject '${subject}'...`);
+
+				const params = {
+					action: 'flow',
+					submodule: 'new-topic',
+					page: title,
+					nttopic: subject,
+					ntcontent: content,
+					ntformat: 'wikitext',
+					bot: '',
+					token: token
+				};
+
+				self.api.call(params, function(err, data) {
+					if (!err && data['new-topic'] && data['new-topic'].status && data['new-topic'].status === "ok") {
+						self.log("Workflow '%s' created on '%s'", data['new-topic'].workflow, title);
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'POST');
+			});
+		},
+
+		'delete'(title, reason, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Delete
+			this.getToken(title, 'delete', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log("Deleting '%s' because '%s'...", title, reason);
+
+				self.api.call({
+					action: 'delete',
+					title,
+					reason,
+					token
+				}, function(err, data) {
+					if (!err && data.title && data.reason) {
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'POST');
+			});
+		},
+
+		purge(titles, callback) {
+			// @see https://www.mediawiki.org/wiki/API:Purge
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			const params = {
+				action: 'purge'
+			};
+
+			if (typeof titles === 'string' && titles.indexOf('Category:') === 0) {
+				// @see https://docs.moodle.org/archive/pl/api.php?action=help&modules=purge
+				// @see https://docs.moodle.org/archive/pl/api.php?action=help&modules=query%2Bcategorymembers
+				// since MW 1.21 - @see https://github.com/wikimedia/mediawiki/commit/62216932c197f1c248ca2d95bc230f87a79ccd71
+				this.log("Purging all articles in category '%s'...", titles);
+				params.generator = 'categorymembers';
+				params.gcmtitle = titles;
+			}
+			else {
+				// cast a single item to an array
+				titles = Array.isArray(titles) ? titles : [titles];
+
+				// both page IDs or titles can be provided
+				if (typeof titles[0] === 'number') {
+					this.log("Purging the list of article IDs: #%s...", titles.join(', #'));
+					params.pageids = titles.join('|');
+				}
+				else {
+					this.log("Purging the list of articles: '%s'...", titles.join("', '"));
+					params.titles = titles.join('|');
+				}
+			}
+
+			this.api.call(
+				params,
+				function(err, data) {
+					if (!err) {
+						data.forEach(function(page) {
+							if (typeof page.purged !== 'undefined') {
+								self.log('Purged "%s"', page.title);
+							}
+						});
+					}
+
+					callback(err, data);
+				},
+				'POST'
+			);
+		},
+
+		sendEmail(username, subject, text, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Email
+			this.getToken(`User:${username}`, 'email', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log("Sending an email to '%s' with subject '%s'...", username, subject);
+
+				self.api.call({
+					action: 'emailuser',
+					target: username,
+					subject,
+					text,
+					ccme: '',
+					token
+				}, function(err, data) {
+					if (!err && data.result && data.result === "Success") {
+						self.log("Email sent");
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'POST');
+			});
+		},
+
+		getUserContribs(options, callback){
+			options = options || {};
+
+			this.api.call({
+				action: 'query',
+				list: 'usercontribs',
+				ucuser: options.user,
+				ucstart: options.start,
+				uclimit: API_LIMIT,
+				ucnamespace: options.namespace || ''
+			}, function(err, data, next) {
+				callback(err, data && data.usercontribs || [], next && next.ucstart || false);
+			});
+		},
+
+		whoami(callback) {
+			// @see http://www.mediawiki.org/wiki/API:Meta#userinfo_.2F_ui
+			const props =[
+				'groups',
+				'rights',
+				'ratelimits',
+				'editcount',
+				'realname',
+				'email'
+			];
+
+			this.api.call({
+				action: 'query',
+				meta: 'userinfo',
+				uiprop: props.join('|')
+			}, function(err, data) {
+				if (!err && data && data.userinfo) {
+					callback(null, data.userinfo);
+				}
+				else {
+					callback(err);
+				}
+			});
+		},
+
+		whois(username, callback) {
+			this.whoare([username], function(err, usersinfo) {
+				callback(err, usersinfo && usersinfo[0]);
+			});
+		},
+
+		whoare(usernames, callback) {
+			// @see https://www.mediawiki.org/wiki/API:Users
+			const props =[
+				'blockinfo',
+				'groups',
+				'implicitgroups',
+				'rights',
+				'editcount',
+				'registration',
+				'emailable',
+				'gender'
+			];
+
+			this.api.call({
+				action: 'query',
+				list: 'users',
+				ususers: usernames.join('|'),
+				usprop: props.join('|')
+			}, function(err, data) {
+				if (!err && data && data.users) {
+					callback(null, data.users);
+				}
+				else {
+					callback(err);
+				}
+			});
+		},
+
+		createAccount(username, password, callback) {
+			// @see https://www.mediawiki.org/wiki/API:Account_creation
+			const self = this;
+			this.log(`creating account ${username}`);
+			this.api.call({
+				action: 'query',
+				meta: 'tokens',
+				type: 'createaccount'
+			}, function(err, data ) {
+					self.api.call({
+					action: 'createaccount',
+					createreturnurl: `${self.api.protocol}://${self.api.server}:${self.api.port}/`,
+					createtoken: data.tokens.createaccounttoken,
+					username: username,
+					password: password,
+					retype: password,
+				}, function(err, data ) {
+						if (err) {
+							callback(err);
+							return;
+						}
+						callback(data);
+					}, 'POST');
+			});
+		},
+
+		move(from, to, summary, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Move
+			this.getToken(from, 'move', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log("Moving '%s' to '%s' because '%s'...", from, to, summary);
+
+				self.api.call({
+					action: 'move',
+					from,
+					to,
+					bot: '',
+					reason: summary,
+					token
+				}, function(err, data) {
+					if (!err && data.from && data.to && data.reason) {
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'POST');
+			});
+		},
+
+		getImages(start, callback) {
+			this.api.call({
+				action: 'query',
+				list: 'allimages',
+				aifrom: start,
+				ailimit: API_LIMIT
+			}, function(err, data, next) {
+				callback(err, ((data && data.allimages) || []), ((next && next.aifrom) || false));
+			});
+		},
+
+		getImagesFromArticle(title, callback) {
+			this.api.call({
+				action: 'query',
+				prop: 'images',
+				titles: title
+			}, function(err, data) {
+				const page = getFirstItem(data && data.pages || []);
+				callback(err, (page && page.images) || []);
+			});
+		},
+
+		getImageUsage(filename, callback) {
+			this.api.call({
+				action: 'query',
+				list: 'imageusage',
+				iutitle: filename,
+				iulimit: API_LIMIT
+			}, function(err, data) {
+				callback(err, (data && data.imageusage) || []);
+			});
+		},
+
+		getImageInfo(filename, callback) {
+			const props = [
+				'timestamp',
+				'user',
+				'metadata',
+				'size',
+				'url'
+			];
+
+			this.api.call({
+				action: 'query',
+				titles: filename,
+				prop: 'imageinfo',
+				iiprop: props.join('|')
+			}, function(err, data) {
+				const image = getFirstItem(data && data.pages || []),
+					imageinfo = image && image.imageinfo && image.imageinfo[0];
+
+				// process EXIF metadata into key / value structure
+				if (!err && imageinfo && imageinfo.metadata) {
+					imageinfo.exif = {};
+
+					imageinfo.metadata.forEach(function(entry) {
+						imageinfo.exif[ entry.name ] = entry.value;
+					});
+				}
+
+				callback(err, imageinfo);
+			});
+		},
+
+		getLog(type, start, callback) {
+			let params = {
+				action: 'query',
+				list: 'logevents',
+				lestart: start,
+				lelimit: API_LIMIT
+			};
+
+			if (type.indexOf('/') > 0) {
+				// Filter log entries to only this type.
+				params.leaction = type;
+			}
+			else {
+				// Filter log actions to only this action. Overrides letype. In the list of possible values,
+				// values with the asterisk wildcard such as action/* can have different strings after the slash (/).
+				params.letype = type;
+			}
+
+			this.api.call(params, function(err, data, next) {
+				if (next && next.lecontinue) {
+					// 20150101124329|22700494
+					next = next.lecontinue.split('|').shift();
+				}
+
+				callback(err, ((data && data.logevents) || []), next);
+			});
+		},
+
+		expandTemplates(text, title, callback) {
+			this.api.call({
+				action: 'expandtemplates',
+				text,
+				title,
+				generatexml: 1
+			}, function(err, data, next, raw) {
+				const xml = getFirstItem(raw.parsetree);
+				callback(err, xml);
+			}, 'POST');
+		},
+
+		parse(text, title, callback) {
+			this.api.call({
+				action: 'parse',
+				text,
+				title,
+				contentmodel: 'wikitext',
+				generatexml: 1
+			}, function(err, data, next, raw) {
+				if (err) {
+					callback(err);
+					return;
+                                }
+				const xml = getFirstItem(raw.parse.text);
+				const images = raw.parse.images;
+				callback(err, xml, images);
+			}, 'POST');
+		},
+
+		getRecentChanges(start, callback) {
+			const props = [
+				'title',
+				'timestamp',
+				'comments',
+				'user',
+				'flags',
+				'sizes'
+			];
+
+			this.api.call({
+				action: 'query',
+				list: 'recentchanges',
+				rcprop: props.join('|'),
+				rcstart: start || '',
+				rclimit: API_LIMIT
+			}, function(err, data, next) {
+				callback(err, ((data && data.recentchanges) || []), ((next && next.rcstart) || false));
+			});
+		},
+
+		getSiteInfo(props, callback) {
+			// @see http://www.mediawiki.org/wiki/API:Siteinfo
+			if (typeof props === 'string') {
+				props = [props];
+			}
+
+			this.api.call({
+				action: 'query',
+				meta: 'siteinfo',
+				siprop: props.join('|')
+			}, function(err, data) {
+				callback(err, data);
+			});
+		},
+
+		getSiteStats(callback) {
+			const prop = 'statistics';
+
+			this.getSiteInfo(prop, function(err, info) {
+				callback(err, info && info[prop]);
+			});
+		},
+
+		getMediaWikiVersion(callback) {
+			// cache it for each instance of the client
+			// we will call it multiple times for features detection
+			if (typeof this._mwVersion !== 'undefined') {
+				callback(null, this._mwVersion);
+				return;
+			}
+
+			this.getSiteInfo(['general'], ((err, info) => {
+				let version;
+
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				version = info && info.general && info.general.generator; // e.g. "MediaWiki 1.27.0-wmf.19"
+				version = version.match(/[\d.]+/)[0]; // 1.27.0
+
+				this.log('Detected MediaWiki v%s', version);
+
+				// cache it
+				this._mwVersion = version;
+				callback(null, this._mwVersion);
+			}));
+		},
+
+		getQueryPage(queryPage, callback) {
+			// @see http://www.mediawiki.org/wiki/API:Querypage
+			this.api.call({
+				action: 'query',
+				list: 'querypage',
+				qppage: queryPage,
+				qplimit: API_LIMIT
+			}, (err, data) => {
+				if (!err && data && data.querypage) {
+					this.log('%s data was generated %s', queryPage, data.querypage.cachedtimestamp);
+					callback(null, data.querypage.results || []);
+				}
+				else {
+					callback(err, []);
+				}
+			});
+		},
+
+		upload(filename, content, extraParams, callback) {
+			let self = this,
+				params = {
+					action: 'upload',
+					ignorewarnings: '',
+					filename,
+					file: (typeof content === 'string') ? new Buffer(content, 'binary') : content,
+					text: ''
+				},
+				key;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			if (typeof extraParams === 'object') {
+				params = _.extend(params, extraParams);
+			}
+			else { // it's summary (comment)
+				params.comment = extraParams;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Upload
+			this.getToken(`File:${filename}`, 'edit', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log('Uploading %s kB as File:%s...', (content.length/1024).toFixed(2), filename);
+
+				params.token = token;
+				self.api.call(params, function(err, data) {
+					if (data && data.result && data.result === 'Success') {
+						self.log('Uploaded as <%s>', data.imageinfo.descriptionurl);
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'UPLOAD' /* fake method to set a proper content type for file uploads */);
+			});
+		},
+
+		uploadByUrl(filename, url, summary, callback) {
+			const self = this;
+
+			this.api.fetchUrl(url, function(error, content) {
+				if (error) {
+					callback(error, content);
+					return;
+				}
+
+				self.upload(filename, content, summary, callback);
+			}, 'binary' /* use binary-safe fetch */);
+		},
+
+		// Wikia-specific API entry-point
+		uploadVideo(fileName, url, callback) {
+			const self = this,
+				parseVideoUrl = require('./utils').parseVideoUrl,
+				parsed = parseVideoUrl(url);
+
+			if (parsed === null) {
+				callback(new Error('Not supported URL provided'));
+				return;
+			}
+
+			let provider = parsed[0], videoId = parsed[1];
+
+			this.getToken(`File:${fileName}`, 'edit', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log('Uploading <%s> (%s provider with video ID %s)', url, provider, videoId);
+
+				self.api.call({
+					action: 'addmediapermanent',
+					title: fileName,
+					provider: provider,
+					videoId: videoId,
+					token: token
+				}, callback, 'POST' /* The addmediapermanent module requires a POST request */);
+			});
+		},
+
+		getExternalLinks (title, callback) {
+				this.api.call({
+					action: 'query',
+					prop: 'extlinks',
+					titles: title,
+					ellimit: API_LIMIT
+				}, function(err, data) {
+					callback(err, (data && getFirstItem(data.pages).extlinks) || []);
+			});
+		},
+
+		getBacklinks(title, callback) {
+			this.api.call({
+				action: 'query',
+				list: 'backlinks',
+				blnamespace: 0,
+				bltitle: title,
+				bllimit: API_LIMIT
+			}, function(err, data) {
+				callback(err, (data && data.backlinks) || []);
+			});
+		},
+
+		// utils section
+		getTemplateParamFromXml(tmplXml, paramName) {
+			paramName = paramName.
+				trim().
+				replace('-', '\\-');
+
+			const re = new RegExp(`<part><name>${paramName}\\s*<\/name>=<value>([^>]+)<\/value>`),
+				matches = tmplXml.match(re);
+
+			return matches && matches[1].trim() || false;
+		},
+
+		fetchUrl(url, callback, encoding) {
+			this.api.fetchUrl(url, callback, encoding);
+		},
+
+		diff(prev, current) {
+			let colors = require('ansicolors'),
+				jsdiff = require('diff'),
+				diff = jsdiff.diffChars(prev, current),
+				res = '';
+
+			diff.forEach(function(part) {
+				const color = part.added ? 'green' :
+					part.removed ? 'red' : 'brightBlack';
+
+				res += colors[color](part.value);
+			});
+
+			return res;
+		}
+	};
+
+	// Wikia-specific methods (issue #56)
+	// @see http://www.wikia.com/api/v1
+	bot.prototype.wikia = {
+		API_PREFIX: '/api/v1',
+
+		call(path, params, callback) {
+			let url = this.api.protocol + '://' + this.api.server + this.wikia.API_PREFIX + path;
+
+			if (typeof params === 'function') {
+				callback = params;
+				this.log('Wikia API call:', path);
+			}
+			else if (typeof params === 'object') {
+				url += `?${querystring.stringify(params)}`;
+				this.log('Wikia API call:', path, params);
+			}
+
+			this.fetchUrl(url, function(err, res) {
+				const data = JSON.parse(res);
+				callback(err, data);
+			});
+		},
+
+		getWikiVariables(callback) {
+			this.call('/Mercury/WikiVariables', function(err, res) {
+				callback(err, res.data);
+			});
+		},
+
+		getUser(ids, callback) {
+			this.getUsers([ids], function(err, users) {
+				callback(err, users && users[0]);
+			});
+		},
+
+		getUsers(ids, callback) {
+			this.call('/User/Details', {
+				ids: ids.join(','),
+				size: 50
+			},function(err, res) {
+				callback(err, res.items);
+			});
+		}
+	};
+
+	return bot;
+}());
+
+}).call(this,require('_process'),require("buffer").Buffer)
+},{"./api":197,"./utils":200,"_process":339,"ansicolors":41,"async":49,"buffer":251,"diff":70,"fs":201,"node-version-compare":117,"querystring":349,"underscore":172}],199:[function(require,module,exports){
+//var bot = require('nodemw');
+var bot = require("./bot.js");
+
+},{"./bot.js":198}],200:[function(require,module,exports){
+/**
+ * Helper functions
+ */
+'use strict';
+
+module.exports = {
+	parseVideoUrl(url) {
+		function getIdFromUrl(url, re) {
+			let matches = url.match(re);
+			return (matches && matches[1]) || null;
+		}
+
+		let id;
+
+		// https://www.youtube.com/watch?v=24X9FpeSASY
+		// http://stackoverflow.com/questions/5830387/how-to-find-all-youtube-video-ids-in-a-string-using-a-regex/5831191#5831191
+		if (url.indexOf('youtube.com/') > -1) {
+			id = getIdFromUrl(url, /\/watch\?v=([A-Z0-9_-]+)/i);
+
+			return id ? ['youtube', id] : null;
+		}
+
+		// https://vimeo.com/27986705
+		if (url.indexOf('vimeo.com/') > -1) {
+			id = getIdFromUrl(url, /\/([0-9]+)/);
+
+			return id ? ['vimeo', id] : null;
+		}
+
+		return null;
+	}
+};
+
+},{}],201:[function(require,module,exports){
 
 },{}],202:[function(require,module,exports){
 var asn1 = exports;
@@ -82112,8 +81967,8 @@ module.exports = RIPEMD160
 
 }).call(this,require("buffer").Buffer)
 },{"buffer":251,"hash-base":290,"inherits":307}],366:[function(require,module,exports){
-arguments[4][141][0].apply(exports,arguments)
-},{"buffer":251,"dup":141}],367:[function(require,module,exports){
+arguments[4][137][0].apply(exports,arguments)
+},{"buffer":251,"dup":137}],367:[function(require,module,exports){
 var Buffer = require('safe-buffer').Buffer
 
 // prototype class for hash functions
@@ -85588,4 +85443,4 @@ function extend() {
     return target
 }
 
-},{}]},{},[200]);
+},{}]},{},[199]);

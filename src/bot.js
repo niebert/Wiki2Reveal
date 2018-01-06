@@ -166,10 +166,16 @@ module.exports = (function() {
 					self.log(`Logged in as ${data.lgusername}`);
 					callback(null, data);
 				}
-				else {
+				else if (typeof data.reason === 'undefined') {
 					self.error('Logging in failed');
 					self.error(data.result);
 					callback(err || new Error(`Logging in failed: ${data.result}`));
+				}
+				else {
+					self.error('Logging in failed');
+					self.error(data.result);
+					self.error(data.reason);
+					callback(err || new Error(`Logging in failed: ${data.result} - ${data.reason}`));
 				}
 			};
 
@@ -388,6 +394,7 @@ module.exports = (function() {
 			this.api.call({
 				action: 'query',
 				prop: 'categories',
+				cllimit: API_LIMIT,
 				titles: title
 			}, function(err, data) {
 				if (err) {
@@ -511,7 +518,7 @@ module.exports = (function() {
 						callback(null, data);
 					}
 					else {
-						callback(new Error(`Edit failed: ${err}`));
+						callback(err || data);
 					}
 				}, 'POST');
 			});
@@ -551,6 +558,46 @@ module.exports = (function() {
 			this.doEdit('prepend', title, summary, params, callback);
 		},
 
+
+		addFlowTopic(title, subject, content, callback) {
+			const self = this;
+
+			if (this.dryRun) {
+				callback(new Error('In dry-run mode'));
+				return;
+			}
+
+			// @see http://www.mediawiki.org/wiki/API:Flow
+			this.getToken(title, 'flow', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log(`Adding a topic to page '${title}' with subject '${subject}'...`);
+
+				const params = {
+					action: 'flow',
+					submodule: 'new-topic',
+					page: title,
+					nttopic: subject,
+					ntcontent: content,
+					ntformat: 'wikitext',
+					bot: '',
+					token: token
+				};
+
+				self.api.call(params, function(err, data) {
+					if (!err && data['new-topic'] && data['new-topic'].status && data['new-topic'].status === "ok") {
+						self.log("Workflow '%s' created on '%s'", data['new-topic'].workflow, title);
+						callback(null, data);
+					}
+					else {
+						callback(err);
+					}
+				}, 'POST');
+			});
+		},
 
 		'delete'(title, reason, callback) {
 			const self = this;
@@ -668,7 +715,7 @@ module.exports = (function() {
 						callback(null, data);
 					}
 					else {
-						callback(new Error(`Sending of email failed: ${err}`));
+						callback(err);
 					}
 				}, 'POST');
 			});
@@ -745,6 +792,32 @@ module.exports = (function() {
 				else {
 					callback(err);
 				}
+			});
+		},
+
+		createAccount(username, password, callback) {
+			// @see https://www.mediawiki.org/wiki/API:Account_creation
+			const self = this;
+			this.log(`creating account ${username}`);
+			this.api.call({
+				action: 'query',
+				meta: 'tokens',
+				type: 'createaccount'
+			}, function(err, data ) {
+					self.api.call({
+					action: 'createaccount',
+					createreturnurl: `${self.api.protocol}://${self.api.server}:${self.api.port}/`,
+					createtoken: data.tokens.createaccounttoken,
+					username: username,
+					password: password,
+					retype: password,
+				}, function(err, data ) {
+						if (err) {
+							callback(err);
+							return;
+						}
+						callback(data);
+					}, 'POST');
 			});
 		},
 
@@ -1051,6 +1124,38 @@ module.exports = (function() {
 				self.upload(filename, content, summary, callback);
 			}, 'binary' /* use binary-safe fetch */);
 		},
+
+		// Wikia-specific API entry-point
+		uploadVideo(fileName, url, callback) {
+			const self = this,
+				parseVideoUrl = require('./utils').parseVideoUrl,
+				parsed = parseVideoUrl(url);
+
+			if (parsed === null) {
+				callback(new Error('Not supported URL provided'));
+				return;
+			}
+
+			let provider = parsed[0], videoId = parsed[1];
+
+			this.getToken(`File:${fileName}`, 'edit', function(err, token) {
+				if (err) {
+					callback(err);
+					return;
+				}
+
+				self.log('Uploading <%s> (%s provider with video ID %s)', url, provider, videoId);
+
+				self.api.call({
+					action: 'addmediapermanent',
+					title: fileName,
+					provider: provider,
+					videoId: videoId,
+					token: token
+				}, callback, 'POST' /* The addmediapermanent module requires a POST request */);
+			});
+		},
+
 		getExternalLinks (title, callback) {
 				this.api.call({
 					action: 'query',

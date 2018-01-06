@@ -1,0 +1,14 @@
+remove dependencies
+-------------------
+- fs
+
+Keep 
+----
+	const Api = require('./api'),   // belongs to nodemw JS
+		_ = require('underscore'),  // has an browserfied equivalent
+		async = require('async'),   // Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript. Although originally designed for use with Node.js and installable via npm install --save async, it can also be used directly in the browser.
+		fs = require('fs'),         // remove dependencies to fs
+		querystring = require('querystring'); // can be browserified
+		let compare = require('node-version-compare'), // can be browserified
+		let colors = require('ansicolors'),
+		jsdiff = require('diff'),

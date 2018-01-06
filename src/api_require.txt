@@ -1,0 +1,27 @@
+=========================================================================
+// Main Task 
+  remove dependencies to "fs" and check if winston logger contributes to nodemw-wiki-get
+  check if "request" module can be browserified and create
+  
+=========================================================================
+// remove require dependencies
+	// winston logging to filesystem "fs" into "/log" files - furthermore remove dependenies to file system 
+	const winston = require('winston'); 
+	fs = require('fs'),
+	
+		
+=========================================================================
+// keep require packages
+	const VERSION = require('../package').version; // no problem
+	async = require('async'),
+	request = require('request');
+	// winston logging to filesystem "fs" into "/log" files is used re 
+	const winston = require('winston');
+
+=========================================================================
+// Code Analysis
+-------------------------------------------------------------------------
+			const CRLF = "\r\n",
+				postBody = [],
+				boundary = `nodemw${Math.random().toString().substr(2)}`;
+-------------------------------------------------------------------------

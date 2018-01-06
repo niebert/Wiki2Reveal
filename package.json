@@ -8,7 +8,13 @@
     "test": "test"
   },
   "scripts": {
-    "test": "test"
+    "doc": "doctoc README.md",
+    "watch": "watchify src/main.js -o dist/wiki2reveal.js -v",
+    "buildsrc": "browserify src/main.js -o dist/wiki2reveal.js -v",
+    "buildmin": "browserify src/main.js  | uglifyjs -c warnings=false > dist/wiki2reveal.min.js",
+    "buildrequest": "browserify request4browser.js  | uglifyjs -mc warnings=false > dist/request4browser.min.js",
+    "test": "node-lint dist/wiki2reveal.js",
+    "compress": "uglifyjs dist/wiki2reveal.js -o docs/js/wiki2reveal.min.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/niebert/Wiki2Reveal/issues"
   },
-  "homepage": "https://github.com/niebert/Wiki2Reveal#readme"
+  "homepage": "https://github.com/niebert/Wiki2Reveal#readme",
+  "dependencies": {
+    "nodemw": "^0.12.0"
+  }
 }

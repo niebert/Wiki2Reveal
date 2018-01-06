@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>wiki2html - Demo</title>
+    <style type="text/css" media="screen">
+
+    </style>
+
+    <script src="js/wiki2html.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+    function callWiki2HTML() {
+      var vWikiCode = document.getElementById('wiki').value;
+      //document.getElementById('divpreview').innerHTML = wiki2html.parse(vWikiCode);
+      document.getElementById('divpreview').innerHTML = wiki2html.parse(vWikiCode);
+    }
+
+    //-->
+    </script>
+</head>
+<body>
+    <h1>Live-Wiki</h1>
+    <p>Working demo of wiki2html - <a href="http://remysharp.com/2008/04/01/wiki-to-html-using-javascript/">read about it and download</a></p>
+    <h2>Wiki URL to Article</h2>
+    <input type="text" id="wikiurl" value="https://en.wikiversity.org/wiki/">
+    <h2>Wiki Text</h2>
+    <input type="button" id="bConvert" value="Convert" onclick="callWiki2HTML()">
+    <hr>
+    <textarea rows="10" cols="100" id="wiki"> this is an example of some code.
+== My Section ==
+Another line of text...
+
+=== My Subsection ===
+And now a list:
+
+* alist item...
+* Another
+** Some more, but in '''bold'''
+* More again...
+
+=== With Link ===
+* A local [[Water]] within the wiki,
+* A [[Water|Local Link to Water]] within the wiki,
+* A web link to [https://www.wikiversity.org/wiki/Water Water Article in Wikiversity]
+
+== Citation ==
+A citation<ref>My Citation (2018), Editors, Publisher Demo</ref>
+
+
+</textarea>
+<hr>
+    <h2>HTML Preview</h2>
+    <div id="divpreview"></div>
+
+</body>
+</html>

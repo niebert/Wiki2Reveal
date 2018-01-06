@@ -4,16 +4,30 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="js/wtf_wikipedia.js"></script>
   </head>
-  <body style="margin:10px;">
+  <body style="margin:10px;background:#C0C0C0">
     <script>
       wtf.from_api("Swarm intelligence", "enwikiversity", function(markup){// Callback function after success
         console.log("LOG (PlainText result): "+wtf.plaintext(markup));
-        // store result in textarea
+        // store markup result in textarea
         document.getElementById("wikimarkup").value = markup;
+        // store JSON parse result in textarea
+        var data = wtf.parse(markup);
+        document.getElementById("wikijson").value = JSON.stringify(data,null,4);
       })
     </script>
+    <hr>
+      <center>
+        <h2>WTF Wikipedia Download Tool</h2>
+        Library NPM: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a>
+      </center>
+    <hr>
     <b>Download Wiki-Markup:</b></br>
-    <textarea id="wikimarkup" rows="35" cols="120">
+    <textarea id="wikimarkup" rows="12" cols="120">
     </textarea>
+    <hr>
+    <b>Parsed Wiki JSON:</b></br>
+    <textarea id="wikijson" rows="12" cols="120">
+    </textarea>
+    <hr>
   </body>
 </html>

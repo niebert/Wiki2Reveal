@@ -5996,20 +5996,23 @@ module.exports = parseDms;
 var request = _dereq_('superagent');
 var site_map = _dereq_('../data/site_map');
 var redirects = _dereq_('../parse/page/redirects');
+var vCount = 0;
 
 var fetch = function fetch(page_identifier, lang_or_wikiid, cb) {
   lang_or_wikiid = lang_or_wikiid || 'en';
   var identifier_type = 'titles';
   if (page_identifier.match(/^[0-9]*$/) && page_identifier.length > 3) {
     identifier_type = 'curid';
-  }
+  };
   var url = void 0;
   if (site_map[lang_or_wikiid]) {
     url = site_map[lang_or_wikiid] + '/w/api.php';
   } else {
     url = 'https://' + lang_or_wikiid + '.wikipedia.org/w/api.php';
-  }
+  };
   //we use the 'revisions' api here, instead of the Raw api, for its CORS-rules..
+  vCount++;
+  console.log("URL"+vCount+": "+url);
   url += '?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&origin=*';
   url += '&' + identifier_type + '=' + encodeURIComponent(page_identifier);
 

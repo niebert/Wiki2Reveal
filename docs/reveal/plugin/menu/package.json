@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "reveal.js-menu",
+        "scope": null,
+        "escapedName": "reveal.js-menu",
+        "name": "reveal.js-menu",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/niehaus/Documents/PanDoc/reveal"
+    ]
+  ],
+  "_from": "reveal.js-menu@latest",
+  "_id": "reveal.js-menu@0.9.0",
+  "_inCache": true,
+  "_location": "/reveal.js-menu",
+  "_nodeVersion": "8.9.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/reveal.js-menu-0.9.0.tgz_1513748719528_0.8035485849250108"
+  },
+  "_npmUser": {
+    "name": "denehyg",
+    "email": "greg@inclose.com.au"
+  },
+  "_npmVersion": "5.6.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "reveal.js-menu",
+    "scope": null,
+    "escapedName": "reveal.js-menu",
+    "name": "reveal.js-menu",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/reveal.js-menu/-/reveal.js-menu-0.9.0.tgz",
+  "_shasum": "800bc42d6cc96b203f800b783f01eee2085a1a68",
+  "_shrinkwrap": null,
+  "_spec": "reveal.js-menu",
+  "_where": "/Users/niehaus/Documents/PanDoc/reveal",
+  "author": {
+    "name": "Greg Denehy"
+  },
+  "bugs": {
+    "url": "https://github.com/denehyg/reveal.js-menu/issues"
+  },
+  "dependencies": {},
+  "description": "A slideout menu for navigating reveal.js presentations",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-xKbNxtNH1Y3VD1ZlwbKfx8HsQ/YQUkyTNMj7mkaSGT1onk1+e2rijdVZTyBnhtCjXZMTh8iU30Gff/Q0GTzV3A==",
+    "shasum": "800bc42d6cc96b203f800b783f01eee2085a1a68",
+    "tarball": "https://registry.npmjs.org/reveal.js-menu/-/reveal.js-menu-0.9.0.tgz"
+  },
+  "gitHead": "f827a0c479864723dba96c83b83ef0ce99dbfe9b",
+  "homepage": "https://github.com/denehyg/reveal.js-menu#readme",
+  "keywords": [
+    "reveal",
+    "menu"
+  ],
+  "license": "MIT, Copyright (C) 2016 Greg Denehy",
+  "maintainers": [
+    {
+      "name": "denehyg",
+      "email": "greg@inclose.com.au"
+    }
+  ],
+  "name": "reveal.js-menu",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denehyg/reveal.js-menu.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.9.0"
+}

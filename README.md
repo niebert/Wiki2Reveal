@@ -91,7 +91,19 @@ $.ajax({
 });
 ```
 ### WikiDownloader
-`wtf_wikipedia.js` seems to be the an appropriate library to download the MediaWiki markup source from any Wiki Product from the Wiki Foundation:
+`wtf_wikipedia.js` seems to be the an appropriate library to download the MediaWiki markup source from any Wiki Product from the Wiki Foundation. The HTML file [``wtf_wikipedia.html`](https://niebert.github.io/Wiki2Reveal/wtf_wikipedia.html) shows, how a HTML file with Javascript can download a MediaWiki source text and store the source text into a textarea. Furthermore the structure of the Wiki document is parsed and stored in JSON file. The stringified output of the JSON file is stored in a textarea as well. Thank you  Spencer Kelly and many contributors that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia).
+
+
+### Wiki2HTML converter
+The first milestone downloaded the MediaWiki source text. Now the source must be converted to HTML, so that the slides in RevealJS can be generated from the sections of the MediaWiki source text.
+
+With [JavaScriptClassCreator JSCC](https://niebert.github.io/JavaScriptClassCreator) a JavaScript class will be generated that performs the following tasks.
+* Handle the Math expressions and convert them into displayed MathJax expressions in RevealJS.
+* Convert local links and references into remote links in the RevealJS presentation, so that a click on link in the slide will display the corresponding link in the MediaWiki (e.g. Wikipedia or Wikiversity).
+* Convert references to images, video and audio in the slide to the correponding links in WikiMedia Commons.
+* Break down long sections from the MediaWiki source text into a set of slides. Could be helpful if the section is to long and the slide is exceeding the size of the screen.
+
+
 
 #### Download Example HTML
 The following in example is stored in `test/wtf_wikipedia.html` that uses the library `test/js/wtf_wikipedia.js`.
@@ -168,3 +180,6 @@ https://github.com/niebert/Wiki2Reveal/tree/master/docs
 * [Grunt](https://gruntjs.com/getting-started) to automate code generation from modular javascript libraries to a WebApp in the folder `/docs`. The folder `/docs` is used to access the WebApp directly in your browser by the URL
  https://niebert.github.io/Wiki2Reveal
 * [Browserify and Watchify](https://spapas.github.io/2015/05/27/using-browserify-watchify/) to combine modular Javascript libraries for use in a browser. This is necessary because the browser does not understand the `require(...)` of NodeJS. Browserify parses the libraries and library dependencies and replaces the `require`-command by an aggregated script call of used javascript sources for the WebApp.  
+
+## Acknowledgement
+* ***[wtf_wikipedia.js](https://github.com/spencermountain/wtf_wikipedia)***: Thanks to [Spencer Kelly](https://github.com/spencermountain) and [many other contributors](https://github.com/spencermountain/wtf_wikipedia/graphs/contributors) that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia) to the OpenSource community.

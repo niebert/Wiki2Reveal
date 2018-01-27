@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>wtf_wikipedia</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="js/handlebars.js"></script>
+    <script src="js/templateengine.js"></script>
+    <script src="js/wtf_wikipedia.js"></script>
+    <script src="js/wiki2html.js"></script>
+    <script src="js/lodash.js"></script>
+    <script src="js/writedom.js"></script>
+  </head>
+  <body style="margin:10px;background:#C0C0C0">
+    <script>
+      function el(pID) {
+        return document.getElementById(pID)
+      };
+
+      function setWikiID() {
+        el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
+      };
+
+    </script>
+    <hr>
+      <center>
+        <h2>WTF Wikipedia Download Tool</h2>
+        Library NPM: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a>
+      </center>
+    <hr>
+    <b>Wiki:</b>
+    <select id="sWikiDomain" onchange="etWikiID()">
+      <option value="wikipedia">Wikipedia</option>
+      <option value="wikiversity" selected>Wikiversity</option>
+    </select>
+    &nbsp;&nbsp;
+    <b>Language:</b>
+    <select id="sWikiLanguage" onchange="setWikiID()">
+      <option value="en"  selected="selected">English</option>
+      <option value="es">Spanish</option>
+      <option value="de">German</option>
+      <option value="fr">French</option>
+      <option value="it">Italian</option>
+      <option value="nl">Dutch</option>
+      <option value="ja">Japanese</option>
+      <option value="pl">Polish</option>
+      <option value="ru">Russian</option>
+      <option value="sv">Swedish</option>
+      <option value="vi">Vietnamese</option>
+      <option value="ar">Arabic</option>
+      <option value="id">Indonesian</option>
+      <option value="ms">Malay</option>
+      <option value="ca">Catalan</option>
+      <option value="cs">Czech</option>
+      <option value="eu">Basque</option>
+      <option value="fa">Persian</option>
+      <option value="ko">Korean</option>
+      <option value="hu">Hungarian</option>
+      <option value="no">Norwegian</option>
+      <option value="pt">Portuguese</option>
+      <option value="ro">Romanian</option>
+      <option value="sr">Serbian</option>
+      <option value="sh">Serbo-Croatian</option>
+      <option value="fi">Finnish</option>
+      <option value="tr">Turkish</option>
+      <option value="uk">Ukrainian</option>
+      <option value="zh">Chinese</option>
+      <option value="bs">Bosnian</option>
+      <option value="bg">Bulgarian</option>
+      <option value="da">Danish</option>
+      <option value="et">Estonian</option>
+      <option value="el">Greek</option>
+      <option value="eo">Esperanto</option>
+      <option value="gl">Galician</option>
+      <option value="he">Hebrew</option>
+      <option value="hr">Croatian</option>
+      <option value="lv">Latvian</option>
+      <option value="lt">Lithuanian</option>
+      <option value="nn">Norwegian Nynorsk</option>
+      <option value="sk">Slovak</option>
+      <option value="sl">Slovenian</option>
+      <option value="th">Thai</option>
+    </select>
+    &nbsp;&nbsp;
+    <b>Article:</b>
+    <input type="text" id="wikiarticle" value="Swarm intelligence" size="45">
+    <input type="button" id="bDownloadWiki" value="Download" onclick="callWikiDownload()">
+    <input type="text" id="wikiid" value="enwikiversity" style="display:none">
+    <hr>
+    <b>Download Wiki-Markup:</b></br>
+    <textarea id="wikimarkup" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Parsed Wiki JSON:</b></br>
+    <textarea id="wikijson" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Converted HTML:</b></br>
+    <textarea id="htmloutput" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>TOC JSON:</b></br>
+    <textarea id="tocjson" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <textarea id="wikisrc" rows="12" cols="120">
+[[File:Indian Harvester Ant Nest.JPG|thumbnail|Entrance to a Harvester Ant nest ([[Wikipedia:Pune|Pune]], [[Wikipedia:Maharashtra|Maharashtra]], India)]]
+[[Image:AntsStitchingLeave.jpg|thumb|upright|[[Wikipedia:Weaver ant|Weaver ant]]s are used as a [[Wikipedia:biological control|biological control]] for citrus cultivation in southern China]]
+[[File:Blausen 0657 MultipolarNeuron.png|thumb|Neuron and Network Connectivity]]
+
+'''Swarm intelligence (SI)''' is the [[Wikipedia:collective behavior|collective behavior]] of [[Wikipedia:decentralization|decentralized]], [[Wikipedia:Self-organization|self-organized]] systems, natural or artificial.
+SI systems consist typically of a population of individuals interacting in network with one another and with their environment. The inspiration often comes from nature, especially biological systems. The individuals in [[w:Complex adaptive system|Complex Adaptive Systems]] follow
+* '''(Individual Behaviour)''' the individuals in a swarm have individual experiences, are localate at different location in a swarm, perceive different features in their environment.
+* '''(Swarm Interaction)''' swarm interaction is determined by an ''input'' of information from the swarm and ''output'' information to the swarm the community of swarm indviduals listen/respond to.
+* '''(Environment Interaction)''' Furthermore the behaviour of individuals is determined the interaction with the environment. Together with the with the interaction with the neighbours individual perceptions are propagated in the swarm as network of individuals.
+
+All together the individueal behaviour is determined by individual perceptions in the swarm, the information from other individuals (like warnings about predators or information about accessible food).
+The swara intelligence arises from without a centralized control structure dictating how individuals in the swarm should behave, local, and to a certain degree random, interactions between such agents lead to the [[Wikipedia:emergence|emergence]] of "intelligent" global behavior, unknown to the individual agents.
+
+== Swarm - Communities ==
+* '''[[/Birds/|Swarm of Birds]]'''
+* '''[[Wikipedia:Ant Colony|Ant Colony]]''' and '''[[Wikipedia:Ant_colony_optimization_algorithms|Network Communication]]''' with '''[[Wikipedia:Pheromone|Pheromones]]'''
+* '''[[/Slime_mold/|Slime Mold]]''': Swarm behaviour of [[Wikipedia:Unicellular_organism|Unicellular Organisms]]
+
+== Swarm Properties ==
+* '''[[/Individual vs. Systems Performance/]]:''' Swarm intelligence combines independent behaviour of individuals with a connect [[w:Swarm behaviour|swarm behaviour]]. This subtopic explores that concept as introduction to [[Systems Thinking]] by application of the concept of [[w:performance indicator|performance indicators]].
+* [[/algorithms/]], that apply the concept of swarm intelligence
+* [[/Innovation/|Swarm Intelligence and Innovation]]
+* [[w:Neural Networks|Neural Networks]]
+
+== Modelling of Swarm Behaviour ==
+* [[/Applications/]]
+* [[/In Popular Culture/]]
+* '''[[/Artificial Intelligence/]]'''
+
+== Swarm Intelligence in Human Population ==
+* Connection of teams,
+* Diversity of knowledge of individuals,
+* sacrifice individual preferences and performance to swarm performance
+
+== Learning Task ==
+=== Swarm Ignorance vs. Swarm Intelligence ===
+In this learning task we introduce the notion of swarm ignorance. It is not official defined scientific term. It is artificial to contrast with swarm intelligence
+* Assume [[w:Lemmings_(video_game)|lemmings]] that behave similar to the next member of the swarm and run jointly towards the edge of the cliff and do not change the swarm behaviour if the first lemmings fall down. Explain missing swarm behaviour or try to define the notion of ''"swarm ingnorance"''.
+* Can you find examples in history (financial market, stock exchange, dictators, ...) that show aspects of swarm intelligence and swarm ignorance?
+* '''(Psychology)''' Can you approach the ''"swarm ignorance"'' and ''"swarm intelligence"'' topic from the psychological perspective? What are drivers for swarm ignorance according to your definition?
+
+=== Education and Capacity Building ===
+* Explain the role of education and capacity building in the context of swarm intelligence and a human population/communities!
+
+=== Sacrifice Specialities to defend the colony ===
+Insects form colonies and specialize in certain areas:
+* feeding the larvae,
+* collecting food,
+* soldier insects defend predators,
+* ...
+Try to find scientific evidence and examples in which insects sacrifice their specialities and act coherent in a swarm to defend the colony or respond jointly to a risk, the colony is exposed to!
+
+=== Disruptive Forces for Swarm Performance ===
+Swarms of individuals are generated because they seem to have a evolutionary benefit in comparision loose collection of independent individuals. This is a [[Systems Thinking]] task.
+* Teams for Development and Innvoation
+* Problem Solving teams,
+* States with Democracy
+* Teams in sports, that compete with other teams.
+
+Disruptive forces for the swarm performance can come
+* from outside, e.g.
+** predator,
+** virus or communicable disease,
+** competing football team,
+** competing companies in a global market,
+* from inside, e.g.
+** developers, that push only their own agenda for personal benefit,
+** offence players, that prefers to score a goal instead providing an opportunity for other team players in more successful position to score the goal,
+** people, that commit a crime in a society.
+The examples coming from different domains (research and development teams, sports, society, economics). All swarms have a certain [[w:Vulnerability|vulnerability]]. All examples are NOT pure swarm intelligence applications. You might identify centralized control structures. Explain and compare the different approaches of a
+* centralized response and
+* swarm response
+to disruptive forces for the community. How do the work together? What are the problems and challenges in the response methods?
+
+=== Historical Perspective ===
+* Look for ancient high developed cultures (e.g. Egypt, ...). Where did they evolve (access to water, rivers)? When did they evolve, e.g. when there was a high availability of water or when there were limited water resources and the communities need to develop intelligence strategies to distribute and share the resources? Derive your conclusions for the emergence of swarm intelligence in human society!
+
+=== Information and Communication Technology ===
+In biological swarms we can observe the coherence of swarm by the spatial connectivity. If we consider information and communication technology, we can consider swarm behaviour by application of mobile devices. Where do we find constructive swarm behaviour and the emergence of swarm intelligence? Where do we find disruptive aspects of swarm behaviour in collaborative networks? Yearly flu epidemics in a country has an impact on the performance of a company because the worker in team are sick? What are similarities and differences from biological and computer viruses in terms of their impact on the economic performance of a company? How does society and economy respond to that risk and how can swarm intelligence emerge with capacity building in the area of [[Risk Literacy]]?
+
+== From Learner to Author ==
+Learning resources can guide the learner to become an author (see [[Learner2Author]]. Generate  a [[Test_and_Quiz#Quiz|quiz in Wikiversity]] for [[self-assessment]] is a task to answer the questions for yourself as learner and then create a quiz for it.
+
+== ToDo for Learning Resource ==
+* decompose in submodule
+* create a learning path, because digging into every single topic will create to much workload and the learner will loose the big picture of the topic
+* create a [[Test_and_Quiz#Quiz|quiz in Wikiversity]] for [[self-assessment]].
+
+==Notable researchers==
+{{div col|cols=2}}
+* [[Wikipedia:Marco Dorigo|Marco Dorigo]]
+* [[Wikipedia:Russell C. Eberhart|Russell C. Eberhart]]
+* [[Wikipedia:Luca Maria Gambardella|Luca Maria Gambardella]]
+* [[Wikipedia:James Kennedy (social psychologist)|James Kennedy]]
+{{div col end}}
+
+==See also==
+{{Portal|Artificial intelligence}}
+{{div col|cols=2}}
+* [[Wikipedia:Cellular automaton|Cellular automaton]]
+* [[Wikipedia:Differential evolution|Differential evolution]]
+* [[Wikipedia:Evolutionary computation|Evolutionary computation]]
+* [[Wikipedia:Global brain|Global brain]]
+* [[Wikipedia:Harmony search|Harmony search]]
+* [[Wikipedia:Metaheuristic|Metaheuristic]]
+* [[Wikipedia:Promise theory|Promise theory]]
+* [[Wikipedia:Swarm Development Group|Swarm Development Group]]
+* [[Wikipedia:Swarming (military)|Swarming]]
+* [[Wikipedia:SwisTrack|SwisTrack]]
+* [[Wikipedia:Stochastic search|Stochastic search]]
+* ''[[Wikipedia:The Wisdom of Crowds|The Wisdom of Crowds]]''
+* [[Wikipedia:Wisdom of the crowd|Wisdom of the crowd]]
+{{div col end}}
+
+==References==
+{{Reflist|2}}
+
+==Further reading==
+*  {{cite web|last=Bernstein|first=Jeremy|title=Project Swarm|url=http://www.projectswarm.net/abstract.php|work=Report on technology inspired by swarms in nature}}
+* {{cite book |title=Swarm Intelligence: From Natural to Artificial Systems |first1=Eric |last1=Bonabeau |first2=Marco |last2=Dorigo |first3=Guy |last3=Theraulaz |year=1999 |isbn=0-19-513159-2}} [http://bibnetwiki.org/wiki/Swarm_Intelligence Complete bibliography]
+* {{cite book |title=Fundamentals of Computational Swarm Intelligence |first=Andries |last=Engelbrecht |publisher=Wiley & Sons |isbn=0-470-09191-6}}
+* {{cite book |first=L. |last=Fisher |title=The Perfect Swarm : The Science of Complexity in Everyday Life |publisher=Basic Books |year=2009}}
+* Fister I, XS Yang, I Fister, J Brest and D Fister (2013) [http://arxiv.org/pdf/1307.4186 "A Brief Review of Nature-Inspired Algorithms for Optimization"] ''Elektrotehniski Vestnik'', '''80''' (3): 1–7.
+* {{cite book |first1=Eva |last1=Horn |first2=Lucas (Ed.) Marco |last2=Gisi |title=Schwärme – Kollektive ohne Zentrum. Eine Wissensgeschichte zwischen Leben und Information |publisher=Bielefeld |year=2009 |isbn=978-3-8376-1133-5}}
+* {{cite news |url=http://www.computer.org/portal/web/csdl/doi/10.1109/HICSS.2010.356 |title=Swarm Intelligence for Analyzing Opinions in Online Communities |first1=Carolin |last1=Kaiser |first2=Johannes |last2=Kröckel |first3=Freimut |last3=Bodendorf |year=2010 |work=Proceedings of the 43rd Hawaii International Conference on System Sciences |pages=1–9}}
+* {{cite book |title=Swarm Intelligence |first1=James |last1=Kennedy |first2=Russell C. |last2=Eberhart |isbn=1-55860-595-9}}
+* {{Citation | last=Miller | first=Peter | title=Swarm Theory | magazine=[[Wikipedia:National Geographic Magazine|National Geographic Magazine]] | date=July 2007 | url=http://www7.nationalgeographic.com/ngm/0707/feature5/}}
+* {{cite book |title=Turtles, Termites, and Traffic Jams: Explorations in Massively Parallel Microworlds |first1=Mitchel |last1=Resnick |isbn=0-262-18162-2}}
+* {{cite journal | first1 = E. | last1 = Ridge | first2 = E. | last2 = Curry | id = {{citeseerx|10.1.1.67.1030}} | title = A roadmap of nature-inspired systems research and development | journal = Multiagent and Grid Systems | volume = 3 | issue = 1 | pages = 3–8 | year = 2007 }}
+* {{cite journal | first1 = E. | last1 = Ridge | first2 = D. | last2 = Kudenko | first3 = D. | last3 = Kazakov | first4 = E. | last4 = Curry | id = {{citeseerx|10.1.1.64.3403}} | title = Moving Nature-Inspired Algorithms to Parallel, Asynchronous and Decentralised Environments | journal = Self-Organization and Autonomic Informatics (I) | year = 2005 | volume = 135 | pages = 35–49 }}
+* ''Swarm Intelligence'' (journal). Chief Editor: Marco Dorigo. Springer New York. ISSN 1935-3812 (Print) 1935-3820 (Online) [http://www.springer.com/computer/artificial/journal/11721]
+* {{cite book |title=Nanocomputers and Swarm Intelligence |first=Jean-Baptiste |last=Waldner| author-link = Wikipedia:Jean-Baptiste Waldner |publisher=ISTE |isbn=978-1-84704-002-2 |year=2007}}
+* {{cite journal | title = Metaheuristic Optimization | first = Xin-She | last = Yang | journal = Scholarpedia | volume = 6 | issue = 8 | page =11472 | year = 2011 | url = http://www.scholarpedia.org/article/Metaheuristic_Optimization | doi = 10.4249/scholarpedia.11472 |bibcode = 2011SchpJ...611472Y }}
+* {{cite news |url=http://www.nytimes.com/2007/11/13/science/13traff.html?ei=5087&em=&en=2770422853e9f63e&ex=1195102800&pagewanted=print |title=From Ants to People: an Instinct to Swarm |work=[[Wikipedia:The New York Times|The New York Times]] |date=November 13, 2007 |first=Carl |last=Zimmer}}
+
+==External links==
+;Detailed theory and software
+* ABC http://mf.erciyes.edu.tr/abc/
+* ACO http://iridia.ulb.ac.be/~mdorigo/ACO/aco-code/public-software.html
+* DSA http://www.pinarcivicioglu.com/ds.html
+* PSO http://www.particleswarm.info/Programs.html
+
+== Wikipedia Links ==
+* [[Wikipedia:Animal cognition]]
+* [[Wikipedia:Collective animal behaviour]]
+* [[Wikipedia:Optimization algorithms]]
+* [[Wikipedia:Mastermind group]]
+
+== Wikipedia Categories ==
+* [[Wikipedia:Category:Optimization algorithms and methods]]
+* [[Wikipedia:Category:Collective intelligence]]
+* [[Wikipedia:Category:Intelligence by type]]
+* [[Wikipedia:Category:Multi-agent systems]]
+* [[Wikipedia:Category:Behavioral and social facets of systemic risk]]
+
+[[Category:Systems Thinking]]
+[[Category:Risk management]]
+[[Category:Intelligence]]
+    </textarea>
+  </body>
+
+  <script>
+    function callWikiDownload() {
+        downloadWikiDoc(el("wikiarticle").value,el("wikiid").value);
+    };
+
+    function downloadWikiDoc(pArticle,pWikiID) {
+      //alert("Emulate MediaWiki Download");
+      var markup = document.getElementById("wikisrc").value;
+      console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
+      // store markup result in textarea
+      el("wikimarkup").value = markup;
+      // store JSON parse result in textarea
+      var vWikiJSON = wtf.parse(markup);
+      // set the page identifier in vWikiJSON and replace blank " " by "underscore"
+      vWikiJSON["page_identifier"] = pArticle.replace(/ /g,"_");
+
+      el("wikijson").value = JSON.stringify(vWikiJSON,null,4);
+      var vWiki2HTML = new Wiki2HTML();
+      vWiki2HTML.init(el("sWikiLanguage").value,el("sWikiDomain").value,vWikiJSON);
+      var htmlout = vWiki2HTML.parse(markup);
+      el("htmloutput").value = htmlout;
+      // vWiki2HTML.aTOC contains the Table of Contents as JSON
+      el("tocjson").value = JSON.stringify(vWiki2HTML.aTOC,null,4);
+    };
+
+    function X_downloadWikiDoc(pArticle,pWikiID) {
+      wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
+        //console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+        console.log("DOWNLOAD with wtf_wikipedia.js");
+        // store markup result in textarea
+        el("wikimarkup").value = markup;
+        // store JSON parse result in textarea
+        var vWikiJSON = wtf.parse(markup);
+        // set the page identifier in vWikiJSON and replace blank " " by "underscore"
+        vWikiJSON["page_identifier"] = pArticle.replace(/ /g,"_");
+
+        el("wikijson").value = JSON.stringify(vWikiJSON,null,4);
+        var vWiki2HTML = new Wiki2HTML();
+        vWiki2HTML.init(el("sWikiLanguage").value,el("sWikiDomain").value,vWikiJSON);
+        var htmlout = vWiki2HTML.parse(markup);
+        el("htmloutput").value = htmlout;
+        // vWiki2HTML.aTOC contains the Table of Contents as JSON
+        el("tocjson").value = JSON.stringify(vWiki2HTML.aTOC,null,4);
+    ;
+      })
+    }
+  </script>
+</html>

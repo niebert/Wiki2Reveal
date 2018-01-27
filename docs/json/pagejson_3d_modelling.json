@@ -1,0 +1,228 @@
+{
+    "type": "page",
+    "sections": [
+        {
+            "title": "",
+            "depth": 0,
+            "images": [
+                {
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/An_early_concept_design_of_the_ERIS_instrument.jpg",
+                    "file": "File:An early concept design of the ERIS instrument.jpg",
+                    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/An_early_concept_design_of_the_ERIS_instrument.jpg/300px-An_early_concept_design_of_the_ERIS_instrument.jpg"
+                },
+                {
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Polygon_face.jpg",
+                    "file": "Image:Polygon face.jpg",
+                    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Polygon_face.jpg/300px-Polygon_face.jpg"
+                },
+                {
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif",
+                    "file": "File:Steps of forensic facial reconstruction - Virtual Mummy - cogitas3d.gif",
+                    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif/300px-Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif"
+                }
+            ],
+            "sentences": [
+                {
+                    "text": "This learning resource support authors in Wikiversity to provide 3D models in learning modules."
+                },
+                {
+                    "text": "Furthermore this module can be used for learners themselves to create web-based 3-D models."
+                },
+                {
+                    "text": "The course focuses on web-based three-dimensional models, because they how to be accessible directly by a link in the Wikiversity content."
+                }
+            ]
+        },
+        {
+            "title": "History",
+            "depth": 1,
+            "sentences": [
+                {
+                    "text": "The learning resouces follows the Open Community Approach and therefore the used software is Open Source and the course is setup up in Wikiversity, so that the community of learners can learn, modify and extend the learning resource.",
+                    "links": [
+                        {
+                            "page": "Open Community Approach",
+                            "text": "Open Community Approach"
+                        }
+                    ]
+                },
+                {
+                    "text": "All tools presented in this course Open source tools, they are freely accessible for learners."
+                }
+            ]
+        },
+        {
+            "title": "Learning Objective",
+            "depth": 1,
+            "lists": [
+                [
+                    {
+                        "text": "Explore 3D Models: Learn, what you can do with 3D models in a browser.",
+                        "links": [
+                            {
+                                "page": "/Examples/",
+                                "text": "Explore 3D Models"
+                            },
+                            {
+                                "page": "/Examples/",
+                                "text": "3D models in a browser"
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Create 3D Models: Learn, how to Create 3D your own models with OpenSource tool.",
+                        "links": [
+                            {
+                                "page": "/Create 3D Models/",
+                                "text": "Create 3D Models"
+                            },
+                            {
+                                "page": "/Create 3D Models/",
+                                "text": "Create 3D your own models"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "sentences": [
+                {
+                    "text": "The course is based on two major steps: See and explore web-based models and create your own three-dimensional models if you decide they are useful for you learning module in Wikiversity."
+                }
+            ]
+        },
+        {
+            "title": "Subtopics",
+            "depth": 1,
+            "lists": [
+                [
+                    {
+                        "text": "3D Scan - use scanning devices to create 3D Models of an object",
+                        "links": [
+                            {
+                                "page": "3D Scan",
+                                "text": "3D Scan"
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Photogrammetry - Take a snapshot of an object from different angles and generate a 3D Model with software (e.g. OpenSource Regard3D)",
+                        "links": [
+                            {
+                                "page": "Photogrammetry",
+                                "text": "Photogrammetry"
+                            },
+                            {
+                                "page": "Photogrammetry/Regard3D",
+                                "text": "OpenSource Regard3D"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "sentences": []
+        },
+        {
+            "title": "Learning Task",
+            "depth": 1,
+            "lists": [
+                [
+                    {
+                        "text": "Perform the Blender Cup Tutorial!",
+                        "links": [
+                            {
+                                "page": "/Create_3D_Models/",
+                                "text": "Blender Cup Tutorial"
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Learn how to create a Screencast with  Open Broadcasting Software (OBS)!",
+                        "links": [
+                            {
+                                "type": "external",
+                                "site": "https://www.youtube.com/watch?v=qeDNgLBVPLU",
+                                "text": "create a Screencast"
+                            },
+                            {
+                                "type": "external",
+                                "site": "https://obsproject.com/",
+                                "text": "Open Broadcasting Software (OBS)"
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Create your own learning video and share your results on Wikiversity!"
+                    },
+                    {
+                        "text": "Export the Cup as GLTF model in blender and place your cup on a marker with AR.js",
+                        "links": [
+                            {
+                                "type": "external",
+                                "site": "https://aframe.io/docs/0.7.0/components/gltf-model.html",
+                                "text": "GLTF model"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "sentences": []
+        },
+        {
+            "title": "See also",
+            "depth": 1,
+            "sentences": [
+                {
+                    "text": "* Real World Lab",
+                    "links": [
+                        {
+                            "page": "Real World Lab",
+                            "text": "Real World Lab"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "References",
+            "depth": 1,
+            "sentences": []
+        }
+    ],
+    "infoboxes": [],
+    "interwiki": {},
+    "categories": [],
+    "images": [
+        {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/An_early_concept_design_of_the_ERIS_instrument.jpg",
+            "file": "File:An early concept design of the ERIS instrument.jpg",
+            "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/An_early_concept_design_of_the_ERIS_instrument.jpg/300px-An_early_concept_design_of_the_ERIS_instrument.jpg"
+        },
+        {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Polygon_face.jpg",
+            "file": "Image:Polygon face.jpg",
+            "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Polygon_face.jpg/300px-Polygon_face.jpg"
+        },
+        {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif",
+            "file": "File:Steps of forensic facial reconstruction - Virtual Mummy - cogitas3d.gif",
+            "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif/300px-Steps_of_forensic_facial_reconstruction_-_Virtual_Mummy_-_cogitas3d.gif"
+        }
+    ],
+    "coordinates": [],
+    "citations": [
+        {
+            "cite": "inline",
+            "text": "ERIS Project Starts - http://www.eso.org/public/announcements/ann13054/ - (accessed 2013/06/14) newspaper ESO Announcement"
+        },
+        {
+            "cite": "inline",
+            "text": "Mikhail, E. M., Bethel, J. S., & McGlone, J. C. (2001). Introduction to modern photogrammetry. New York."
+        },
+        {
+            "cite": "inline",
+            "text": "OBS Tutorial: Open Broadcaster Software - Screencast/Video Screen Capture (OBS Studio/Multiplatform) by TanUv90 (2016) - https://www.youtube.com/watch?v=qeDNgLBVPLU (accessed 2018/01/11)"
+        }
+    ],
+    "page_identifier": null,
+    "lang_or_wikiid": null
+}

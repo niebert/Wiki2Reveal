@@ -38,6 +38,8 @@ The call retrieves the article about `Swarm intelligence` from the english  Wiki
   * `title=Swarm_intelligence` for the definition of the title
   * `action=raw` to get the raw sources of the article in the Wiki syntax
 
+This job will be performed by the library `wtf_wikipedia.js`  (see [`wtf_wikipedia.html` demo](https://niebert.github.io/Wiki2Reveal/wtf_wikipedia.html).
+
 ## Images Download wget
 
 * The link `https://en.wikipedia.org/wiki/Special:Redirect/file/Annweiler_Rathaus.JPG` refers to the current version of the image `Annweiler_Rathaus.JPG`.
@@ -91,7 +93,7 @@ $.ajax({
 });
 ```
 ### WikiDownloader
-`wtf_wikipedia.js` seems to be the an appropriate library to download the MediaWiki markup source from any Wiki Product from the Wiki Foundation. The HTML file [``wtf_wikipedia.html`](https://niebert.github.io/Wiki2Reveal/wtf_wikipedia.html) shows, how a HTML file with Javascript can download a MediaWiki source text and store the source text into a textarea. Furthermore the structure of the Wiki document is parsed and stored in JSON file. The stringified output of the JSON file is stored in a textarea as well. Thank you  Spencer Kelly and many contributors that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia).
+`wtf_wikipedia.js` seems to be the an appropriate library to download the MediaWiki markup source from any Wiki Product from the Wiki Foundation. The HTML file [`wtf_wikipedia.html`](https://niebert.github.io/Wiki2Reveal/wtf_wikipedia.html) shows, how a HTML file with Javascript can download a MediaWiki source text and store the source text into a textarea. Furthermore the structure of the Wiki document is parsed and stored in JSON file. The stringified output of the JSON file is stored in a textarea as well. Thank you  Spencer Kelly and many contributors that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia).
 
 
 ### Wiki2HTML converter

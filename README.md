@@ -44,10 +44,39 @@ This job will be performed by the library `wtf_wikipedia.js`  (see [`wtf_wikiped
 
 * The link `https://en.wikipedia.org/wiki/Special:Redirect/file/Annweiler_Rathaus.JPG` refers to the current version of the image `Annweiler_Rathaus.JPG`.
 * Size of image can be determined by `http://en.wikipedia.org/wiki/Special:FilePath/Annweiler_Rathaus.JPG?width=300` (here resize the width to 300 pixels.
+* To download images for local use will be performed by Javascript implementation of `wget` (e.g. [`wgetjs` NPM module](https://www.npmjs.com/package/wgetjs))
+
+## Termplate Engine
+After [download the MediaWiki markup language](https://niebert.github.io/Wiki2Reveal/wtf_wikipedia.html) the syntax will be parsed. Examples for relevant content elements are:
+* Headers of sections,
+* images,
+* links,
+* citations,
+* ....
+Dependent on the output format
+* RevealJS,
+* LaTeX,
+* LibreOffice,
+* ...
+a template engine will handle the output. Just by replacement of the template engine a different format will be exported. The template engine uses [HandleBars](http://handlebarsjs.com/).
+```
+var section_tpl = "<h1> {{title}} </h1>";
+var section = Handlebars.compile(source);  // 'section' is HandleBars function
+var context = {"title": "My New Section in the Wiki"};
+var vHTML_section = section(context);
+console.log(vHTML_section);
+```
 
 
 ## Retrieve MediaWiki Content in a Browser
-The following approaches have be tested and compared. So that other programmers can follow the decision making process for designing the module for retrieving MediaWiki content in  a `browserified` library and convert PanDocElectron in pure browser application. See [Alternative MediaWiki Parsers](https://www.mediawiki.org/wiki/Alternative_parsers) for other programming languages as well.
+The following approaches are tested and compared. So that other programmers can follow the decision making process for designing the module for
+* retrieving,
+* parsing and
+* compiling
+MediaWiki content in different output formats.
+The main requirement is, that the whole process runs in browser.  Wiki2Reveal is a `browserified` component of the [PanDocElectron/Wikipedia concept](https://en.wikiversity.org/wiki/PanDocElectron/Presentation) library and convert PanDocElectron in pure browser application.
+
+See [Alternative MediaWiki Parsers](https://www.mediawiki.org/wiki/Alternative_parsers) for other programming languages as well.
 
 ### NodeJS Module: nodemw
 Node module `nodemw` is able to handle MediaWiki calls as shown in [PanDocElectron](https://en.wikiversity.org/wiki/PanDocElectron). Seems to be a good solution, but `nodemw` has the `fs` module as dependencies and browsers cannot write to the local file system in comparison to `NodeJS` applications.
@@ -179,7 +208,9 @@ https://github.com/niebert/Wiki2Reveal/tree/master/docs
 
 
 ## Use Tools for the repository
-* [Grunt](https://gruntjs.com/getting-started) to automate code generation from modular javascript libraries to a WebApp in the folder `/docs`. The folder `/docs` is used to access the WebApp directly in your browser by the URL
+* `npm run build` to automate code generation from modular javascript libraries to the bundled distribution in `/dist` and the export to a WebApp in the folder `/docs`. The folder `/dist` is used to store the uncompressed build (extension `wiki2reveal.js`) and the compressed bundle of the code (extension `wiki2reveal.min.js`).
+
+The folder `/docs` is used to access the WebApp directly in your browser by the URL
  https://niebert.github.io/Wiki2Reveal
 * [Browserify and Watchify](https://spapas.github.io/2015/05/27/using-browserify-watchify/) to combine modular Javascript libraries for use in a browser. This is necessary because the browser does not understand the `require(...)` of NodeJS. Browserify parses the libraries and library dependencies and replaces the `require`-command by an aggregated script call of used javascript sources for the WebApp.  
 

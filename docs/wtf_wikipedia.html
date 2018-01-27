@@ -18,8 +18,9 @@
       function callWikiDisplay() {
         var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
         vURL += encodeURI(el("wikiarticle").value);
+        document.location.href=vURL;
       };
-      
+
     </script>
     <hr>
       <center>

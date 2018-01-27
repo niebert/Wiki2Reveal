@@ -201,11 +201,22 @@ In the current repository `Browserfy` and `Watchify` are expected to be installe
 ### Start Watching the Files with Watchify
 Watchify will trigger the `npm run build` process if files were change due to alteration of code. To start watching the files, run the npm-watch script by `npm run watch`, which is defined in `package.json`
 
-## Main Library for Handling Testing Wiki2Reveal
+## Main Library for Storing Configuration Data for Wiki2Reveal
 
-Main library to handle large arrays is `docs/js/editor4json.js`
+The configuration data for the cross compilation of MediaWiki markup language  will be performed by the modified JSON editor `docs/js/editor4json.js` forked from Jeremy Dorn
+
+
+## Webbased Test Environments
+
+The `/docs` folder is this repository published as server root directory for
+
+https://niebert.github.io/Wiki2Reveal
+
+The content of the files can be explored under   
+
 https://github.com/niebert/Wiki2Reveal/tree/master/docs
 
+In the settings of the repository
 
 ## Use Tools for the repository
 * `npm run build` to automate code generation from modular javascript libraries to the bundled distribution in `/dist` and the export to a WebApp in the folder `/docs`. The folder `/dist` is used to store the uncompressed build (extension `wiki2reveal.js`) and the compressed bundle of the code (extension `wiki2reveal.min.js`).
@@ -215,4 +226,4 @@ The folder `/docs` is used to access the WebApp directly in your browser by the 
 * [Browserify and Watchify](https://spapas.github.io/2015/05/27/using-browserify-watchify/) to combine modular Javascript libraries for use in a browser. This is necessary because the browser does not understand the `require(...)` of NodeJS. Browserify parses the libraries and library dependencies and replaces the `require`-command by an aggregated script call of used javascript sources for the WebApp.  
 
 ## Acknowledgement
-* ***[wtf_wikipedia.js](https://github.com/spencermountain/wtf_wikipedia)***: Thanks to [Spencer Kelly](https://github.com/spencermountain) and [many other contributors](https://github.com/spencermountain/wtf_wikipedia/graphs/contributors) that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia) to the OpenSource community.
+* [***wtf_wikipedia.js***](https://github.com/spencermountain/wtf_wikipedia): Thanks to [Spencer Kelly](https://github.com/spencermountain) and [many other contributors](https://github.com/spencermountain/wtf_wikipedia/graphs/contributors) that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia) to the OpenSource community.

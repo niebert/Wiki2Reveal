@@ -4,6 +4,7 @@
     <title>wtf_wikipedia</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="js/wtf_wikipedia.js"></script>
+    <script src="js/writedom.js"></script>
   </head>
   <body style="margin:10px;background:#C0C0C0">
     <script>
@@ -21,6 +22,21 @@
         document.location.href=vURL;
       };
 
+      function callWikiDownload() {
+          downloadWikiDoc(el("wikiarticle").value,el("wikiid").value);
+      };
+
+      function downloadWikiDoc(pArticle,pWikiID) {
+        wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
+          console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+          // store markup result in textarea
+          document.getElementById("wikimarkup").value = markup;
+          // store JSON parse result in textarea
+          var data = wtf.parse(markup);
+          document.getElementById("wikijson").value = JSON.stringify(data,null,4);
+        })
+      }
+
     </script>
     <hr>
       <center>
@@ -29,8 +45,8 @@
       </center>
     <hr>
     <b>Wiki:</b>
-    <select id="sWikiDomain" onchange="etWikiID()">
-      <option value="wikipedia">Wikipedia</option>
+    <select id="sWikiDomain" onchange="setWikiID()">
+      <option value="wiki">Wikipedia</option>
       <option value="wikiversity" selected>Wikiversity</option>
     </select>
     &nbsp;&nbsp;
@@ -99,19 +115,6 @@
   </body>
 
   <script>
-    function callWikiDownload() {
-        downloadWikiDoc(el("wikiarticle").value,el("wikiid").value);
-    };
 
-    function downloadWikiDoc(pArticle,pWikiID) {
-      wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
-        console.log("LOG (PlainText result): "+wtf.plaintext(markup));
-        // store markup result in textarea
-        document.getElementById("wikimarkup").value = markup;
-        // store JSON parse result in textarea
-        var data = wtf.parse(markup);
-        document.getElementById("wikijson").value = JSON.stringify(data,null,4);
-      })
-    }
   </script>
 </html>

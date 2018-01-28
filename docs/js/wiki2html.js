@@ -766,25 +766,11 @@ Wiki2HTML.prototype.generateTOC = function () {
   //    vMyInstance.generateTOC(pWikiCode);
   //-------------------------------------------------------
 	var vTOC = this.aTOC;
-	var vDepth = 0;
-	var vOutTOC = "";
-	var vEnum = [0];
 	for (var i = 0; i < vTOC.length; i++) {
-		if (vTOC[i]["depth"] > vDepth) {
-			vDepth = vTOC[i]["depth"];
-			// open new TOC environment and add TOC item
-			vOutTOC += this.openLevelTOC(vDepth);
-			vEnum.push(1);
-			this.itemLevelTOC(vDepth,vEnum,vTOC[i]["title"])
-		} else 	if (vTOC[i]["depth"] < vDepth) {
-			// decrease TOC depth and close previous enviroment
-			vDepth = vTOC[i]["depth"];
-			vEnum[vDepth]++;
-			var vCount = vEnum.pop();
-			vOutTOC += this.closeLevelTOC(vDepth);
-		} else {
-
-		}
+		//if (vTOC[i]["depth"] > vDepth) {
+			//vTOC[i]["depth"];
+			//vTOC[i]["title"]
+		//}
 	}
 	console.log("Not implemented yet");
   return vOutTOC;

@@ -87,3 +87,14 @@ function getInnerHTML(pID) {
   }
   return vReturn;
 };
+
+function isChecked(pID) {
+  var vCheckBox = document.getElementById(pID);
+  var vReturn = false;
+  if (vCheckBox) {
+    vReturn = vCheckBox.checked
+  } else {
+      console.log("ERROR: Checkbox ["+pID+"] is undefined");
+  };
+  return vReturn;
+};

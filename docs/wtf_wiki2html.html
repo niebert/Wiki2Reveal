@@ -20,6 +20,12 @@
         el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
       };
 
+      function callWikiDisplay() {
+        var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
+        vURL += encodeURI(el("wikiarticle").value);
+        document.location.href=vURL;
+      };
+
     </script>
     <hr>
       <center>
@@ -28,8 +34,8 @@
       </center>
     <hr>
     <b>Wiki:</b>
-    <select id="sWikiDomain" onchange="etWikiID()">
-      <option value="wikipedia">Wikipedia</option>
+    <select id="sWikiDomain" onchange="setWikiID()">
+      <option value="wiki">Wikipedia</option>
       <option value="wikiversity" selected>Wikiversity</option>
     </select>
     &nbsp;&nbsp;
@@ -83,6 +89,7 @@
     &nbsp;&nbsp;
     <b>Article:</b>
     <input type="text" id="wikiarticle" value="Swarm intelligence" size="45">
+    <input type="button" id="bOpenWiki" value="Open Wiki" onclick="callWikiDisplay()">
     <input type="button" id="bDownloadWiki" value="Download" onclick="callWikiDownload()">
     <input type="text" id="wikiid" value="enwikiversity" style="display:none">
     <hr>

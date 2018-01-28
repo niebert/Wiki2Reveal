@@ -8,18 +8,22 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
 
 - [Call of MediaWiki API](#call-of-mediawiki-api)
 - [Images Download wget](#images-download-wget)
+- [Termplate Engine](#termplate-engine)
 - [Retrieve MediaWiki Content in a Browser](#retrieve-mediawiki-content-in-a-browser)
   - [NodeJS Module: nodemw](#nodejs-module-nodemw)
   - [Alternative Javascript MediaWiki libraries](#alternative-javascript-mediawiki-libraries)
   - [Generate an AJAX Call in HTML5 Environment](#generate-an-ajax-call-in-html5-environment)
   - [WikiDownloader](#wikidownloader)
+  - [Wiki2HTML converter](#wiki2html-converter)
     - [Download Example HTML](#download-example-html)
 - [Browserify and Watchify](#browserify-and-watchify)
   - [Global Installation of Browserify, Watchify, UglifyJS and DocToc](#global-installation-of-browserify-watchify-uglifyjs-and-doctoc)
   - [Package Installation of Browserify and Watchify - Alternative](#package-installation-of-browserify-and-watchify---alternative)
   - [Start Watching the Files with Watchify](#start-watching-the-files-with-watchify)
-- [Main Library for Handling Testing Wiki2Reveal](#main-library-for-handling-testing-wiki2reveal)
+- [Main Library for Storing Configuration Data for Wiki2Reveal](#main-library-for-storing-configuration-data-for-wiki2reveal)
+- [Webbased Test Environments](#webbased-test-environments)
 - [Use Tools for the repository](#use-tools-for-the-repository)
+- [Acknowledgement](#acknowledgement)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -66,7 +70,8 @@ var context = {"title": "My New Section in the Wiki"};
 var vHTML_section = section(context);
 console.log(vHTML_section);
 ```
-
+This will allow to create new export formats much easier just by replacement of the format specific templateengine.
+A template engine for an output format will have `TemplateEngine` as super class. In a browserified version of [PanDocElectron](https://en.wikiversity.org/wiki/PanDocElectron) the user does not need an installation of an Electron application and all the other modules like [`ImageMagick`]().    
 
 ## Retrieve MediaWiki Content in a Browser
 The following approaches are tested and compared. So that other programmers can follow the decision making process for designing the module for
@@ -216,12 +221,10 @@ The content of the files can be explored under
 
 https://github.com/niebert/Wiki2Reveal/tree/master/docs
 
-In the settings of the repository
+In the `Settings/Options/GitHub pages` of this repository
 
-## Use Tools for the repository
-* `npm run build` to automate code generation from modular javascript libraries to the bundled distribution in `/dist` and the export to a WebApp in the folder `/docs`. The folder `/dist` is used to store the uncompressed build (extension `wiki2reveal.js`) and the compressed bundle of the code (extension `wiki2reveal.min.js`).
-
-The folder `/docs` is used to access the WebApp directly in your browser by the URL
+## Tools for the repository
+* `npm run build` to automate code generation from modular javascript libraries in the folder `src/` to the bundled distribution in `/dist` and the export to a WebApp in the folder `/docs`. The folder `/dist` is used to store the uncompressed build (extension `wiki2reveal.js`) and the compressed bundle of the code (extension `wiki2reveal.min.js`). The folder `/docs` is used to access the WebApp directly in your browser by the URL
  https://niebert.github.io/Wiki2Reveal
 * [Browserify and Watchify](https://spapas.github.io/2015/05/27/using-browserify-watchify/) to combine modular Javascript libraries for use in a browser. This is necessary because the browser does not understand the `require(...)` of NodeJS. Browserify parses the libraries and library dependencies and replaces the `require`-command by an aggregated script call of used javascript sources for the WebApp.  
 

@@ -86,6 +86,9 @@
       <option value="sl">Slovenian</option>
       <option value="th">Thai</option>
     </select>
+    <b>Offline:</b>
+    <input type="checkbox" name="checkOffline" id="checkOffline" checked  onclick="if (this.checked == true) {alert('OFFLINE: Use Wiki Emulated Source!')} else {alert('ONLINE: Try downloading from MediaWiki')}">
+
     &nbsp;&nbsp;
     <b>Article:</b>
     <input type="text" id="wikiarticle" value="Swarm intelligence" size="45">
@@ -109,6 +112,7 @@
     <textarea id="tocjson" rows="12" cols="120">
     </textarea>
     <hr>
+    <b>Emulated Wiki Source:</b></br>
     <textarea id="wikisrc" rows="12" cols="120">
 [[File:Indian Harvester Ant Nest.JPG|thumbnail|Entrance to a Harvester Ant nest ([[Wikipedia:Pune|Pune]], [[Wikipedia:Maharashtra|Maharashtra]], India)]]
 [[Image:AntsStitchingLeave.jpg|thumb|upright|[[Wikipedia:Weaver ant|Weaver ant]]s are used as a [[Wikipedia:biological control|biological control]] for citrus cultivation in southern China]]
@@ -278,11 +282,35 @@ Learning resources can guide the learner to become an author (see [[Learner2Auth
 
     function downloadWikiDoc(pArticle,pWikiID) {
       //alert("Emulate MediaWiki Download");
+      if (isChecked("checkOffline") == true) {
+        offlineWikiDoc(pArticle,pWikiID);
+      } else {
+        onlineWikiDoc(pArticle,pWikiID);
+      }
+    };
+
+    function offlineWikiDoc(pArticle,pWikiID) {
+      //alert("Emulate MediaWiki Download");
       var markup = document.getElementById("wikisrc").value;
       console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
       // store markup result in textarea
       el("wikimarkup").value = markup;
       // store JSON parse result in textarea
+      processWikiDoc(pArticle,markup);
+    };
+
+    function onlinedWikiDoc(pArticle,pWikiID) {
+      wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
+        //console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+        console.log("DOWNLOAD with wtf_wikipedia.js");
+        // store markup result in textarea
+        el("wikimarkup").value = markup;
+        // store JSON parse result in textarea
+        processWikiDoc(pArticle,markup);
+      })
+    }
+
+    function processWikiDoc(pArticle,markup) {
       var vWikiJSON = wtf.parse(markup);
       // set the page identifier in vWikiJSON and replace blank " " by "underscore"
       vWikiJSON["page_identifier"] = pArticle.replace(/ /g,"_");
@@ -294,28 +322,6 @@ Learning resources can guide the learner to become an author (see [[Learner2Auth
       el("htmloutput").value = htmlout;
       // vWiki2HTML.aTOC contains the Table of Contents as JSON
       el("tocjson").value = JSON.stringify(vWiki2HTML.aTOC,null,4);
-    };
-
-    function X_downloadWikiDoc(pArticle,pWikiID) {
-      wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
-        //console.log("LOG (PlainText result): "+wtf.plaintext(markup));
-        console.log("DOWNLOAD with wtf_wikipedia.js");
-        // store markup result in textarea
-        el("wikimarkup").value = markup;
-        // store JSON parse result in textarea
-        var vWikiJSON = wtf.parse(markup);
-        // set the page identifier in vWikiJSON and replace blank " " by "underscore"
-        vWikiJSON["page_identifier"] = pArticle.replace(/ /g,"_");
-
-        el("wikijson").value = JSON.stringify(vWikiJSON,null,4);
-        var vWiki2HTML = new Wiki2HTML();
-        vWiki2HTML.init(el("sWikiLanguage").value,el("sWikiDomain").value,vWikiJSON);
-        var htmlout = vWiki2HTML.parse(markup);
-        el("htmloutput").value = htmlout;
-        // vWiki2HTML.aTOC contains the Table of Contents as JSON
-        el("tocjson").value = JSON.stringify(vWiki2HTML.aTOC,null,4);
-    ;
-      })
     }
   </script>
 </html>

@@ -107,6 +107,13 @@ function Wiki2HTML () {
 	this.aMap["wikibooks"] = "wikibooks";
 	this.aMap["Wikibooks"] = "wikibooks";
 
+	this.aFilePrefix = {};
+	this.aFilePrefix["File"] = "File";
+	this.aFilePrefix["file"] = "File";
+	this.aFilePrefix["Datei"] = "File";
+	this.aFilePrefix["Image"] = "File";
+
+	this.aMediaArray = [];
 	this.aTplEngine = new TemplateEngine();
 
 
@@ -293,10 +300,10 @@ Wiki2HTML.prototype.parse = function (pWikiCode,pWikiTitle) {
 			pWikiCode = this.math2reveal(pWikiCode);
 			pWikiCode = this.sections(pWikiCode);
   		pWikiCode = this.horizontalRule(pWikiCode);
-			//pWikiCode = this.replaceWikiLinks(pWikiCode);
-			pWikiCode = this.convertWiki2Local(pWikiCode);
-			//pWikiCode = this.inlineElement(pWikiCode);
-			//pWikiCode = this.replaceImages(pWikiCode);
+			pWikiCode = this.replaceWikiLinks(pWikiCode);
+			//pWikiCode = this.convertWiki2Local(pWikiCode);
+			pWikiCode = this.replaceImages(pWikiCode);
+			pWikiCode = this.inlineElement(pWikiCode);
 
   		pWikiCode = this.list(pWikiCode);
   		pWikiCode = this.table(pWikiCode);
@@ -339,7 +346,13 @@ Wiki2HTML.prototype.clean_source = function (pWikiCode) {
   //    var vMyInstance = new Wiki2HTML();
   //    vMyInstance.clean_source(pWikiCode);
   //-------------------------------------------------------
-
+	pWikiCode = replaceString(pWikiCode,"[[Image:","[[File:");
+	pWikiCode = replaceString(pWikiCode,"[[Datei:","[[File:");
+	pWikiCode = replaceString(pWikiCode,"|thumbnail|","|thumb|");
+	pWikiCode = replaceString(pWikiCode,"|thumbnail]]","|thumb| ]]");
+	pWikiCode = replaceString(pWikiCode,"|mini|","|thumb|");
+	pWikiCode = replaceString(pWikiCode,"|mini]]","|thumb| ]]");
+	//pWikiCode = pWikiCode.replace(/[|](thumbnail|mini)(\]|\|)/g,"|thumb$2");
   pWikiCode = pWikiCode.replace(/\r/g, '');
   return pWikiCode;
 
@@ -453,6 +466,7 @@ Wiki2HTML.prototype.inlineElement = function (pWikiCode) {
 };
 //----End of Method inlineElement Definition
 
+
 //#################################################################
 //# PUBLIC Method: replaceImages()
 //#    used in Class: Wiki2HTML
@@ -474,26 +488,38 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
   //    vMyInstance.replaceImages(pWikiCode);
   //-------------------------------------------------------
 
-  		var image = /\[\[File:(.[^\]|]*)([|]thumb|frame|mini)?([|]alt=.[^\]|]*)?([|].[^\]|]*)?\]\]/g;
-  		var anchor = /\[([a-zA-Z0-9].[^\s]*) ([a-zA-Z0-9].[^\]]*)\]/g;
-
-  		while(tokens = image.exec(pWikiCode)) {
-  			if(tokens.length == 5 &&
-  				typeof(tokens[2]) != 'undefined' &&
-  				typeof(tokens[3]) != 'undefined' &&
-  				typeof(tokens[4]) != 'undefined') {
-  				tokens[2] = tokens[2].replace('|', '');
-  				tokens[3] = tokens[3].replace('|alt=', '');
-  				tokens[4] = tokens[4].replace('|', '');
-  				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + tokens[2] + '"><img src="' + tokens[1] + '" class="' + tokens[2] + '" alt="' + tokens[3] + '"><figcaption>' + tokens[4] + '</figcaption></figure>');
-  			}
-  			else
-  				pWikiCode = pWikiCode.replace(tokens[0], '<div class="warning">WARNING: your image code is incomplete. Good practices for images impose to specify an alternative text, a caption and if the image is a frame or a thumbnail. For example, <code>&#091;&#091;File:anImage.png|thumb|alt=Alternative text|Caption text&#093;&#093;</code></div>');
-  		}
-
-  		pWikiCode = pWikiCode.replace(anchor, '<a href="$1">$2</a>');
-
-  		return pWikiCode;
+	//var image = /\[\[File:(.[^\]|]*)([|]thumb|frame|mini)?([|]alt=.[^\]|]*)?([|].[^\]|]*)?\]\]/g;
+	var image = /\[\[File:(.[^\]]*)\]\]/g;
+	var vTitle = "";
+	var vAltText = "";
+	var vClass = "image";
+	var vURL = "";
+  while(tokens = image.exec(pWikiCode)) {
+		vTitle = "";
+		vAltText = "";
+		//[[File:my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment]]
+		//tokens[0]=my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment
+		var vLinkSplit = (tokens[0]).split("|");
+		vURL = this.getWikiMediaURL(vLinkSplit[0]);
+		if (vLinkSplit.length == 1) {
+			pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '></figure>');
+		} else {
+			if (vLinkSplit.length == 2) {
+				//pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '" alt="' + tokens[0] + '"><figcaption>' + tokens[4] + '</figcaption></figure>');
+				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '><figcaption>' + vLinkSplit[1] + '</figcaption></figure>');
+			} else {
+				for (var i = 1; i < (vLinkSplit.length-1); i++) {
+					if ((vLinkSplit[i]).indexOf("alt=") == 0) {
+						vAltText =  ' alt="' + vLinkSplit[i] + '" ';
+					} else if (vLinkSplit[i] == "thumb") {
+						console.log("Background Image Slide");
+					};
+					pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vLinkSplit[vLinkSplit.length-1] + '</figcaption></figure>');
+				}
+			}
+		}; // else if vLineSplit.length
+	}; // While tokens
+  return pWikiCode;
 
 };
 //----End of Method replaceImages Definition
@@ -904,23 +930,26 @@ Wiki2HTML.prototype.parseWiki4Media = function (pWikiCode) {
   //    var vMyInstance = new Wiki2HTML();
   //    vMyInstance.parseWiki4Media(pWikiCode);
   //-------------------------------------------------------
-		pWikiCode = this.replaceString(pWikiCode,"[[Image:","[[File:");
-		pWikiCode = this.replaceString(pWikiCode,"[[Datei:","[[File:");
+		// the following code is performed in clean_source()
+		//pWikiCode = this.replaceString(pWikiCode,"[[Image:","[[File:");
+		//pWikiCode = this.replaceString(pWikiCode,"[[Datei:","[[File:");
 		var vMediaArray = [];
+		// (1) find the image specs "my_image.png|330px|thumb|My Caption" in "[[File:my_image.png|330px|thumb|My Caption]]"
     //var vSearch = /\[(File|Datei|Image):([^\|]*)/;
-    var vSearch = /\[(?:File|Image|Datei):([^\|\]]+)/g;
-    // \[            # "["
-    // (?:            # non-capturing group
-    //  File|Image|Datei        #   "File" or "Image" or "Datei"
-    // )              # end non-capturing group
-    //:             # ":"
-    //(              # group 1
-    //  [^\|]+      #   any character except "|" or "]" at least once
-    // )              # end group 1 - this will be the image's name
-    var vResult;
-    var vCount =0;
-    while (vResult = vSearch.exec(pWikiCode)) {
-      vCount++;
+		// (2) find just the filename "my_image.png" in "[[File:my_image.png|330px|thumb|My Caption]]"
+	    var vSearch = /\[(?:File|Image|Datei):([^\|\]]+)/g;
+	    // \[            # "["
+	    // (?:            # non-capturing group
+	    //  File|Image|Datei        #   "File" or "Image" or "Datei"
+	    // )              # end non-capturing group
+	    //:             # ":"
+	    //(              # group 1
+	    //  [^\|\]]+      #   any character except "|" or "]" at least once
+	    // )              # end group 1 - this will be the image's name
+	    var vResult;
+	    var vCount =0;
+	    while (vResult = vSearch.exec(pWikiCode)) {
+	      vCount++;
       vMediaArray.push(vResult[1]);
       console.log("Media "+vCount+": '" + vResult[1] + "' found");
     };
@@ -1378,7 +1407,9 @@ Wiki2HTML.prototype.replaceWikiLinks = function (pWikiCode) {
     var vURL,Title,vLink,vLocalLink;
     var vPipePos = 0;
 		var vColonPos = 0;
+		this.aMediaArray = [];
     this.checkParseJSON("links");
+		var vCount = 0;
     for (var i = 0; i < vLinkArray.length; i++) {
       vLink = vLinkArray[i];
       vPipePos = vLink.indexOf("|");
@@ -1402,16 +1433,33 @@ Wiki2HTML.prototype.replaceWikiLinks = function (pWikiCode) {
 			if (vColonPos > 0) {
 				//for Wikipedia:Water vLinkSplit[0]= "Wikipedia" -> is a not interwikilink
 				// link contains colon ":"
-				if (this.aMap.hasOwnProperty(vURL.substr(0,vColonPos))) {
+				var vColonPrefix = vURL.substr(0,vColonPos);
+				//vColonPrefix w,v,Wikipedia,wikiversity Interwiki Link
+				if (this.aFilePrefix.hasOwnProperty(vColonPrefix)) {
+					console.log("URL: '"+vURL+"' is an image, do not replace by URL text reference.");
+					this.aMediaArray.push(vURL);
+				} else if (this.aMap.hasOwnProperty(vColonPrefix)) {
 					// do something for interwiki links
+					console.log("Inter Wiki Link '"+vURL+"' found");
+					vURL = this.getWikiDisplayURL(vURL);
+		      vLocalLink = "<a href=\""+vURL+"\" target=\"_blank\">"+vTitle+"</a>";
+		      pWikiCode = this.replaceString(pWikiCode,"[["+vLink+"]]",vLocalLink);
+		      // for reverse replacement to online Wikipedia or Wikiversity store replacement in ParseJSON
+		      this.aParseJSON["links"][vLocalLink] = "["+vLink+"]";
 				}
+			} else {
+				console.log("Local Wiki Link '"+vURL+"' found");
+				vURL = this.getWikiDisplayURL(vURL);
+	      vLocalLink = "<a href=\""+vURL+"\" target=\"_blank\">"+vTitle+"</a>";
+	      pWikiCode = this.replaceString(pWikiCode,"[["+vLink+"]]",vLocalLink);
+	      // for reverse replacement to online Wikipedia or Wikiversity store replacement in ParseJSON
+	      this.aParseJSON["links"][vLocalLink] = "["+vLink+"]";
 			};
-			vURL = this.getWikiDisplayURL(vURL);
-      vLocalLink = "<a href=\""+vURL+"\" target=\"_blank\">"+vTitle+"</a>";
-      pWikiCode = this.replaceString(pWikiCode,"[["+vLink+"]]",vLocalLink);
-      // for reverse replacement to online Wikipedia or Wikiversity store replacement in ParseJSON
-      this.aParseJSON["links"][vLocalLink] = "["+vLink+"]";
-    };
+	  };
+		// Replace External Links: [http://www.example.com Example Server]
+		var external_links = /\[(https:\/\/|http:\/\/)([a-zA-Z0-9].[^\s]*) ([a-zA-Z0-9].[^\]]*)\]/g;
+		pWikiCode = pWikiCode.replace(external_links, '<a href="$1$2">$3</a>');
+
     return pWikiCode;
 };
 //----End of Method replaceWikiLinks Definition
@@ -1444,13 +1492,12 @@ Wiki2HTML.prototype.getWikiDisplayURL= function (pLink) {
 		// w:Swarm_intelligence
 		// /Slime_mold/
 		vServer = vLanguage + "." + vMap[vLinkArr[0]]+".org";
-		vArticle = vMap[vLinkArr[1]] || "undefined_wiki_link";
+		vArticle = vLinkArr[1] || "undefined_wiki_link";
 	} else if (vLinkArr.length == 3) {
-		// w:de:Swarm_intelligence
+		// w:en:Swarm_intelligence
 		vServer = vLinkArr[1] + "." + vMap[vLinkArr[0]]+".org";
-		vArticle = vMap[vLinkArr[2]] || "undefined_wiki_link";
-	};
-	if (vArticle.indexOf("/")==0) {
+		vArticle = vLinkArr[2] || "undefined_wiki_link";
+	} else if (vArticle.indexOf("/")==0) {
 		// Link: "/Slime mold/"
 		vArticle = this.aArticle+vArticle;
 		// Link: "Swarm intelligence/Slime mold/ "
@@ -1474,6 +1521,8 @@ Wiki2HTML.prototype.getWikiDisplayURL= function (pLink) {
 //# last modifications 2018/01/21 17:17:18
 //#################################################################
 Wiki2HTML.prototype.getWikiMediaURL = function(pFileName) {
+	pFileName = pFileName.replace(/^\[\[(File|Image|Datei):/gi,"");
+	pFileName = pFileName.replace(/[\]]+$/gi,"");
 	pFileName = pFileName.replace(/\s/g,"_");
 	return this.aMediaPath+pFileName;
 };
@@ -1550,10 +1599,11 @@ Wiki2HTML.prototype.getWikiLinks = function (pWikiCode) {
 			} else if (this.aMap.hasOwnProperty(vLinkSplit[0])) {
 				//for Wikipedia:Water vLinkSplit[0]= "Wikipedia" -> is a wikilink
 				vLinkArray.push(vResult[1]);
+				console.log("Wiki-Link ('"+vLinkSplit[0]+"') "+vCount+": '" + vResult[1] + "' found");
 			} else {
+				console.log("Wiki-File "+vCount+": '" + vResult[1] + "' found");
 				//for File:Water.png vLinkSplit[0]= "File" not an own property of aMap -> not a Link
 			};
-      console.log("Wiki-Link "+vCount+": '" + vResult[1] + "' found");
     };
     return vLinkArray;
 
@@ -1588,7 +1638,8 @@ Wiki2HTML.prototype.convertMediaLink4WikiOnline = function (pWikiCode,pMediaArra
     var vMediaFile;
     var vPathArray;
 
-    pWikiCode = pWikiCode.replace(/\[(File|Image|Datei):/gi,"[File:");
+		// "File:" "Image:" "Datei:" will be replaced "File:" by clean_source()
+		//pWikiCode = pWikiCode.replace(/\[\[(File|Image|Datei):/gi,"[[File:");
 
 		//var vSearch = /\[(File|Datei|Image):([^\|]*)/;
     var vSearch = /(\[\[File:[^\]]+\]\])/g;

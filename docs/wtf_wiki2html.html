@@ -318,7 +318,7 @@ Learning resources can guide the learner to become an author (see [[Learner2Auth
       el("wikijson").value = JSON.stringify(vWikiJSON,null,4);
       var vWiki2HTML = new Wiki2HTML();
       vWiki2HTML.init(el("sWikiLanguage").value,el("sWikiDomain").value,vWikiJSON);
-      var htmlout = vWiki2HTML.parse(markup);
+      var htmlout = vWiki2HTML.parse(markup,pArticle);
       el("htmloutput").value = htmlout;
       // vWiki2HTML.aTOC contains the Table of Contents as JSON
       el("tocjson").value = JSON.stringify(vWiki2HTML.aTOC,null,4);

@@ -453,13 +453,16 @@ Wiki2HTML.prototype.inlineElement = function (pWikiCode) {
   //    vMyInstance.inlineElement(pWikiCode);
   //-------------------------------------------------------
 
-  		var strongEm = /'''''([0-9A-Za-z].*)'''''/g;
-  		var strong = /'''([0-9A-Za-z].*)'''/g;
-  		var em = /''([0-9A-Za-z].*)''/g;
+			//var strongEm = /'''''([(0-9A-Za-z].*)'''''/g;
+			var strongEm = /'''''([^']*)'''''([^'])?/g;
+			//var strong = /'''([(0-9A-Za-z].*)'''/g;
+			var strong = /'''([^']*)'''([^'])?/g;
+			//var em = /''([(0-9A-Za-z].*)''/g;
+			var em = /''([^']*)''([^'])?/g;
 
-  		pWikiCode = pWikiCode.replace(strongEm, '<strong><em>$1</em></strong>');
-  		pWikiCode = pWikiCode.replace(strong, '<strong>$1</strong>');
-  		pWikiCode = pWikiCode.replace(em, '<em>$1</em>');
+  		pWikiCode = pWikiCode.replace(strongEm, '<strong><em>$1</em></strong>$2');
+  		pWikiCode = pWikiCode.replace(strong, '<strong>$1</strong>$2');
+  		pWikiCode = pWikiCode.replace(em, '<em>$1</em>$2');
 
   		return pWikiCode;
 
@@ -1499,7 +1502,7 @@ Wiki2HTML.prototype.getWikiDisplayURL= function (pLink) {
 		vArticle = vLinkArr[2] || "undefined_wiki_link";
 	} else if (vArticle.indexOf("/")==0) {
 		// Link: "/Slime mold/"
-		vArticle = this.aArticle+vArticle;
+		vArticle = this.aWikiTitle+vArticle;
 		// Link: "Swarm intelligence/Slime mold/ "
 		vArticle = vArticle.replace(/[\/\s]+$/i,"");
 		// Link: "Swarm intelligence/Slime mold"

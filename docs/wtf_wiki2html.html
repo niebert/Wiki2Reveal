@@ -104,7 +104,11 @@
     <textarea id="wikijson" rows="12" cols="120">
     </textarea>
     <hr>
-    <b>Converted HTML:</b></br>
+    <b>Converted HTML with <tt>wtf_wikipedia.js</tt>:</b></br>
+    <textarea id="output" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Converted HTML with <tt>wiki2html.js</tt>:</b></br>
     <textarea id="htmloutput" rows="12" cols="120">
     </textarea>
     <hr>
@@ -311,6 +315,7 @@ Learning resources can guide the learner to become an author (see [[Learner2Auth
     }
 
     function processWikiDoc(pArticle,markup) {
+      el("output").value = wtf.html(markup);
       var vWikiJSON = wtf.parse(markup);
       // set the page identifier in vWikiJSON and replace blank " " by "underscore"
       vWikiJSON["page_identifier"] = pArticle.replace(/ /g,"_");

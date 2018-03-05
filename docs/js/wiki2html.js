@@ -307,7 +307,7 @@ Wiki2HTML.prototype.parse = function (pWikiCode,pWikiTitle) {
 
   		pWikiCode = this.list(pWikiCode);
   		pWikiCode = this.table(pWikiCode);
-  		// collect a TOC (Table of Contents) JSON in vHashTOC.
+			// collect a TOC (Table of Contents) JSON in vHashTOC.
 			// Level=0 is the root level of TOC, it will NOT be stored in this.aTOC
 			// unless vDepthIncrease > 0 and "title" of root section != ""
 			// extractTOC() uses aDocJSON to create the TOC
@@ -316,12 +316,42 @@ Wiki2HTML.prototype.parse = function (pWikiCode,pWikiTitle) {
 			//  set vDepthIncrease to 1 for WikiBookCreator because a section for collected articles necessary
 			this.extractTOC(vDepthIncrease); // parse TOC
 			pWikiCode = this.insertTOC(pWikiCode); // Inserts if this.aInsertTOC == true
-  		html = pWikiCode;
+			// Clean Wiki deletes currently unsupported Wiki Source Code
+			pWikiCode = this.clean_unsupported_wiki(pWikiCode);
+			html = pWikiCode;
 
   		return html;
 
 };
 //----End of Method parse Definition
+
+//#################################################################
+//# PUBLIC Method: clean_unsupported_wiki()
+//#    used in Class: Wiki2HTML
+//# Parameter:
+//#    pWikiCode:String
+//# Comment:
+//#    clean_unsupported_wiki(pWikiCode) removes double bracket {{...}} Wiki commands.
+//#    clean_unsupported_wiki() uses the MediaWiki source code `pWikiCode` from the parameter of the function and returns a HTML string
+//#    after removing all {{...}} commands still left in Wiki Code.
+//# Return: String
+//# created with JSCC  2017/03/05 18:13:28
+//# last modifications 2018/01/21 17:17:18
+//#################################################################
+
+Wiki2HTML.prototype.clean_unsupported_wiki = function (pWikiCode) {
+  //----Debugging------------------------------------------
+  // console.log("js/wiki2html.js - Call: clean_unsupported_wiki(pWikiCode:String):String");
+  // alert("js/wiki2html.js - Call: clean_unsupported_wiki(pWikiCode:String):String");
+  //----Create Object/Instance of Wiki2HTML----
+  //    var vMyInstance = new Wiki2HTML();
+  //    vMyInstance.clean_unsupported_wiki(pWikiCode);
+  //-------------------------------------------------------
+	pWikiCode = pWikiCode.replace(/\{\{[^}]\}\}/g, '');
+  return pWikiCode;
+
+};
+//----End of Method clean_unsupported_wiki Definition
 
 
 //#################################################################
@@ -497,6 +527,7 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
 	var vAltText = "";
 	var vClass = "image";
 	var vURL = "";
+	var vCaption = "";
   while(tokens = image.exec(pWikiCode)) {
 		vTitle = "";
 		vAltText = "";
@@ -508,14 +539,15 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
 			pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '></figure>');
 		} else {
 			if (vLinkSplit.length == 2) {
+				vCaption = this.checkCaption(vLinkSplit[1]);
 				//pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '" alt="' + tokens[0] + '"><figcaption>' + tokens[4] + '</figcaption></figure>');
-				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '><figcaption>' + vLinkSplit[1] + '</figcaption></figure>');
+				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '><figcaption>' + vCaption + '</figcaption></figure>');
 			} else {
 				for (var i = 1; i < (vLinkSplit.length-1); i++) {
 					if ((vLinkSplit[i]).indexOf("alt=") == 0) {
 						vAltText =  ' alt="' + vLinkSplit[i] + '" ';
 					} else if (vLinkSplit[i] == "thumb") {
-						console.log("Background Image Slide");
+						console.log("Background Image Slide for 'thumb'");
 					};
 					pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vLinkSplit[vLinkSplit.length-1] + '</figcaption></figure>');
 				}
@@ -526,6 +558,35 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
 
 };
 //----End of Method replaceImages Definition
+
+
+//#################################################################
+//# PUBLIC Method: checkCaption()
+//#    used in Class: Wiki2HTML
+//# Parameter:
+//#    pCaption:String
+//# Comment:
+//#    Correct a caption removes ]] at end
+//# Return: String
+//# created with JSCC  2017/03/05 18:13:28
+//# last modifications 2018/01/21 17:17:18
+//#################################################################
+
+Wiki2HTML.prototype.checkCaption = function (pCaption) {
+  //----Debugging------------------------------------------
+  // console.log("js/wiki2html.js - Call: checkCaption(pCaption:String):String");
+  // alert("js/wiki2html.js - Call: checkCaption(pCaption:String):String");
+  //----Create Object/Instance of Wiki2HTML----
+  //    var vMyInstance = new Wiki2HTML();
+  //    vMyInstance.checkCaption(pCaption);
+  //-------------------------------------------------------
+	if (pCaption) {
+		pCaption.replace(/[\]]+$/g,"");
+	};
+  return pCaption;
+
+};
+//----End of Method checkCaption Definition
 
 
 //#################################################################
@@ -1438,7 +1499,15 @@ Wiki2HTML.prototype.replaceWikiLinks = function (pWikiCode) {
 				// link contains colon ":"
 				var vColonPrefix = vURL.substr(0,vColonPos);
 				//vColonPrefix w,v,Wikipedia,wikiversity Interwiki Link
-				if (this.aFilePrefix.hasOwnProperty(vColonPrefix)) {
+				if (vColonPrefix.toLowerCase() == "category") {
+					// [[Category:Risk management]]
+					console.log("Category with Local Wiki Link '"+vURL+"' found");
+					vURL = this.getWikiDisplayURL(vURL);
+					vLocalLink = "<a href=\""+vURL+"\" target=\"_blank\">"+vTitle+"</a>";
+				  pWikiCode = this.replaceString(pWikiCode,"[["+vLink+"]]",vLocalLink);
+				  // for reverse replacement to online Wikipedia or Wikiversity store replacement in ParseJSON
+				  this.aParseJSON["links"][vLocalLink] = "["+vLink+"]";
+			 	} else if (this.aFilePrefix.hasOwnProperty(vColonPrefix)) {
 					console.log("URL: '"+vURL+"' is an image, do not replace by URL text reference.");
 					this.aMediaArray.push(vURL);
 				} else if (this.aMap.hasOwnProperty(vColonPrefix)) {
@@ -1461,7 +1530,7 @@ Wiki2HTML.prototype.replaceWikiLinks = function (pWikiCode) {
 	  };
 		// Replace External Links: [http://www.example.com Example Server]
 		var external_links = /\[(https:\/\/|http:\/\/)([a-zA-Z0-9].[^\s]*) ([a-zA-Z0-9].[^\]]*)\]/g;
-		pWikiCode = pWikiCode.replace(external_links, '<a href="$1$2">$3</a>');
+		pWikiCode = pWikiCode.replace(external_links, '<a href="$1$2" target="_blank">$3</a>');
 
     return pWikiCode;
 };
@@ -1494,12 +1563,32 @@ Wiki2HTML.prototype.getWikiDisplayURL= function (pLink) {
 		// Wikipedia:Swarm_intelligence
 		// w:Swarm_intelligence
 		// /Slime_mold/
-		vServer = vLanguage + "." + vMap[vLinkArr[0]]+".org";
-		vArticle = vLinkArr[1] || "undefined_wiki_link";
+		// Category:Risk Management
+		if ((vLinkArr[0]).toLowerCase() == "category") {
+			// Category:Risk Management
+			vArticle = pLink || "undefined_wiki_link";
+		} else {
+			// w:Swarm_intelligence
+			vServer = vLanguage + "." + vMap[vLinkArr[0]]+".org";
+			vArticle = vLinkArr[1] || "undefined_wiki_link";
+		};
+
 	} else if (vLinkArr.length == 3) {
 		// w:en:Swarm_intelligence
-		vServer = vLinkArr[1] + "." + vMap[vLinkArr[0]]+".org";
-		vArticle = vLinkArr[2] || "undefined_wiki_link";
+		// [[Wikipedia:Category:Risk Management]]
+		var vLinkLanguage = this.aLanguage;
+		var vLinkDomain = this.aDomain;
+		if ((vLinkArr[1]).toLowerCase() == "category") {
+			// [[Wikipedia:Category:Risk Management]]
+			vArticle = vLinkArr[1]+":"+vLinkArr[2] || "undefined_category";
+			// vArticle = "Category:Risk Management"
+		} else {
+			vArticle = vLinkArr[2] || "undefined_wiki_link";
+			// w:en:Swarm_intelligence
+			vLinkLanguage = vLinkArr[1];     // vLinkArr[1] = "en"
+			vLinkDomain = vMap[vLinkArr[0]]; // map "w" to "wikipedia"
+		};
+		vServer = vLinkLanguage + "." + vLinkDomain +".org";
 	} else if (vArticle.indexOf("/")==0) {
 		// Link: "/Slime mold/"
 		vArticle = this.aWikiTitle+vArticle;
@@ -1529,6 +1618,7 @@ Wiki2HTML.prototype.getWikiMediaURL = function(pFileName) {
 	pFileName = pFileName.replace(/\s/g,"_");
 	return this.aMediaPath+pFileName;
 };
+
 //#################################################################
 //# PUBLIC Method: getWikiDisplayURL()
 //#    used in Class: Wiki2HTML
@@ -1603,6 +1693,10 @@ Wiki2HTML.prototype.getWikiLinks = function (pWikiCode) {
 				//for Wikipedia:Water vLinkSplit[0]= "Wikipedia" -> is a wikilink
 				vLinkArray.push(vResult[1]);
 				console.log("Wiki-Link ('"+vLinkSplit[0]+"') "+vCount+": '" + vResult[1] + "' found");
+			} else if ((vLinkSplit[0]).toLowerCase() == "category") {
+				//for Wikipedia:Water vLinkSplit[0]= "Wikipedia" -> is a wikilink
+				vLinkArray.push(vResult[1]);
+				console.log("Wiki-Category-Link ('"+vLinkSplit[0]+"') "+vCount+": '" + vResult[1] + "' found");
 			} else {
 				console.log("Wiki-File "+vCount+": '" + vResult[1] + "' found");
 				//for File:Water.png vLinkSplit[0]= "File" not an own property of aMap -> not a Link
@@ -1681,7 +1775,7 @@ Wiki2HTML.prototype.convertMediaLink4WikiOnline = function (pWikiCode,pMediaArra
 				var vCaption = "";
 				if (vFileSplit.length >1) {
 					//[[File:My File.png|center|400px|My Caption "Title"]]
-					vCaption = vFileSplit[vFileSplit.length-1];
+					vCaption = this.checkCaption(vFileSplit[vFileSplit.length-1]);
 					// vCaption ="My Caption \"Title\""
 					vCaption = replaceString(vCaption,"\"","'");
 					// vCaption ="My Caption 'Title'
@@ -1697,6 +1791,7 @@ Wiki2HTML.prototype.convertMediaLink4WikiOnline = function (pWikiCode,pMediaArra
 				vReplaceLink += ">";
 				// add figcaption if aAddFigCaption as attribute is true
 				if (this.aAddFigCaption == true) {
+					vCaption = this.checkCaption(vCaption);
 					vReplaceLink += "\n<figcaption>"+vCaption+"</figcaption>";
 				};
 				// wrap image into <figure>-tag

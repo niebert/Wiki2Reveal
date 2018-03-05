@@ -549,7 +549,8 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
 					} else if (vLinkSplit[i] == "thumb") {
 						console.log("Background Image Slide for 'thumb'");
 					};
-					pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vLinkSplit[vLinkSplit.length-1] + '</figcaption></figure>');
+					vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
+					pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vCaption + '</figcaption></figure>');
 				}
 			}
 		}; // else if vLineSplit.length
@@ -581,8 +582,9 @@ Wiki2HTML.prototype.checkCaption = function (pCaption) {
   //    vMyInstance.checkCaption(pCaption);
   //-------------------------------------------------------
 	if (pCaption) {
-		pCaption.replace(/[\]]+$/g,"");
+		pCaption = pCaption.replace(/[\]]+$/g,"");
 	};
+	console.log("Caption Figure: '"+pCaption+"' ");
   return pCaption;
 
 };

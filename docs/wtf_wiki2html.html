@@ -303,7 +303,7 @@ Learning resources can guide the learner to become an author (see [[Learner2Auth
       processWikiDoc(pArticle,markup);
     };
 
-    function onlinedWikiDoc(pArticle,pWikiID) {
+    function onlineWikiDoc(pArticle,pWikiID) {
       wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
         //console.log("LOG (PlainText result): "+wtf.plaintext(markup));
         console.log("DOWNLOAD with wtf_wikipedia.js");

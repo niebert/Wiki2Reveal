@@ -459,6 +459,9 @@ function getMediaSubDir(pMediaLink) {
   var vExt = getExtensionOfFilename(pMediaLink);
   var vSubDir ="images"
   switch (vExt) {
+    case "wav":
+        vSubDir = "audio"
+    break;
     case "mp3":
         vSubDir = "audio"
     break;

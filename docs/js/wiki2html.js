@@ -543,15 +543,16 @@ Wiki2HTML.prototype.replaceImages = function (pWikiCode) {
 				//pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '" alt="' + tokens[0] + '"><figcaption>' + tokens[4] + '</figcaption></figure>');
 				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '><figcaption>' + vCaption + '</figcaption></figure>');
 			} else {
+				//if vLinkSplit.length > 2 do the following LinkSplit parsing
 				for (var i = 1; i < (vLinkSplit.length-1); i++) {
 					if ((vLinkSplit[i]).indexOf("alt=") == 0) {
 						vAltText =  ' alt="' + vLinkSplit[i] + '" ';
 					} else if (vLinkSplit[i] == "thumb") {
 						console.log("Background Image Slide for 'thumb'");
 					};
-					vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
-					pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vCaption + '</figcaption></figure>');
-				}
+				};
+				vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
+				pWikiCode = pWikiCode.replace(tokens[0], '<figure class="' + vClass + '"><img src="' + vURL + '" class="' + vClass + '"' + vAltText + '><figcaption>' + vCaption + '</figcaption></figure>');
 			}
 		}; // else if vLineSplit.length
 	}; // While tokens
@@ -796,6 +797,8 @@ Wiki2HTML.prototype.math2reveal = function (pWikiCode) {
   //-------------------------------------------------------
 	//pWikiCode = pWikiCode.replace(/\\R /g,"\\mathbb R ");
 	//pWikiCode = replaceString(pWikiCode,'\\','\mathbb R \\');
+	// INLINE MATH <span class="math inline">\( f(x) \)</span>  
+	// DISPLAY MATH <p><span class="math display">\[ f(x) \]</span></p>
 	return pWikiCode;
 
 };
@@ -1315,8 +1318,17 @@ Wiki2HTML.prototype.downloadMediaFile = function (pMediaLink) {
   //    var vMyInstance = new Wiki2HTML();
   //    vMyInstance.downloadMediaFile(pMediaLink);
   //-------------------------------------------------------
-
-   console.log("Download Media File '"+pMediaLink+"' to folder '"+this.aProjectDir+"' not implemented yet");
+	var vSubDir = this.getMediaSubDir(pMediaLink);
+	// convertWikiMedia2File "http://www,srv.org/img/my_image.png" to  "my_image.png"
+	var vMediaFile = this.convertWikiMedia2File(pMediaLink);
+	// add a subdirectory according to file type
+	// e.g."my_image.png" to "img/my_image.png"
+	// or  "my_music.mp3" to "audio/my_music.mp3"
+	// or  "my_video.webm" to "video/my_video.webm"
+	var vLocalLink = vSubDir + "/" + vMediaFile;
+	var vWGET_CMD = "wget -O " + this.aProjectDir + "/" + vLocalLink + " "+ pMediaLink;
+	console.log("CALL WGET: "+vWGET_CMD+" (e.g. in NodeJS)");
+	console.log("Download Media File '"+pMediaLink+"' to folder '"+this.aProjectDir+"' not implemented yet");
 
 };
 //----End of Method downloadMediaFile Definition
@@ -1359,8 +1371,7 @@ Wiki2HTML.prototype.convertMediaLink4Wiki = function (pWikiCode,pMediaArray) {
       vMediaFile = this.convertWikiMedia2File(pMediaArray[i]);
       vReplaceLink = vSubDir + "/" + vMediaFile;
 
-			vLinkHTML = "<img src=\""+vReplaceLink+"\" "
-      pWikiCode = this.replaceString(pWikiCode,"File:"+pMediaArray[i],"File:"+vReplaceLink);
+			pWikiCode = this.replaceString(pWikiCode,"File:"+pMediaArray[i],"File:"+vReplaceLink);
     };
     return pWikiCode;
 

@@ -797,8 +797,27 @@ Wiki2HTML.prototype.math2reveal = function (pWikiCode) {
   //-------------------------------------------------------
 	//pWikiCode = pWikiCode.replace(/\\R /g,"\\mathbb R ");
 	//pWikiCode = replaceString(pWikiCode,'\\','\mathbb R \\');
-	// INLINE MATH <span class="math inline">\( f(x) \)</span>  
+	//-------------------------------------------------------
+	// 'Greedy' means match longest possible string.
+	// 'Lazy' means match shortest possible string.
+	// For example, the greedy h.+l matches 'hell' in 'hello' but the lazy h.+?l
+	//-------------------------------------------------------
+	// DISPLAY MATH REPLACEMENT
 	// DISPLAY MATH <p><span class="math display">\[ f(x) \]</span></p>
+	var vMathTag = /\n(:<math[^>]+>)(.+?)(<\/math>)/gi;
+	var vMath = "";
+  while(tokens = vMathTag.exec(pWikiCode)) {
+		vMath = tokens[1];
+		pWikiCode = this.replaceString(pWikiCode,tokens[0]+tokens[1]+tokens[2],"<p><span class=\"math display\">\\["+vMath+"\\]</span></p>")
+	};
+	//-------------------------------------------------------
+	// INLINE MATH REPLACEMENT
+	// INLINE MATH <span class="math inline">\( f(x) \)</span>
+	vMathTag = /(<math[^>]+>)(.+?)(<\/math>)/gi;
+	while(tokens = vMathTag.exec(pWikiCode)) {
+		vMath = tokens[1];
+		pWikiCode = this.replaceString(pWikiCode,tokens[0]+tokens[1]+tokens[2],"<span class=\"math inline\">\\("+vMath+"\\)</span>")
+	};
 	return pWikiCode;
 
 };

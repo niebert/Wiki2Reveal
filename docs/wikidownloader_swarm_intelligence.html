@@ -4,7 +4,6 @@
     <title>wtf_wikipedia</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="js/wtf_wikipedia.js"></script>
-    <script src="js/wiki2reveal.js"></script>
   </head>
   <body style="margin:10px;background:#C0C0C0">
     <hr>
@@ -27,27 +26,25 @@
     <hr>
   </body>
   <script>
-    //---------------------------------------
-    var vTitle = "Normen, Metriken, Topologie";
-    var vAuthor = "Wikiversity DE";
-    var vLanguage = "de";
-    var vDomain = "wikiversity";
-    //---------------------------------------
-    var vWikiID = vLanguage+vDomain;
-    var page_identifier = vTitle.replace(/ /g,"_");
-    wtf.from_api(vTitle, vWikiID, function(pMarkdown){// Callback function after success
+  
+    var vTitle = "Swarm intelligence";
+    var vAuthor = "Wikiversity EN";
+    var vWikiID = "enwikiversity";
+    wtf.from_api(vTitle, vWikiID, function(markup){// Callback function after success
+      console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+      var slide0 = "<section>";
+      slide0 += "\n  <h1 class=\"title\">"+vTitle+"</h1>";
+      slide0 += "\n  <h2 class=\"author\">"+vAuthor+"</h2>";
+      slide0 += "\n</section>";
+      markup = slide0 + "\n" + markup;
+      markup = addSectionReveal(markup);
+      // store markup result in textarea
+      document.getElementById("wikimarkup").value = markup;
       // store JSON parse result in textarea
-      var data = wtf.parse(pMarkdown);
+      var data = wtf.parse(markup);
       document.getElementById("wikijson").value = JSON.stringify(data,null,4);
-      // store pMarkdown result in textarea
-      document.getElementById("wikimarkup").value = pMarkdown;
-
-      //console.log("LOG (PlainText result): "+wtf.plaintext(pMarkdown));
-      var htmlout = getWiki2Reveal(pMarkdown,vTitle, vAuthor, vLanguage, vDomain);
-      document.getElementById("wikihtml").value  = htmlout;
-      ;
+      document.getElementById("wikihtml").value  = wtf.html(markup);
     })
   </script>
-
 
 </html>

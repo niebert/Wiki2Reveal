@@ -376,12 +376,12 @@ Wiki2HTML.prototype.clean_source = function (pWikiCode) {
   //    var vMyInstance = new Wiki2HTML();
   //    vMyInstance.clean_source(pWikiCode);
   //-------------------------------------------------------
-	pWikiCode = replaceString(pWikiCode,"[[Image:","[[File:");
-	pWikiCode = replaceString(pWikiCode,"[[Datei:","[[File:");
-	pWikiCode = replaceString(pWikiCode,"|thumbnail|","|thumb|");
-	pWikiCode = replaceString(pWikiCode,"|thumbnail]]","|thumb| ]]");
-	pWikiCode = replaceString(pWikiCode,"|mini|","|thumb|");
-	pWikiCode = replaceString(pWikiCode,"|mini]]","|thumb| ]]");
+	pWikiCode = this.replaceString(pWikiCode,"[[Image:","[[File:");
+	pWikiCode = this.replaceString(pWikiCode,"[[Datei:","[[File:");
+	pWikiCode = this.replaceString(pWikiCode,"|thumbnail|","|thumb|");
+	pWikiCode = this.replaceString(pWikiCode,"|thumbnail]]","|thumb| ]]");
+	pWikiCode = this.replaceString(pWikiCode,"|mini|","|thumb|");
+	pWikiCode = this.replaceString(pWikiCode,"|mini]]","|thumb| ]]");
 	//pWikiCode = pWikiCode.replace(/[|](thumbnail|mini)(\]|\|)/g,"|thumb$2");
   pWikiCode = pWikiCode.replace(/\r/g, '');
   return pWikiCode;
@@ -736,7 +736,7 @@ Wiki2HTML.prototype.math2jax = function (pWikiCode,pFormat) {
 	pWikiCode = pWikiCode.replace(/\\R\^/g,"\\mathbb R^");
 	pWikiCode = pWikiCode.replace(/\\R</g,"\\mathbb R<");
 	pWikiCode = pWikiCode.replace(/\\R\s/g,"\\mathbb R ");
-	//pWikiCode = replaceString(pWikiCode,'\\','\mathbb R \\');
+	//pWikiCode =this.replaceString(pWikiCode,'\\','\mathbb R \\');
 	return pWikiCode;
 
 };
@@ -768,7 +768,7 @@ Wiki2HTML.prototype.mathsymbols = function (pWikiCode) {
 	pWikiCode = pWikiCode.replace(/\\R\^/g,"\\mathbb R^");
 	pWikiCode = pWikiCode.replace(/\\R</g,"\\mathbb R<");
 	pWikiCode = pWikiCode.replace(/\\R\s/g,"\\mathbb R ");
-	//pWikiCode = replaceString(pWikiCode,'\\','\mathbb R \\');
+	//pWikiCode =this.replaceString(pWikiCode,'\\','\mathbb R \\');
 	return pWikiCode;
 
 };
@@ -796,7 +796,7 @@ Wiki2HTML.prototype.math2reveal = function (pWikiCode) {
   //    pWikiCode = vMyInstance.math2reveal(pWikiCode);
   //-------------------------------------------------------
 	//pWikiCode = pWikiCode.replace(/\\R /g,"\\mathbb R ");
-	//pWikiCode = replaceString(pWikiCode,'\\','\mathbb R \\');
+	//pWikiCode =this.replaceString(pWikiCode,'\\','\mathbb R \\');
 	//-------------------------------------------------------
 	// 'Greedy' means match longest possible string.
 	// 'Lazy' means match shortest possible string.
@@ -1586,7 +1586,7 @@ Wiki2HTML.prototype.getWikiDisplayURL= function (pLink) {
 	console.log("getWikiDisplayURL('"+pLink+"') vServer='"+vServer+"'");
 	var vMap = this.aMap;
 	pLink = pLink || "undefined link";
-	pLink = replaceString(pLink," ","_");
+	pLink =this.replaceString(pLink," ","_");
 	var vLinkArr = pLink.split(":");
 	// pLink = "Wikipedia:Water"
 	var vArticle = pLink;
@@ -1809,7 +1809,7 @@ Wiki2HTML.prototype.convertMediaLink4WikiOnline = function (pWikiCode,pMediaArra
 					//[[File:My File.png|center|400px|My Caption "Title"]]
 					vCaption = this.checkCaption(vFileSplit[vFileSplit.length-1]);
 					// vCaption ="My Caption \"Title\""
-					vCaption = replaceString(vCaption,"\"","'");
+					vCaption =this.replaceString(vCaption,"\"","'");
 					// vCaption ="My Caption 'Title'
 				};
 				// ReplaceLink created as image-tag

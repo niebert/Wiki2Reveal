@@ -25,159 +25,164 @@
   <script src="reveal/lib/js/html5shiv.js"></script>
   <![endif]-->
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script>
+	 setTimeout("document.getElementById('firstslide').innerHTML = '<p>Test</p>'",5000);
+</script>
+
 </head>
 <body>
   <div class="reveal">
-    <div class="slides">
+    <div class="slides" id="divslides">
 
-<section>
-  <h1 class="title">OER & Nutzung von PanDoc</h1>
-  <h2 class="author">Engelbert Niehaus</h2>
-</section>
+      <section id="firstslide">
+        <h1 class="title">OER & Nutzung von PanDoc</h1>
+        <h2 class="author">Engelbert Niehaus</h2>
+      </section>
 
-<section id="wiki-formate-als-datensenken" class="level2">
-<h2>Wiki-Formate als Datensenken</h2>
-<p>WikiMedia-Syntax wird als Format in</p>
-<ul>
-<li>Wikipedia</li>
-<li>Wikiversity (OER)</li>
-<li>OLAT (closed Doc Development)</li>
-<li>....</li>
-</ul>
-<p>verwendet.</p>
-</section>
-<section id="wikimedia-konzept" class="level2">
-<h2>WikiMedia-Konzept</h2>
-<ul>
-<li>Offene kollaborative Inhaltsentwicklung</li>
-<li>Versionierung der Inhalte</li>
-<li>Diskussionsseiten jeweils zu allen Inhalten</li>
-<li>Qualtitätsicherung mit externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
-</ul>
-</section>
-<section id="wikiversity-und-bildungsprozesse" class="level2">
-<h2>Wikiversity und Bildungsprozesse</h2>
-<ul>
-<li>Primary Education (Grundschulen)</li>
-<li>Secondary Education (Weiterführende Schulen)</li>
-<li>Tertiary Education (Universitäten)</li>
-<li>Non-formal Education (Handwerkliche Techniken, Alltagswissen, ...)</li>
-</ul>
-</section>
-<section id="aus-datensenken-andere-formate-erzeugen" class="level2">
-<h2>Aus Datensenken andere Formate erzeugen</h2>
-<ul>
-<li>Markdown</li>
-<li>Präsentationen (RevealJS, DZSlides, LaTeX Beamer)</li>
-<li>LibreOffice-Dokumente mit Style-Templates,</li>
-<li>Microsoft Office-Dokumente mit Style-Templates,</li>
-<li>LaTeX-Dokumente,</li>
-<li>PDF, ...</li>
-</ul>
-</section>
-<section id="pandoc-electron" class="level2">
-<h2>PanDoc Electron</h2>
-<figure>
-<img src="./images/PanDocElectronMain.png" width="700" />
-</figure>
-</section>
-<section id="pandoc-electron-1" class="level2">
-<h2>PanDoc Electron</h2>
-<figure>
-<img src="./images/PanDocElectronMain.png" width="250" />
-</figure>
-<ul>
-<li><strong>Electron</strong> = Browser mit vollem Zugriff auf das Dateisystem</li>
-<li><strong>Download (PanDocElectron):</strong> <a href="http://niebert.github.io/PanDocElectron"><a href="http://niebert.github.io/PanDocElectron" class="uri">http://niebert.github.io/PanDocElectron</a></a></li>
-</ul>
-</section>
-<section id="reveal-präsentationen" class="level2">
-<h2>Reveal-Präsentationen</h2>
-<ul>
-<li>In Standard <a href="https://github.com/hakimel/reveal.js">reveal.js</a>-Präsentationen werden mathematische Formel mit MathJax erzeugt.</li>
-<li>Eingabeformate LaTeX (und ASCII-MathI)</li>
-<li>URL: <a href="https://github.com/mathjax/MathJax" class="uri">https://github.com/mathjax/MathJax</a></li>
-<li>Homepage: <a href="http://www.mathjax.org" class="uri">http://www.mathjax.org</a></li>
-</ul>
-</section>
-<section id="mathemtatik" class="level2">
-<h2>Mathemtatik</h2>
-<ul>
-<li>z.B. Taylorentwickung <span class="math inline">\(f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n\)</span><br />
-</li>
-</ul>
-<p>Abgesetzte mathematische Formeln <span class="math inline">\(\displaystyle  \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)\)</span></p>
-<ul>
-<li>Grundlage LaTeX with in WikiMedia, MathJax, ... unterstützt</li>
-</ul>
-</section>
-<section id="audio-video" class="level2">
-<h2>Audio Video</h2>
-<ul>
-<li>Die Mediendateien werden in einen Unterverzeichnis der Projekte gespeichert <em>/audio</em>, <em>/video</em> and <em>/images</em></li>
-<li>die Unterordner der Projekte Medien (Video, Audio, Images, ...),</li>
-<li>insbesondere für Audiodateien zu Präsentationen <em>audio1.mp3, audio2.mp3, ...</em></li>
-</ul>
-</section>
-<section id="wikimedia-quelle" class="level2">
-<h2>WikiMedia Quelle</h2>
-<figure>
-<img src="./images/PanDocWikiversity.png" width="650" />
-</figure>
-<p><a href="https://commons.wikimedia.org/wiki/User:Bert_Niehaus" class="uri" title="wikilink">https://commons.wikimedia.org/wiki/User:Bert_Niehaus</a></p>
-</section>
-<section id="pandoc-ausgabe-libreoffice" class="level2">
-<h2>PanDoc-Ausgabe: LibreOffice</h2>
-<figure>
-<img src="./images/PanDocLibreOffice1col.png" width="650" />
-</figure>
-</section>
-<section id="pandoc-ausgabe-libreoffice-layout" class="level2">
-<h2>PanDoc-Ausgabe: LibreOffice Layout</h2>
-<figure>
-<img src="./images/PanDocLibreOffice2col.png" width="650" />
-</figure>
-</section>
-<section id="pandoc-ausgabe-word-layout" class="level2">
-<h2>PanDoc-Ausgabe: Word Layout</h2>
-<figure>
-<img src="./images/PanDocWord2col.png" width="650" />
-</figure>
-</section>
-<section id="pandoc-von-der-kommandozeile" class="level2">
-<h2>PanDoc von der Kommandozeile</h2>
-<pre><code>pandoc -f mediawiki -t html5 --template=tpl4reveal.html \
-     --standalone --section-divs \
-     --variable theme=&#39;beige&#39; \
-     --variable transition=&amp;quot;slide&amp;quot; --mathjax \
-     wikipedia.wiki -o wikipedia.html</code></pre>
-</section>
-<section id="github-versionierung-einer-qualitätssicherung" class="level2">
-<h2>GitHub: Versionierung einer Qualitätssicherung</h2>
-<ul>
-<li>GitHub zur Versionierung von Quelltexten (i.d. Programmcode)</li>
-<li>für OER angewendet auf WikiMedia Quelltextes</li>
-<li>Lese-Zugriff frei/offen</li>
-<li>Schreibzugriff auf die Versionierung nur durch Gutachterteam</li>
-<li>Gutachter-Innen nicht anonym</li>
-</ul>
-</section>
-<section id="tutorials-für-markdown-wikimedia" class="level2">
-<h2>Tutorials für Markdown &amp; WikiMedia</h2>
-<ul>
-<li>Tutorial Markdown <a href="http://www.markdowntutorial.com" class="uri">http://www.markdowntutorial.com</a></li>
-<li>Tutorial WikiMedia <a href="https://en.wikipedia.org/wiki/Wikipedia:Tutorial" class="uri">https://en.wikipedia.org/wiki/Wikipedia:Tutorial</a></li>
-</ul>
-</section>
-<section id="zusammenfassung" class="level2">
-<h2>Zusammenfassung</h2>
-<ul>
-<li><strong>Wikiversity:</strong> Offene kollaborative Inhaltsentwicklung für OER</li>
-<li><strong>Versionierung:</strong> Inhalte werden versioniert inkl. Diskussionsseiten</li>
-<li><strong>PanDoc(Electron):</strong> Tools für Konvertierung der Inhalte in andere Formate</li>
-<li><strong>Qualtitätsicherung:</strong> Externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
-</ul>
-</section>
+      <section id="wiki-formate-als-datensenken" class="level2">
+      <h2>Wiki-Formate als Datensenken</h2>
+      <p>WikiMedia-Syntax wird als Format in</p>
+      <ul>
+      <li>Wikipedia</li>
+      <li>Wikiversity (OER)</li>
+      <li>OLAT (closed Doc Development)</li>
+      <li>....</li>
+      </ul>
+      <p>verwendet.</p>
+      </section>
+      <section id="wikimedia-konzept" class="level2">
+      <h2>WikiMedia-Konzept</h2>
+      <ul>
+      <li>Offene kollaborative Inhaltsentwicklung</li>
+      <li>Versionierung der Inhalte</li>
+      <li>Diskussionsseiten jeweils zu allen Inhalten</li>
+      <li>Qualtitätsicherung mit externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
+      </ul>
+      </section>
+      <section id="wikiversity-und-bildungsprozesse" class="level2">
+      <h2>Wikiversity und Bildungsprozesse</h2>
+      <ul>
+      <li>Primary Education (Grundschulen)</li>
+      <li>Secondary Education (Weiterführende Schulen)</li>
+      <li>Tertiary Education (Universitäten)</li>
+      <li>Non-formal Education (Handwerkliche Techniken, Alltagswissen, ...)</li>
+      </ul>
+      </section>
+      <section id="aus-datensenken-andere-formate-erzeugen" class="level2">
+      <h2>Aus Datensenken andere Formate erzeugen</h2>
+      <ul>
+      <li>Markdown</li>
+      <li>Präsentationen (RevealJS, DZSlides, LaTeX Beamer)</li>
+      <li>LibreOffice-Dokumente mit Style-Templates,</li>
+      <li>Microsoft Office-Dokumente mit Style-Templates,</li>
+      <li>LaTeX-Dokumente,</li>
+      <li>PDF, ...</li>
+      </ul>
+      </section>
+      <section id="pandoc-electron" class="level2">
+      <h2>PanDoc Electron</h2>
+      <figure>
+      <img src="./images/PanDocElectronMain.png" width="700" />
+      </figure>
+      </section>
+      <section id="pandoc-electron-1" class="level2">
+      <h2>PanDoc Electron</h2>
+      <figure>
+      <img src="./images/PanDocElectronMain.png" width="250" />
+      </figure>
+      <ul>
+      <li><strong>Electron</strong> = Browser mit vollem Zugriff auf das Dateisystem</li>
+      <li><strong>Download (PanDocElectron):</strong> <a href="http://niebert.github.io/PanDocElectron"><a href="http://niebert.github.io/PanDocElectron" class="uri">http://niebert.github.io/PanDocElectron</a></a></li>
+      </ul>
+      </section>
+      <section id="reveal-präsentationen" class="level2">
+      <h2>Reveal-Präsentationen</h2>
+      <ul>
+      <li>In Standard <a href="https://github.com/hakimel/reveal.js">reveal.js</a>-Präsentationen werden mathematische Formel mit MathJax erzeugt.</li>
+      <li>Eingabeformate LaTeX (und ASCII-MathI)</li>
+      <li>URL: <a href="https://github.com/mathjax/MathJax" class="uri">https://github.com/mathjax/MathJax</a></li>
+      <li>Homepage: <a href="http://www.mathjax.org" class="uri">http://www.mathjax.org</a></li>
+      </ul>
+      </section>
+      <section id="mathemtatik" class="level2">
+      <h2>Mathemtatik</h2>
+      <ul>
+      <li>z.B. Taylorentwickung <span class="math inline">\(f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n\)</span><br />
+      </li>
+      </ul>
+      <p>Abgesetzte mathematische Formeln <span class="math inline">\(\displaystyle  \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)\)</span></p>
+      <ul>
+      <li>Grundlage LaTeX with in WikiMedia, MathJax, ... unterstützt</li>
+      </ul>
+      </section>
+      <section id="audio-video" class="level2">
+      <h2>Audio Video</h2>
+      <ul>
+      <li>Die Mediendateien werden in einen Unterverzeichnis der Projekte gespeichert <em>/audio</em>, <em>/video</em> and <em>/images</em></li>
+      <li>die Unterordner der Projekte Medien (Video, Audio, Images, ...),</li>
+      <li>insbesondere für Audiodateien zu Präsentationen <em>audio1.mp3, audio2.mp3, ...</em></li>
+      </ul>
+      </section>
+      <section id="wikimedia-quelle" class="level2">
+      <h2>WikiMedia Quelle</h2>
+      <figure>
+      <img src="./images/PanDocWikiversity.png" width="650" />
+      </figure>
+      <p><a href="https://commons.wikimedia.org/wiki/User:Bert_Niehaus" class="uri" title="wikilink">https://commons.wikimedia.org/wiki/User:Bert_Niehaus</a></p>
+      </section>
+      <section id="pandoc-ausgabe-libreoffice" class="level2">
+      <h2>PanDoc-Ausgabe: LibreOffice</h2>
+      <figure>
+      <img src="./images/PanDocLibreOffice1col.png" width="650" />
+      </figure>
+      </section>
+      <section id="pandoc-ausgabe-libreoffice-layout" class="level2">
+      <h2>PanDoc-Ausgabe: LibreOffice Layout</h2>
+      <figure>
+      <img src="./images/PanDocLibreOffice2col.png" width="650" />
+      </figure>
+      </section>
+      <section id="pandoc-ausgabe-word-layout" class="level2">
+      <h2>PanDoc-Ausgabe: Word Layout</h2>
+      <figure>
+      <img src="./images/PanDocWord2col.png" width="650" />
+      </figure>
+      </section>
+      <section id="pandoc-von-der-kommandozeile" class="level2">
+      <h2>PanDoc von der Kommandozeile</h2>
+      <pre><code>pandoc -f mediawiki -t html5 --template=tpl4reveal.html \
+           --standalone --section-divs \
+           --variable theme=&#39;beige&#39; \
+           --variable transition=&amp;quot;slide&amp;quot; --mathjax \
+           wikipedia.wiki -o wikipedia.html</code></pre>
+      </section>
+      <section id="github-versionierung-einer-qualitätssicherung" class="level2">
+      <h2>GitHub: Versionierung einer Qualitätssicherung</h2>
+      <ul>
+      <li>GitHub zur Versionierung von Quelltexten (i.d. Programmcode)</li>
+      <li>für OER angewendet auf WikiMedia Quelltextes</li>
+      <li>Lese-Zugriff frei/offen</li>
+      <li>Schreibzugriff auf die Versionierung nur durch Gutachterteam</li>
+      <li>Gutachter-Innen nicht anonym</li>
+      </ul>
+      </section>
+      <section id="tutorials-für-markdown-wikimedia" class="level2">
+      <h2>Tutorials für Markdown &amp; WikiMedia</h2>
+      <ul>
+      <li>Tutorial Markdown <a href="http://www.markdowntutorial.com" class="uri">http://www.markdowntutorial.com</a></li>
+      <li>Tutorial WikiMedia <a href="https://en.wikipedia.org/wiki/Wikipedia:Tutorial" class="uri">https://en.wikipedia.org/wiki/Wikipedia:Tutorial</a></li>
+      </ul>
+      </section>
+      <section id="zusammenfassung" class="level2">
+      <h2>Zusammenfassung</h2>
+      <ul>
+      <li><strong>Wikiversity:</strong> Offene kollaborative Inhaltsentwicklung für OER</li>
+      <li><strong>Versionierung:</strong> Inhalte werden versioniert inkl. Diskussionsseiten</li>
+      <li><strong>PanDoc(Electron):</strong> Tools für Konvertierung der Inhalte in andere Formate</li>
+      <li><strong>Qualtitätsicherung:</strong> Externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
+      </ul>
+      </section>
+
     </div>
   </div>
 
@@ -186,29 +191,34 @@
 
   <script>
 
-      // Full list of configuration options available at:
-      // https://github.com/hakimel/reveal.js#configuration
-      Reveal.initialize({
+  function callRevealInit() {
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
 
-        math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
-          //mathjax: 'mathjax/MathJax.js',
-          config: 'TeX-AMS_HTML-full'
-        },
+      math: {
+        mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+        //mathjax: 'mathjax/MathJax.js',
+        config: 'TeX-AMS_HTML-full'
+      },
 
-        // Optional reveal.js plugins
-        dependencies: [
-          { src: 'reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-          { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
-          { src: 'reveal/plugin/notes/notes.js', async: true },
-          { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-		  { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-		  { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-          { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
-          { src: 'reveal/plugin/notes/notes.js', async: true },
-          { src: 'reveal/plugin/math/math.js', async: true }
-				]
-      });
+      // Optional reveal.js plugins
+      dependencies: [
+        { src: 'reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+        { src: 'reveal/plugin/notes/notes.js', async: true },
+        { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+        { src: 'reveal/plugin/notes/notes.js', async: true },
+        { src: 'reveal/plugin/math/math.js', async: true }
+      ]
+    });
+
+  }
+
+  setTimeout("callRevealInit()",5000);
     </script>
     </body>
 </html>

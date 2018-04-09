@@ -33,6 +33,64 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
 };
 
 
+function callRevealInit() {
+  console.log("callRevealInit()");
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      math: {
+        mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+        //mathjax: 'mathjax/MathJax.js',
+        config: 'TeX-AMS_HTML-full'
+      },
+      // Optional reveal.js plugins
+      dependencies: [
+        { src: 'reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+        { src: 'reveal/plugin/notes/notes.js', async: true },
+        { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+        { src: 'reveal/plugin/notes/notes.js', async: true },
+        { src: 'reveal/plugin/math/math.js', async: true },
+        { src: 'reveal/plugin/chalkboard/chalkboard.js', async: true },
+        { src: 'reveal/plugin/menu/menu.js', async: true }
+      ],
+      audio: {
+        prefix: 'chalkboard/',
+        suffix: '.ogg',
+        defaultDuration: 5,
+//					textToSpeechURL: "http://api.voicerss.org/?key=[YOUR_KEY]&hl=en-gb&c=ogg&src=",
+        advance: 500,
+        autoplay: false,
+        defaultText: true,
+        playerOpacity: 0.2,
+      },
+      chalkboard: { // font-awesome.min.css must be available
+        //src: "../../reveal/plugin/chalkboard/chalkboard.json",
+        //src: "chalkboard/chalkboard.json",
+        toggleChalkboardButton: { left: "80px" },
+        toggleNotesButton: { left: "130px" },
+        theme: "whiteboard",
+        background: [ 'rgba(127,127,127,.1)' , 'reveal/plugin/chalkboard/img/whiteboard.png' ],
+        pen: [ 'reveal/plugin/chalkboard/img/boardmarker.png' , 'reveal/plugin/chalkboard/img/boardmarker.png' ],
+//				        color: [ 'rgba(0,0,255,1)', 'rgba(0,0,255,0.5)' ],
+//				        draw: [ (RevealChalkboard) ?  RevealChalkboard.drawWithPen : null , (RevealChalkboard) ? RevealChalkboard.drawWithPen : null ],
+      },
+      keyboard: {
+          67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle chalkboard when 'c' is pressed
+          66: function() { RevealChalkboard.toggleChalkboard() },	// toggle chalkboard when 'b' is pressed
+          46: function() { RevealChalkboard.clear() },	// clear chalkboard when 'DEL' is pressed
+           8: function() { RevealChalkboard.reset() },	// reset all chalkboard data when 'BACKSPACE' is pressed
+          68: function() { RevealChalkboard.download() },	// download chalkboard drawing when 'd' is pressed
+        90: function() { Recorder.downloadZip(); }, 	// press 'z' to download zip containing audio files
+        84: function() { Recorder.fetchTTS(); } 	// press 't' to fetch TTS audio files
+      }
+    });
+}
+
+
 function addSectionReveal(pMarkdown) {
     var vSearch = /(<section[^>]*>)/i;
     var vResult;

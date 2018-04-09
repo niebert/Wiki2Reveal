@@ -17,6 +17,16 @@
   <script src="js/linkparam.js"></script>
   <!-- Printing and PDF exports -->
   <script>
+    //---------------------------------------
+    //------DEFAULT VALUES-------------------
+    //---------------------------------------
+    // Link parameters will overwrite default values (see line )
+    var vTitle = "Normen, Metriken, Topologie";
+    var vAuthor = "Wikiversity DE";
+    var vLanguage = "de";
+    var vDomain = "wikiversity";
+    //---------------------------------------
+    var vOffline = false
     var link = document.createElement( 'link' );
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -30,16 +40,7 @@
   <![endif]-->
 
   <script>
-  //---------------------------------------
-  //------DEFAULT VALUES-------------------
-  //---------------------------------------
-  var vTitle = "Normen, Metriken, Topologie";
-  var vAuthor = "Wikiversity DE";
-  var vLanguage = "de";
-  var vDomain = "wikiversity";
-  //---------------------------------------
-  var vOffline = false; // set to true for Debugging in offline mode
-  //---------------------------------------
+  //setTimeout("document.getElementById('firstslide').innerHTML = '<p>Test</p>'",5000);
 
   function el(pID) {
     return document.getElementById(pID)
@@ -63,18 +64,25 @@
     <div class="slides" id="divslides">
     </div>
   </div>
-<div style="display:none">
-  <b>Emulated Wiki Source:</b></br>
-    <textarea id="wikisrc" rows="12" cols="120">
+<textarea id="revealsource" rows="12" cols="120">
+
+  <section id="firstslide">
+    <h1 class="title">Wiki2Reveal Demo</h1>
+    <h2 class="author">Offline - No Slides</h2>
+  </section>
+</textarea>
+<b>Emulated Wiki Source:</b></br>
+  <textarea id="wikisrc" rows="12" cols="120">
 == Wiki2Reveal Demo ==
-Converter used in Offline mode without internet connectivity!
+Text could not be downloaded
   </textarea>
-</div>
 </body>
 
   <script src="reveal/lib/js/head.min.js"></script>
   <script src="reveal/js/reveal.js"></script>
 
+  <script>
+    </script>
     </body>
 
     <script>
@@ -83,7 +91,7 @@ Converter used in Offline mode without internet connectivity!
     //---------------------------------------
     var vLinkParam = new LinkParam();
     vLinkParam.init(document);
-    //------ TiTLE --------------------------
+    //------ TUTLE --------------------------
     if (vLinkParam.exists("title")) {
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
@@ -104,9 +112,6 @@ Converter used in Offline mode without internet connectivity!
       vLanguage = vLinkParam.getValue("domain");
     };
     //--------------------------------------
-    function callWikiDownload() {
-        downloadWikiDoc(el("tArticle").value,el("sWikiLanguage").value + el("sWikiDomain").value);
-    };
 
       function downloadWikiDoc(pArticle,pWikiID) {
         //alert("Emulate MediaWiki Download");
@@ -143,10 +148,10 @@ Converter used in Offline mode without internet connectivity!
         el("divslides").innerHTML = htmlout; //el("revealsource").value;
         //el("divslides").innerHTML = el("revealsource").value;
         //var vWikiJSON = wtf.parse(markup);
-        setTimeout("callRevealInit()",1000)
+        setTimeout("callRevealInit()",3000)
       }
-      callWikiDownload();
-      //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");
+
+      onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");
     </script>
 
 </html>

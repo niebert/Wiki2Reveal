@@ -101,11 +101,11 @@ Converter used in Offline mode without internet connectivity!
     //------ DOMAIN ------------------------
     if (vLinkParam.exists("domain")) {
       // e.g. index.html?domain=wikipedia
-      vLanguage = vLinkParam.getValue("domain");
+      vDomain = vLinkParam.getValue("domain");
     };
     //--------------------------------------
     function callWikiDownload() {
-        downloadWikiDoc(el("tArticle").value,el("sWikiLanguage").value + el("sWikiDomain").value);
+        downloadWikiDoc(vTitle,vLanguage + vDomain);
     };
 
       function downloadWikiDoc(pArticle,pWikiID) {

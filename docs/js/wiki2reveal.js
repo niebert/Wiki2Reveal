@@ -16,11 +16,12 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // replace local  urls (e.g. [[Other Article]])
   // by a remote url to the Wiki article e.g. [https://en.wikipedia.org/wiki/Other_Article Other Article]
   pMarkdown = wtf.wikiconvert.replaceWikiLinks(pMarkdown);
+  pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
   // create a Title slide and place the slide before output
-  pMarkdown = createTitleSlide(pTitle,pAuthor) + "\n" + pMarkdown;
+  pMarkdown = createTitleSlide(link2title(pTitle),pAuthor) + "\n" + pMarkdown;
   // replace the Math-Tags for Reveal output
   pMarkdown = replaceMath4Reveal(pMarkdown);
   // generate Reveal html output
@@ -28,10 +29,23 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   //var htmlout =  wtf.html(pMarkdown)
   htmlout = addSectionReveal(htmlout);
   htmlout = postprocessMath4Reveal(htmlout);
-  pMarkdown = pMarkdown.replace(/<imgXXX /g,"<img ");
+  htmlout = htmlout.replace(/<imgXXX /g,"<img ");
+  htmlout = htmlout.replace(/___aXXX___ /g,"<a ");
+  htmlout = htmlout.replace(/___aXXXC___/g,"</a>");
+  htmlout = htmlout.replace(/___\/aXXX___/g,"</a>");
   return htmlout;
 };
 
+function link2title(pArticle) {
+  return pArticle.replace(/_/g," ");
+};
+
+function external_links2href(pMarkdown) {
+  var RE_ext_link = /\[([^\s\]]+)[[\s]+?([^\]]+)\]/gm;
+  pMarkdown = pMarkdown.replace(RE_ext_link, '___aXXX___ href="$1" target="_blank"___aXXXC___$2 ___/aXXX___');
+
+  return pMarkdown
+}
 
 function callRevealInit() {
   console.log("callRevealInit()");

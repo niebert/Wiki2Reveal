@@ -61,6 +61,7 @@
 <body>
   <div class="reveal">
     <div class="slides" id="divslides">
+      Waiting for Wiki-Download ...
     </div>
   </div>
 <div style="display:none">
@@ -105,19 +106,20 @@ Converter used in Offline mode without internet connectivity!
     };
     //--------------------------------------
     function callWikiDownload() {
-        downloadWikiDoc(vTitle,vLanguage + vDomain);
+        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
     };
 
-      function downloadWikiDoc(pArticle,pWikiID) {
+      function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
         //alert("Emulate MediaWiki Download");
+        console.log("CALL:downloadWikiDoc()\nWiki Title: '"+pTitle+"'\n URL: 'https://"+pLanguage+"."+pDomain+".org'");
         if (vOffline == true) {
-          offlineWikiDoc(pArticle,pWikiID);
+          offlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
         } else {
-          onlineWikiDoc(pArticle,pWikiID);
+          onlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
         }
       };
 
-      function offlineWikiDoc(pArticle,pWikiID) {
+      function offlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
         //alert("Emulate MediaWiki Download");
         var markup = document.getElementById("wikisrc").value;
         console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
@@ -125,8 +127,9 @@ Converter used in Offline mode without internet connectivity!
         processWikiDoc(pArticle,markup);
       };
 
-      function onlineWikiDoc(pArticle,pWikiID) {
-        wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
+      function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+        var vWikiID = pLanguage+pDomain;
+        wtf.from_api(pArticle, vWikiID, function(markup){// Callback function after success
           //console.log("LOG (PlainText result): "+wtf.plaintext(markup));
           console.log("DOWNLOAD with wtf_wikipedia.js \n"+markup.substr(0,100)+"...");
           // store markup result in textarea
@@ -143,7 +146,7 @@ Converter used in Offline mode without internet connectivity!
         el("divslides").innerHTML = htmlout; //el("revealsource").value;
         //el("divslides").innerHTML = el("revealsource").value;
         //var vWikiJSON = wtf.parse(markup);
-        setTimeout("callRevealInit()",1000)
+        setTimeout("callRevealInit()",3000)
       }
       callWikiDownload();
       //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");

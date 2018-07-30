@@ -1,6 +1,8 @@
 # Wiki2Reveal
 Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentation. The main challenges is the cross-origine call to retrieve the wiki source text of an article in the MediaWiki. Transcoding of the wiki syntax to other formats like [PanDoc](https://pandoc.org/try)
 
+## [Wiki2Reveal Online-Demo](http://niebert.github.io/Wiki2Reveal/)
+
 ***Table of Contents***
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->

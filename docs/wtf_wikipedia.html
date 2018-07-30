@@ -3,11 +3,22 @@
   <head>
     <title>wtf_wikipedia</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script src="js/wtf_wikipedia.js"></script>
+    <script src="js/wtf_wikipedia.min.js"></script>
+    <script src="js/wiki2reveal.js"></script>
+    <script src="js/wikiconvert.js"></script>
     <script src="js/writedom.js"></script>
+    <script src="js/wiky.js"></script>
   </head>
   <body style="margin:10px;background:#C0C0C0">
     <script>
+    if (wtf) {
+      if (wtf.version) {
+        console.log("VERSION: wtf_wikipedia "+wtf.version);
+      };
+      //var vWikiConvert = new WikiConvert();
+      wtf.wikiconvert = new WikiConvert();
+      wtf.reveal = wtf.html;
+    }
       function el(pID) {
         return document.getElementById(pID)
       };
@@ -27,13 +38,31 @@
       };
 
       function downloadWikiDoc(pArticle,pWikiID) {
-        wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
-          console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+        wtf.fetch(pArticle, pWikiID, function(err, doc){// Callback function after success
+
+          var markup = doc.markdown();
+          console.log("LOG (PlainText result): "+markup);
           // store markup result in textarea
-          document.getElementById("wikimarkup").value = markup;
+          document.getElementById("wikimarkup").value = doc.wiki;
+          // store revealJS result in textarea
+          var markup = doc.wiki;
+          var vTitle = el("wikiarticle").value;
+          var vLanguage = el("sWikiLanguage").value;
+          var vDomain = el("sWikiDomain").value;
+          var revealout = getWiki2Reveal(markup,vTitle, "Wiki Author", vLanguage, vDomain);
+          // store RevealJS result in textarea
+          document.getElementById("revealout").value = revealout;
+          // store wiky.js result in textarea
+          document.getElementById("wikyout").value = wiky.process(markup);
+// store markup result in textarea
+          document.getElementById("markdownout").value = doc.markdown();
+          // store markup result in textarea
+          document.getElementById("latexout").value = doc.latex();
+          // store markup result in textarea
+          document.getElementById("htmlout").value = doc.html();
           // store JSON parse result in textarea
-          var data = wtf.parse(markup);
-          document.getElementById("wikijson").value = JSON.stringify(data,null,4);
+          document.getElementById("wikijson").value = JSON.stringify(doc,null,4);
+
         })
       }
 
@@ -41,7 +70,8 @@
     <hr>
       <center>
         <h2>WTF Wikipedia Download Tool</h2>
-        Library NPM: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a>
+        Library NPM: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a>, <a href="https://www.github.com/tanin47/wiky.js/" target="_blank">wiky.js</a>
+
       </center>
     <hr>
     <b>Wiki:</b>
@@ -112,8 +142,28 @@
     <textarea id="wikimarkup" rows="12" cols="120">
     </textarea>
     <hr>
-    <b>Parsed Wiki JSON:</b></br>
+    <b><a href="https://raw.githubusercontent.com/tanin47/wiky.js/master/wiky.js" target="_blank">Wiky Output</a>:</b></br>
+    <textarea id="wikyout" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Wiki JSON:</b></br>
     <textarea id="wikijson" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Reveal Output:</b></br>
+    <textarea id="revealout" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>Markdown Output:</b></br>
+    <textarea id="markdownout" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>LaTeX Output:</b></br>
+    <textarea id="latexout" rows="12" cols="120">
+    </textarea>
+    <hr>
+    <b>HTML Output:</b></br>
+    <textarea id="htmlout" rows="12" cols="120">
     </textarea>
     <hr>
   </body>

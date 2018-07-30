@@ -1,3 +1,17 @@
+/* ---------------------------------------
+ Exported Module Variable: LinkParam
+ Package:  linkparam
+ Version:  1.1.3
+ Homepage: https://github.com/niebert/LinkParam#readme
+ Author:   Engelbert Niehaus
+ License:  MIT
+ Require Module with:
+    const LinkParam = require('linkparam');
+ ------------------------------------------ */
+
+//--- JSHint Settings: -----
+/*jshint  laxcomma: true, asi: true, maxerr: 150 */
+/*global alert, confirm, console, prompt */
 //#################################################################
 //# Javascript Class: LinkParam()
 //#       SuperClass:
@@ -52,16 +66,16 @@ function LinkParam () {
     //---------------------------------------------------------------------
 	//---PUBLIC: size (Integer): Counts the Number of Parameter
 	this.size = 0;
-	//---PUBLIC: aVars (Hash): Attribute: 'aVars' Type: 'Hash' stores all URL parameters 
-	this.aVars = {};
-	//---PUBLIC: aLink (String): Attribute: 'aLink' Type: 'String' stores the Link before '?' 
+	//---PUBLIC: aVars (Hash): Attribute: 'aVars' Type: 'Hash' stores all URL parameters
+	this.aVars = {} ;
+	//---PUBLIC: aLink (String): Attribute: 'aLink' Type: 'String' stores the Link before '?'
 	this.aLink = "";
-	
+
     //---------------------------------------------------------------------
     //---Methods of Class "LinkParam()"
     //---------------------------------------------------------------------
 	//----PUBLIC Method: LinkParam.init(pDoc:Document)-----
-	// init(pDoc)  
+	// init(pDoc)
 	//	init extract the link with parameters from document.location.search and store aLink
 	//----PUBLIC Method: LinkParam.parseURL(pLink:String):String-----
 	// parseURL(pLink)  Return: String
@@ -70,13 +84,13 @@ function LinkParam () {
 	// getURL(pVarHash)  Return: String
 	//	Comment for getLink
 	//----PUBLIC Method: LinkParam.setValue(pVar:String,pValue:String)-----
-	// setValue(pVar,pValue)  
+	// setValue(pVar,pValue)
 	//	Comment for setValue
 	//----PUBLIC Method: LinkParam.getValue(pVar:String):String-----
 	// getValue(pVar)  Return: String
 	//	Comment for getValue(pVar) return the definition of the parameter exists otherwise en empty string
 	//----PUBLIC Method: LinkParam.deleteValue(pVar:String)-----
-	// deleteValue(pVar)  
+	// deleteValue(pVar)
 	//	Comment for deleteValue in the parameter hash aVars
 	//	return a Boolean if delete was sucessful, resp. variable pVar exists in Hash aVars
 	//----PUBLIC Method: LinkParam.getLink4URL():String-----
@@ -89,7 +103,7 @@ function LinkParam () {
 	// decodeParam(pParam)  Return: String
 	//	decode a parameter from the URL
 	//----PUBLIC Method: LinkParam.encodeParam(pParam:String)-----
-	// encodeParam(pParam)  
+	// encodeParam(pParam)
 	//	encode a parameter for a call from the app.
 	//----PUBLIC Method: LinkParam.getTableHTML():String-----
 	// getTableHTML()  Return: String
@@ -101,7 +115,7 @@ function LinkParam () {
 	//	An optional ID prefix as parameter can be used to create a unique ID for the DOM elements
 	//	All parameters are visible in an input field.
 	//----PUBLIC Method: LinkParam.calcSize()-----
-	// calcSize()  
+	// calcSize()
 	//	calculates the number of variables defined in the URL parameters, stores result in length
 	//----PUBLIC Method: LinkParam.encodeHTML(pValue:String,pWrapCode:Boolean):String-----
 	// encodeHTML(pValue,pWrapCode)  Return: String
@@ -109,17 +123,17 @@ function LinkParam () {
 	//	 1) Replace "&" character with "&amp;"
 	//	 2) Replace "<" character with "&lt;"
 	//	 3) Replace ">" character with "&gt;"
-	//	The converted pValue will wrapped with <pre> and <code> tags for direct display as HTML 
+	//	The converted pValue will wrapped with <pre> and <code> tags for direct display as HTML
 	//	and without code tag wrapper if the code is written as inner HTML and value to a textarea.
 	//----PUBLIC Method: LinkParam.exists(pVar:String):Boolean-----
 	// exists(pVar)  Return: Boolean
 	//	checks if the parameter with variable 'pVar' exists in parameter hash this.aVars
 	//----PUBLIC Method: LinkParam.param2DOM(pLinkID:String,pDOMID:String,pOutType:String)-----
-	// param2DOM(pLinkID,pDOMID,pOutType)  
-	//	param2DOM(pLinkID,pDOMID) read the Link Parameter of the pLinkID if exists and 
+	// param2DOM(pLinkID,pDOMID,pOutType)
+	//	param2DOM(pLinkID,pDOMID) read the Link Parameter of the pLinkID if exists and
 	//	- (html) writes the content to innerHTML (pOutType='html') of DOM node pDOMID or
-	//	- (val) writes the content to the value of the HTML input object with the ID pDOMID  
-	
+	//	- (val) writes the content to the value of the HTML input object with the ID pDOMID
+
 
 
 }
@@ -135,7 +149,7 @@ function LinkParam () {
 //#    pDoc:Document
 //# Comment:
 //#    init extract the link with parameters from document.location.search and store aLink
-//# 
+//#
 //# created with JSCC  2017/03/05 18:13:28
 //# last modifications 2017/11/14 11:11:20
 //#################################################################
@@ -149,12 +163,12 @@ LinkParam.prototype.init = function (pDoc) {
   //    vMyInstance.init(pDoc);
   //-------------------------------------------------------
 
-  //save "document" object in aDoc as Attribute for further use 
+  //save "document" object in aDoc as Attribute for further use
   this.aDoc = pDoc;
   this.aLink = pDoc.location;
   this.aVars = this.parseURL(pDoc.location.search);
 
-};
+}
 //----End of Method init Definition
 
 
@@ -188,13 +202,13 @@ LinkParam.prototype.parseURL = function (pLink) {
     while (vTokens = vRE.exec(vLink)) {
       vParams[this.decodeParam(vTokens[1])] = this.decodeParam(vTokens[2]);
       this.calcSize();
-    };
+    }
   } else {
       console.log("parseURL(pLink) - pLink contains no parameters")
-  };
+  }
   return vParams;
 
-};
+}
 //----End of Method parseURL Definition
 
 
@@ -220,14 +234,14 @@ LinkParam.prototype.getURL = function (pVarHash) {
   //-------------------------------------------------------
 
   var vParam = "";
-  if (pVars) {
-      vParam = getParam4URL(pVars);
+  if (pVarHash) {
+      vParam = this.getParam4URL(pVarHash);
   } else {
-      vParam = getParam4URL();
-  };
+      vParam = this.getParam4URL();
+  }
   return this.getLink4URL() + vParam;
 
-};
+}
 //----End of Method getURL Definition
 
 
@@ -259,10 +273,10 @@ LinkParam.prototype.setValue = function (pVar,pValue) {
   } else {
     this.calcSize();
     console.log("New  link parameter '"+pVar+"' created");
-  };
+  }
   this.aVars[pVar] = pValue
 
-};
+}
 //----End of Method setValue Definition
 
 
@@ -292,10 +306,10 @@ LinkParam.prototype.getValue = function (pVar) {
       vRet = this.aVars[pVar]
   } else {
       console.log("ERROR: variable '"+pVar+"' does not exist in LinkParam");
-  };
+  }
   return vRet;
 
-};
+}
 //----End of Method getValue Definition
 
 
@@ -307,7 +321,7 @@ LinkParam.prototype.getValue = function (pVar) {
 //# Comment:
 //#    Comment for deleteValue in the parameter hash aVars
 //#    return a Boolean if delete was sucessful, resp. variable pVar exists in Hash aVars
-//# 
+//#
 //# created with JSCC  2017/03/05 18:13:28
 //# last modifications 2017/11/14 11:11:20
 //#################################################################
@@ -326,10 +340,10 @@ LinkParam.prototype.deleteValue = function (pVar) {
       delete this.aVars[pVar];
       vRet = true;
       this.calcSize();
-  };
+  }
   return vRet;
 
-};
+}
 //----End of Method deleteValue Definition
 
 
@@ -337,7 +351,7 @@ LinkParam.prototype.deleteValue = function (pVar) {
 //# PUBLIC Method: getLink4URL()
 //#    used in Class: LinkParam
 //# Parameter:
-//#    
+//#
 //# Comment:
 //#    get the Link part of the URL without the URL parameters
 //# Return: String
@@ -356,7 +370,7 @@ LinkParam.prototype.getLink4URL = function () {
 
   return this.aLink;
 
-};
+}
 //----End of Method getLink4URL Definition
 
 
@@ -364,7 +378,7 @@ LinkParam.prototype.getLink4URL = function () {
 //# PUBLIC Method: getParam4URL()
 //#    used in Class: LinkParam
 //# Parameter:
-//#    
+//#
 //# Comment:
 //#    get the parameter string for the URL starting with ? if aVars contains variables
 //# Return: String
@@ -381,18 +395,18 @@ LinkParam.prototype.getParam4URL = function () {
   //    vMyInstance.getParam4URL();
   //-------------------------------------------------------
 
-	  var vHash = this.aVars || {};
+	  var vHash = this.aVars || {} ;
 	  var vOut = "";
 	  var vSep = "?";
 	  for (var iID in vHash) {
 	    if (vHash.hasOwnProperty(iID)) {
         vOut += vSep + this.encodeParam(iID) + "=" + this.encodeParam(vHash[iID]);
 	      vSep = "&";
-	    };
-	  };
+	    }
+	  }
 	  return vOut;
 
-};
+}
 //----End of Method getParam4URL Definition
 
 
@@ -420,9 +434,9 @@ LinkParam.prototype.decodeParam = function (pParam) {
   pParam = pParam.replace(/\+/g,  " ");
   pParam = decodeURIComponent(pParam);
   return pParam;
-  
 
-};
+
+}
 //----End of Method decodeParam Definition
 
 
@@ -433,7 +447,7 @@ LinkParam.prototype.decodeParam = function (pParam) {
 //#    pParam:String
 //# Comment:
 //#    encode a parameter for a call from the app.
-//# 
+//#
 //# created with JSCC  2017/03/05 18:13:28
 //# last modifications 2017/11/14 11:11:20
 //#################################################################
@@ -451,7 +465,7 @@ LinkParam.prototype.encodeParam = function (pParam) {
   vParam = vParam.replace(/'/g,"%27").replace(/"/g,"%22");
   return vParam;
 
-};
+}
 //----End of Method encodeParam Definition
 
 
@@ -459,7 +473,7 @@ LinkParam.prototype.encodeParam = function (pParam) {
 //# PUBLIC Method: getTableHTML()
 //#    used in Class: LinkParam
 //# Parameter:
-//#    
+//#
 //# Comment:
 //#    creates a HTML table with two column for key and value of the parameter hash aVars
 //# Return: String
@@ -488,16 +502,16 @@ LinkParam.prototype.getTableHTML = function () {
         vOut += "<b>"+iID+"</b>";
         vOut += "</td>";
         vOut += "<td>";
-        // second parameter vWrapCode = true for non textarea use; 
+        // second parameter vWrapCode = true for non textarea use;
         vOut += this.encodeHTML(vHash[iID],vWrapCode);
         vOut += "</td>";
         vOut += "</tr>";
-      };
-  };
+      }
+  }
   vOut += "</table>";
   return vOut;
 
-};
+}
 //----End of Method getTableHTML Definition
 
 
@@ -539,24 +553,24 @@ LinkParam.prototype.getEditTableHTML = function (pPrefixID) {
         vRows = (vHash[iID].split("\n")).length;
         if (vRows > vMaxRows) {
             vRows = vMaxRows;
-        };
+        }
         vOut += "<tr>";
         vOut += "<td>";
         vOut += "<b>"+iID+"</b>";
         vOut += "</td>";
         vOut += "<td>";
-        // second parameter vWrapCode = true for non textarea use; 
+        // second parameter vWrapCode = true for non textarea use;
         vOut += "<textarea id='"+vPrefix+iID+"'' cols='90' rows='"+vRows+"''>";
         vOut += vContent;
         vOut += "</textarea>";
         vOut += "</td>";
         vOut += "</tr>";
-      };
-  };
+      }
+  }
   vOut += "</table>";
   return vOut;
 
-};
+}
 //----End of Method getEditTableHTML Definition
 
 
@@ -564,10 +578,10 @@ LinkParam.prototype.getEditTableHTML = function (pPrefixID) {
 //# PUBLIC Method: calcSize()
 //#    used in Class: LinkParam
 //# Parameter:
-//#    
+//#
 //# Comment:
 //#    calculates the number of variables defined in the URL parameters, stores result in length
-//# 
+//#
 //# created with JSCC  2017/03/05 18:13:28
 //# last modifications 2017/11/14 11:11:20
 //#################################################################
@@ -586,13 +600,13 @@ LinkParam.prototype.calcSize = function () {
       var vHash = this.aVars;
       for (var key in vHash) {
           vRet++;
-      };
+      }
   } else {
       console.log("ERROR: variable '"+pVar+"' does not exist in LinkParam");
-  };
+  }
   return vRet;
 
-};
+}
 //----End of Method calcSize Definition
 
 
@@ -607,7 +621,7 @@ LinkParam.prototype.calcSize = function () {
 //#     1) Replace "&" character with "&amp;"
 //#     2) Replace "<" character with "&lt;"
 //#     3) Replace ">" character with "&gt;"
-//#    The converted pValue will wrapped with <pre> and <code> tags for direct display as HTML 
+//#    The converted pValue will wrapped with <pre> and <code> tags for direct display as HTML
 //#    and without code tag wrapper if the code is written as inner HTML and value to a textarea.
 //# Return: String
 //# created with JSCC  2017/03/05 18:13:28
@@ -628,13 +642,13 @@ LinkParam.prototype.encodeHTML = function (pValue,pWrapCode) {
       vValue = vValue.replace(/</g,"&lt;");
       vValue = vValue.replace(/>/g,"&gt;");
       vValue = vValue.replace(/&/g,"&amp;");
-  };
+  }
   if (pWrapCode && (pWrapCode == true)) {
       vValue = "<pre><code>"+vValue+"</code></pre>";
-  };
+  }
   return vValue
 
-};
+}
 //----End of Method encodeHTML Definition
 
 
@@ -661,12 +675,12 @@ LinkParam.prototype.exists = function (pVar) {
 
   var vRet = false;
   if (pVar) {
-     vRet = this.aVars.hasOwnProperty(pVar)    
-  };
+     vRet = this.aVars.hasOwnProperty(pVar)
+  }
   return vRet;
-  
 
-};
+
+}
 //----End of Method exists Definition
 
 
@@ -678,10 +692,10 @@ LinkParam.prototype.exists = function (pVar) {
 //#    pDOMID:String
 //#    pOutType:String
 //# Comment:
-//#    param2DOM(pLinkID,pDOMID) read the Link Parameter of the pLinkID if exists and 
+//#    param2DOM(pLinkID,pDOMID) read the Link Parameter of the pLinkID if exists and
 //#    - (html) writes the content to innerHTML (pOutType='html') of DOM node pDOMID or
-//#    - (val) writes the content to the value of the HTML input object with the ID pDOMID  
-//# 
+//#    - (val) writes the content to the value of the HTML input object with the ID pDOMID
+//#
 //# created with JSCC  2017/03/05 18:13:28
 //# last modifications 2017/11/14 11:11:20
 //#################################################################
@@ -711,13 +725,13 @@ LinkParam.prototype.param2DOM = function (pLinkID,pDOMID,pOutType) {
   } else {
       console.log("pLinkID does not exist in param2DOM-call")
   }
-  
 
-};
+
+}
 //----End of Method param2DOM Definition
 
 
-    
+
 //-------------------------------------------
 //---End Definition of Class-----------------
 // JS Class: LinkParam

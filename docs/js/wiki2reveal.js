@@ -4,13 +4,16 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   var page_identifier = pTitle.replace(/ /g,"_");
   var vDocJSON = {}; // vDocJSON stores parsed content
   // init "wikiconvert" the Wiki Source - necessary for expanding relative URLs for images and local links
-  wtf.wikiconvert.init(pLanguage,pDomain,vDocJSON);
+  wtf.wikiconvert.init(pLanguage,pDomain,vDocJSON,"reveal");
   // init the article name with the page_identifier, also necessary for handling relative links
   wtf.wikiconvert.initArticle(page_identifier);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown);
+  pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown);
+  console.log("wiki2reveal.js:14 - Sections replaced!");
+  pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
@@ -25,13 +28,16 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // replace the Math-Tags for Reveal output
   pMarkdown = replaceMath4Reveal(pMarkdown);
   // generate Reveal html output
-  var htmlout =  wtf.reveal(pMarkdown)
-  //var htmlout =  wtf.html(pMarkdown)
+  console.log("Call: wtf.reveal(pMarkdown)");
+  //var vDoc = wtf(pMarkdown);
+  //var htmlout =  vDoc.html(pMarkdown)
+  var htmlout =  pMarkdown;
+
   htmlout = addSectionReveal(htmlout);
   htmlout = postprocessMath4Reveal(htmlout);
   htmlout = htmlout.replace(/<imgXXX /g,"<img ");
   htmlout = htmlout.replace(/___aXXX___ /g,"<a ");
-  htmlout = htmlout.replace(/___aXXXC___/g,"</a>");
+  htmlout = htmlout.replace(/___aXXXC___/g,">"); // closing ">" of openening <a ..
   htmlout = htmlout.replace(/___\/aXXX___/g,"</a>");
   return htmlout;
 };
@@ -140,10 +146,10 @@ function postprocessMath4Reveal(pMarkdown) {
 }
 
 function createTitleSlide(pTitle,pAuthor) {
-  var slide0 = "\n<div class=\"section\">";
+  var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
-  slide0 += "\n</div>\n";
+  slide0 += "\n</section>\n";
   return slide0;
 }
 

@@ -69,6 +69,15 @@
     <div class="slides" id="divslides">
       Waiting for Wiki-Download ...
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+      <textarea id="revealout" rows="12" cols="120">
+    output
+    </textarea>
   </div>
 <div style="display:none">
   <b>Emulated Wiki Source:</b></br>
@@ -79,9 +88,10 @@ Converter used in Offline mode without internet connectivity!
 </div>
 </body>
 
+  <!--
   <script src="reveal/lib/js/head.min.js"></script>
   <script src="reveal/js/reveal.js"></script>
-
+-->
     </body>
 
     <script>
@@ -172,10 +182,9 @@ Converter used in Offline mode without internet connectivity!
         // el("divslides").innerHTML = wtf.reveal(markup);
         var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain);
         // store JSON parse result in textarea
-        el("divslides").innerHTML = htmlout; //el("revealsource").value;
-        //el("divslides").innerHTML = el("revealsource").value;
-        //var vWikiJSON = wtf.parse(markup);
-        setTimeout("callRevealInit()",3000)
+        //el("divslides").innerHTML = htmlout; //el("revealsource").value;
+        el("revealout").value = htmlout; //el("revealsource").value;
+        //setTimeout("callRevealInit()",3000)
       }
       callWikiDownload();
       //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");

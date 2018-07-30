@@ -1,6 +1,6 @@
 /* Blob.js
  * A Blob implementation.
- * 2018-01-12
+ * 2014-07-24
  *
  * By Eli Grey, http://eligrey.com
  * By Devin Samarin, https://github.com/dsamarin
@@ -208,8 +208,4 @@
 		return object.__proto__;
 	};
 	view.Blob.prototype = getPrototypeOf(new view.Blob());
-}(
-	   typeof self !== "undefined" && self
-	|| typeof window !== "undefined" && window
-	|| this
-));
+}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this.content || this));

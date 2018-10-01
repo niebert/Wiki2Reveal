@@ -1041,7 +1041,7 @@ this.process_normal = function(wikitext) {
 				pWikiCode = this.math2jax(pWikiCode);
 				pWikiCode = this.math2reveal(pWikiCode);
 				pWikiCode = this.replaceWikiLinks(pWikiCode);
-				//pWikiCode = this.replaceEnumeration(pWikiCode);
+				pWikiCode = this.replaceEnumeration(pWikiCode);
 				//pWikiCode = this.convertWiki2Local(pWikiCode);
 				pWikiCode = this.replaceImages(pWikiCode);
 				return pWikiCode || "";
@@ -1127,8 +1127,225 @@ this.process_normal = function(wikitext) {
 			//# created with JSCC  2017/03/05 18:13:28
 			//# last modifications 2018/01/21 17:17:18
 			//#################################################################
+			var wikiconfig = {
+					options: {
+							'link-image': true //Preserve backward compat
+					}
+			}
 
-			this.replaceEnumeration = function (pWikiCode) {
+			this.replaceEnumeration = function(pWikiCode) {
+				return this.processWiki(pWikiCode,wikiconfig)
+			}
+
+
+
+			this.processWiki = function(wikitext) {
+				var lines = wikitext.split(/\r?\n/);
+
+				var html = "";
+
+				for (i=0;i<lines.length;i++)
+				{
+					line = lines[i];
+					if (line.match(/^===/)!=null && line.match(/===$/)!=null)
+					{
+						html += "<h2>"+line.substring(3,line.length-3)+"</h2>";
+					}
+					else if (line.match(/^==/)!=null && line.match(/==$/)!=null)
+					{
+						html += "<h3>"+line.substring(2,line.length-2)+"</h3>";
+					}
+					else if (line.match(/^:+/)!=null)
+					{
+						// find start line and ending line
+						start = i;
+						while (i < lines.length && lines[i].match(/^\:+/)!=null) i++;
+						i--;
+
+						html += this.process_indent(lines,start,i);
+					}
+					else if (line.match(/^----+(\s*)$/)!=null)
+					{
+						html += "<hr/>";
+					}
+					else if (line.match(/^(\*+) /)!=null)
+					{
+						// find start line and ending line
+						start = i;
+						while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null) i++;
+						i--;
+
+						html += this.process_bullet_point(lines,start,i);
+					}
+					else if (line.match(/^(\#+) /)!=null)
+					{
+						// find start line and ending line
+						start = i;
+						while (i < lines.length && lines[i].match(/^(\#+|\*\*+)\:? /)!=null) i++;
+						i--;
+
+						html += this.process_bullet_point(lines,start,i);
+					}
+					else
+					{
+						html += this.process_normal(line);
+					}
+
+					html += "<br/>\n";
+				}
+
+				return html;
+			}
+
+			this.process_indent = function(lines,start,end) {
+				var i = start;
+
+				var html = "<dl>";
+
+				for(var i=start;i<=end;i++) {
+
+					html += "<dd>";
+
+					var this_count = lines[i].match(/^(\:+)/)[1].length;
+
+					html += this.process_normal(lines[i].substring(this_count));
+
+					var nested_end = i;
+					for (var j=i+1;j<=end;j++) {
+						var nested_count = lines[j].match(/^(\:+)/)[1].length;
+						if (nested_count <= this_count) break;
+						else nested_end = j;
+					}
+
+					if (nested_end > i) {
+						html += wiky.process_indent(lines,i+1,nested_end);
+						i = nested_end;
+					}
+
+					html += "</dd>";
+				}
+
+				html += "</dl>";
+				return html;
+			}
+
+			this.process_normal = function(wikitext) {
+
+
+				var count_b = 0;
+				var index = wikitext.indexOf("'''");
+				while(index > -1) {
+
+					if ((count_b%2)==0) wikitext = wikitext.replace(/'''/,"<b>");
+					else wikitext = wikitext.replace(/'''/,"</b>");
+
+					count_b++;
+
+					index = wikitext.indexOf("'''",index);
+				}
+
+				var count_i = 0;
+				var index = wikitext.indexOf("''");
+				while(index > -1) {
+
+					if ((count_i%2)==0) wikitext = wikitext.replace(/''/,"<i>");
+					else wikitext = wikitext.replace(/''/,"</i>");
+
+					count_i++;
+
+					index = wikitext.indexOf("''",index);
+				}
+
+				wikitext = wikitext.replace(/<\/b><\/i>/g,"</i></b>");
+
+				return wikitext;
+			}
+
+			this.process_bullet_point = function(lines,start,end) {
+					var i = start;
+
+				var html = (lines[start].charAt(0)=='*')?"<ul>":"<ol>";
+
+			    html += '\n';
+
+				for(var i=start;i<=end;i++) {
+
+					html += "<li>";
+
+					var this_count = lines[i].match(/^(\*+|\#+) /)[1].length;
+
+					html += this.process_normal(lines[i].substring(this_count+1));
+
+					// continue previous with #:
+					{
+						var nested_end = i;
+						for (var j = i + 1; j <= end; j++) {
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+
+							if (nested_count < this_count)
+								break;
+							else {
+								if (lines[j].charAt(nested_count) == ':') {
+									html += "<br/>" + this.process_normal(lines[j].substring(nested_count + 2));
+									nested_end = j;
+								} else {
+									break;
+								}
+							}
+
+						}
+
+						i = nested_end;
+					}
+
+					// nested bullet point
+					{
+						var nested_end = i;
+						for (var j = i + 1; j <= end; j++) {
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							if (nested_count <= this_count)
+								break;
+							else
+								nested_end = j;
+						}
+
+						if (nested_end > i) {
+							html += this.process_bullet_point(lines, i + 1, nested_end);
+							i = nested_end;
+						}
+					}
+
+					// continue previous with #:
+					{
+						var nested_end = i;
+						for (var j = i + 1; j <= end; j++) {
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+
+							if (nested_count < this_count)
+								break;
+							else {
+								if (lines[j].charAt(nested_count) == ':') {
+									html += this.process_normal(lines[j].substring(nested_count + 2));
+									nested_end = j;
+								} else {
+									break;
+								}
+							}
+
+						}
+
+						i = nested_end;
+					}
+
+					html += "</li>\n";
+				}
+
+				html += (lines[start].charAt(0)=='*')?"</ul>":"</ol>";
+			    html += '\n';
+				return html;
+			}
+
+			this.replaceEnumTokens = function (pWikiCode) {
 			  //----Debugging------------------------------------------
 			  // console.log("js/wikiconvert.js - Call: replaceEnumeration(pWikiCode:String):String");
 			  // alert("js/wikiconvert.js - Call: replaceEnumeration(pWikiCode:String):String");

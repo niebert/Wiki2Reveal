@@ -10,6 +10,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown);
+  //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown);
   console.log("wiki2reveal.js:14 - Sections replaced!");

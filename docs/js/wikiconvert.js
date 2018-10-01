@@ -299,6 +299,32 @@ function WikiConvert () {
 	};
 	//----End of Method section2id Definition
 
+	this.removeMathNewlines = function(wikicode) {
+		console.log("replaceMathNewLines() "+wikicode);
+		if (wikicode) {
+			//var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
+			var vSearch = /(<math>)(.*?)(<\/math>)/gi;
+			// \[            # "["
+			// (?:            # non-capturing group
+			//  File|Image|Datei        #   "File" or "Image" or "Datei"
+			// )              # end non-capturing group
+			//:             # ":"
+			//(              # group 1
+			//  [^\|\]]+      #   any character except "|" or "]" at least once
+			// )              # end group 1 - this will be the image's name
+			var vResult;
+			var vCount =0;
+			console.log("wikicode defined");
+			while (vResult = vSearch.exec(pWikiCode)) {
+				vCount++;
+				console.log("Math Expression "+vCount+": '" + vResult[1] + "' found");
+				var vFound = vResult[1];
+				var vReplace = vFound.replace(/\n/g," ");
+				this.replaceString(wikicode,vFound,vReplace);
+			};
+		}
+		return wikicode
+}
 
 	//#################################################################
 	//# PUBLIC Method: replaceSections()
@@ -324,13 +350,23 @@ function WikiConvert () {
 			var end = 0;
 			while (i<lines.length) {
 				console.log("("+(i+1)+"/"+lines.length+") LINE iteration for section");
-				line = lines[i];
+				line = lines[i] || "";
 				if (line) {
-					// console.log("Line "+(i+1)+" Checker");
-					if (line.indexOf(":<math>") == 0) {
-						console.log("MATH BLOCK found");
-						html += line;
-					} else if (line.match(/^======/)!=null && line.match(/======$/)!=null) {
+				 	console.log("Line "+(i+1)+" Checker");
+					//if (line.match(/^[\:]+.*?<math[^>]*>/)) {
+					if (line.indexOf("<math")>=0) {
+							console.log("MATH BLOCK found");
+						if ((lines[i].toLowerCase()).indexOf("</math>") >= 0) {
+							html += line;
+						} else {
+							while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
+								// find end line of </math>
+								console.log("Add MATH Block Line: "+lines[i]);
+								html += lines[i];
+								i++;
+							};
+						};
+					}  else if (line.match(/^======/)!=null && line.match(/======$/)!=null) {
 						level = 6;
 						title = line.substring(level,line.length-level);
 						html += this.convert_section(title,level);
@@ -350,7 +386,8 @@ function WikiConvert () {
 						level = 2;
 						title = line.substring(level,line.length-level);
 						html += this.convert_section(title,level);
-					} else if (line.match(/^:+/)!=null) {
+					} else if (line.match(/^\:+/)!=null) {
+						console.log("replaceSections()-Call: Indent Found");
 						// find start line and ending line
 						start = i;
 						while (i < lines.length && lines[i].match(/^\:+/)!=null) i++;
@@ -398,6 +435,18 @@ function WikiConvert () {
 				//html += "<br/>\n";
 				i++;
 				console.log("("+(i)+"/"+lines.length+") LINE END iteration end line="+(lines[i] || "undefined"));
+				if (i<lines.length) {
+					if ((lines[i]).match(/^[\:]+.*?<math[^>]*>/i)) {
+						console.log("Indent MATH INLINE found");
+						html += line;
+						while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
+							// find end line of </math>
+							console.log("Add MATH Block Line: "+lines[i]);
+							html += lines[i];
+							i++;
+						};
+					}
+				}
 
 			};
 			console.log("close_document()-Call End of replaceSections()-Call");
@@ -433,7 +482,7 @@ function WikiConvert () {
 					};
 					this.aSectionCount++;
 					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\">\n\t<h"+level+">"+match+"</h"+level+">"
-					out += "<p class=\"left\">";
+					out += "\n<p class=\"left\">";
 					break;
 				default:
 					out += delimiter[level] + match + delimiter[level] + "\n";
@@ -1087,18 +1136,18 @@ this.process_normal = function(wikitext) {
 			  //    var vMyInstance = new WikiConvert();
 			  //    vMyInstance.replaceEnumeration(pWikiCode);
 			  //-------------------------------------------------------
-				pWikiCode = this.replaceString(pWikiCode,"\n* ","___UL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n# ","___OL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n** ","___UL2___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n## ","___OL2___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n:* ","___IND1_UL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n:# ","___IND1_OL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n*** ","___UL3___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n### ","___OL3___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n::* ","___IND2_UL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n::# ","___IND2_OL1___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n:** ","___IND1_UL2___ ");
-				pWikiCode = this.replaceString(pWikiCode,"\n:*# ","___IND1_OL2___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n* ","\n___UL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n# ","\n___OL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n** ","\n___UL2___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n## ","\n___OL2___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n:* ","\n___IND1_UL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n:# ","\n___IND1_OL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n*** ","\n___UL3___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n### ","\n___OL3___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n::* ","\n___IND2_UL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n::# ","\n___IND2_OL1___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n:** ","\n___IND1_UL2___ ");
+				pWikiCode = this.replaceString(pWikiCode,"\n:*# ","\n___IND1_OL2___ ");
 				//pWikiCode = pWikiCode.replace(/[|](thumbnail|mini)(\]|\|)/g,"|thumb$2");
 			  pWikiCode = pWikiCode.replace(/\r/g, '');
 			  return pWikiCode;
@@ -1438,9 +1487,10 @@ this.process_normal = function(wikitext) {
 		    var vCount =0;
 		    while (vResult = vSearch.exec(pWikiCode)) {
 		      vCount++;
-	      vMediaArray.push(vResult[1]);
-	      console.log("Media "+vCount+": '" + vResult[1] + "' found");
-	    };
+	      	vMediaArray.push(vResult[1]);
+	      	console.log("Media "+vCount+": '" + vResult[1] + "' found");
+	    	};
+
 	    return vMediaArray;
 
 	};

@@ -1191,7 +1191,7 @@ this.process_normal = function(wikitext) {
 						html += this.process_normal(line);
 					}
 
-					html += "<br/>\n";
+					//html += "<xxbr/>\n";
 				}
 
 				return html;

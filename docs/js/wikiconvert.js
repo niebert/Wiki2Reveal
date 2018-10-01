@@ -1041,7 +1041,7 @@ this.process_normal = function(wikitext) {
 				pWikiCode = this.math2jax(pWikiCode);
 				pWikiCode = this.math2reveal(pWikiCode);
 				pWikiCode = this.replaceWikiLinks(pWikiCode);
-				pWikiCode = this.replaceEnumeration(pWikiCode);
+				//pWikiCode = this.replaceEnumeration(pWikiCode);
 				//pWikiCode = this.convertWiki2Local(pWikiCode);
 				pWikiCode = this.replaceImages(pWikiCode);
 				return pWikiCode || "";

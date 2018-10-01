@@ -14,7 +14,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown);
   console.log("wiki2reveal.js:14 - Sections replaced!");
-  pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
+  //pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])

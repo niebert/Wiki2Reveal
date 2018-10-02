@@ -481,7 +481,7 @@ function WikiConvert () {
 							out += "</section>\n";
 					};
 					this.aSectionCount++;
-					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\">\n\t<h"+level+">"+match+"</h"+level+">"
+					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\" style=\"text-align: left;\">\n\t<h"+level+">"+match+"</h"+level+">"
 					out += "\n<p class=\"left\">";
 					break;
 				default:

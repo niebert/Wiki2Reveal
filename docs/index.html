@@ -18,6 +18,14 @@
         window.open(vURL);
       };
 
+      function callWikiSource() {
+        var vURL = "wiki2reveal_textarea.html?language"+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        vURL += "title="+encodeURI(el("tTitle").value);
+        vURL += "author="+encodeURI(el("tAuthor").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
+
     </script>
     <hr>
       <center>
@@ -122,7 +130,8 @@
           <b>Wiki Presentation:</b>
         </td>
         <td>
-          <input type="button" id="bWikiSource" value="Display Wiki Source" onclick="callWikiDisplay()">
+          <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
+          <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
           <input type="submit" id="bSubmit" value="Download Presentation">
         </td>
       </tr>

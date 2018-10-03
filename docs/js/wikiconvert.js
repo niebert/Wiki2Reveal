@@ -1476,34 +1476,53 @@ this.process_normal = function(wikitext) {
 			//tokens[0]=my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment
 			var vLinkSplit = (tokens[0]).split("|");
 			vURL = this.getWikiMediaURL(vLinkSplit[0]);
-			console.log("Image Found: "+vURL);
-			if (vLinkSplit.length == 1) {
-				//replace_str = '___IMG_OPEN___File:' + vURL + '___IMG_CLOSE___';
-				//replace_str = '<section data-background-image="'+vURL+'" data-background-size="cover"></section>\n';
-				replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+'width: 50%;">';
+			var vFileType = this.getMediaFileType(vURL);
+			if (vFileType == "audio") {
+				//-------------------------
+				//-----AUDIO---------------
+				//-------------------------
+				console.log("Audio Found: "+vURL+" with Type: "+vFileType);
+				replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '">&#9658;';
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
+			} else if (vFileType == "video") {
+				//-------------------------
+				//-----VIDEO---------------
+				//-------------------------
+				console.log("Video Found: "+vURL+" with Type: "+vFileType);
+			//} else if ((vFileType == "svg") || (vFileType == "img")) {
 			} else {
-				if (vLinkSplit.length == 2) {
-					vCaption = this.checkCaption(vLinkSplit[1]);
-					//replace_str = '___IMG_OPEN___File:' + vURL + '|' + vCaption + '___IMG_CLOSE___';
-					replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;">';
+				//-------------------------
+				//-----IMAGE---------------
+				//-------------------------
+				console.log("Image Found: "+vURL+" with Type: "+vFileType);
+				if (vLinkSplit.length == 1) {
+					//replace_str = '___IMG_OPEN___File:' + vURL + '___IMG_CLOSE___';
+					//replace_str = '<section data-background-image="'+vURL+'" data-background-size="cover"></section>\n';
+					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+'width: 50%;">';
 					pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 				} else {
-					// var vMediaParam = "";
-					var vSize = "";
-					vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
-					for (var i = 1; i < (vLinkSplit.length-1); i++) {
-						// vMediaParam += "|"+vLinkSplit[i];
-						if (vSizeRE.test(vLinkSplit[i])) {
-							vSize = " width='"+vLinkSplit[i]+"'";
-							console.log("URL:"+vURL+" Size="+vLinkSplit[i]);
+					if (vLinkSplit.length == 2) {
+						vCaption = this.checkCaption(vLinkSplit[1]);
+						//replace_str = '___IMG_OPEN___File:' + vURL + '|' + vCaption + '___IMG_CLOSE___';
+						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;">';
+						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
+					} else {
+						// var vMediaParam = "";
+						var vSize = "";
+						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
+						for (var i = 1; i < (vLinkSplit.length-1); i++) {
+							// vMediaParam += "|"+vLinkSplit[i];
+							if (vSizeRE.test(vLinkSplit[i])) {
+								vSize = " width='"+vLinkSplit[i]+"'";
+								console.log("URL:"+vURL+" Size="+vLinkSplit[i]);
+							};
 						};
-					};
-					//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-					replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;" '+vSize+'>';
-					pWikiCode = pWikiCode.replace(tokens[0], replace_str);
-				}
-			}; // else if vLineSplit.length
+						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
+						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;" '+vSize+'>';
+						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
+					}
+				}; // else if vLineSplit.length
+			} // else vFileType
 		}; // While tokens
 	  return pWikiCode;
 

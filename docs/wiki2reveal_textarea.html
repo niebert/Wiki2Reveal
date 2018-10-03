@@ -23,6 +23,7 @@
   var vAuthor = "Wikiversity DE";
   var vLanguage = "de";
   var vDomain = "wikiversity";
+  var vAudioSlide = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
@@ -102,6 +103,11 @@ Converter used in Offline mode without internet connectivity!
     if (vLinkParam.exists("domain")) {
       // e.g. index.html?domain=wikipedia
       vDomain = vLinkParam.getValue("domain");
+    };
+    //------ AUDIO SLIDE ------------------------
+    if (vLinkParam.exists("audioslide")) {
+      // e.g. index.html?domain=wikipedia
+      vAudioSlide = vLinkParam.getValue("audioslide");
     };
     //--------------------------------------
     function callWikiDownload() {

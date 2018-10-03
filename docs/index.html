@@ -19,9 +19,10 @@
       };
 
       function callWikiSource() {
-        var vURL = "wiki2reveal_textarea.html?language"+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
-        vURL += "title="+encodeURI(el("tTitle").value);
-        vURL += "author="+encodeURI(el("tAuthor").value);
+        var vURL = "wiki2reveal_textarea.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        vURL += "&title="+encodeURI(el("tTitle").value);
+        vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
         window.open(vURL);
       };
@@ -71,6 +72,17 @@
         <td>
           <input type="text" size="80" name="author" id="tAuthor" value="Wikiversity Authors">
         </td>
+      </tr>
+      <tr>
+          <td>
+            <b>Audio Slides</b>
+          </td>
+          <td>
+            <select name="audioslide" id="sAudioSlide">
+              <option value="no">NO Audio Slides</option>
+              <option value="yes">Use Player for Audio Slides</option>
+            </select>
+          </td>
       </tr>
       <tr>
           <td>

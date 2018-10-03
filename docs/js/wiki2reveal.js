@@ -58,7 +58,7 @@ function callRevealInit() {
   console.log("callRevealInit()");
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
-    Reveal.initialize({
+    var vConfigReveal = {
       math: {
         mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
         //mathjax: 'mathjax/MathJax.js',
@@ -108,8 +108,14 @@ function callRevealInit() {
         90: function() { Recorder.downloadZip(); }, 	// press 'z' to download zip containing audio files
         84: function() { Recorder.fetchTTS(); } 	// press 't' to fetch TTS audio files
       }
-    });
+    };
+    if (vAudioSlide == "yes") {
+      vConfigReveal.dependencies.push({ src: 'reveal/plugin/audio-slideshow/slideshow-recorder.js'});
+      vConfigReveal.dependencies.push({ src: 'reveal/plugin/audio-slideshow/audio-slideshow.js'});
+    };
+    Reveal.initialize(vConfigReveal)
 }
+
 
 
 function addSectionReveal(pMarkdown) {

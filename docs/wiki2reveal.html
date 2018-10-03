@@ -38,6 +38,7 @@
   var vAuthor = "Wikiversity DE";
   var vLanguage = "de";
   var vDomain = "wikiversity";
+  var vAudioSlide = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
@@ -71,7 +72,7 @@
     </div>
   </div>
 <div style="display:none">
-  <b>Emulated Wiki Source:</b></br>
+  <h2>Emulated Wiki Source:</h2>
     <textarea id="wikisrc" rows="12" cols="120">
 == Wiki2Reveal Demo ==
 Converter used in Offline mode without internet connectivity!
@@ -81,8 +82,6 @@ Converter used in Offline mode without internet connectivity!
 
   <script src="reveal/lib/js/head.min.js"></script>
   <script src="reveal/js/reveal.js"></script>
-
-    </body>
 
     <script>
     //---------------------------------------
@@ -109,6 +108,11 @@ Converter used in Offline mode without internet connectivity!
     if (vLinkParam.exists("domain")) {
       // e.g. index.html?domain=wikipedia
       vDomain = vLinkParam.getValue("domain");
+    };
+    //------ AUDIO SLIDE ------------------------
+    if (vLinkParam.exists("audioslide")) {
+      // e.g. index.html?domain=wikipedia
+      vAudioSlide = vLinkParam.getValue("audioslide");
     };
     //--------------------------------------
     function callWikiDownload() {

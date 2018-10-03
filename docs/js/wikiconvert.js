@@ -1482,14 +1482,22 @@ this.process_normal = function(wikitext) {
 				//-----AUDIO---------------
 				//-------------------------
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType);
-				replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '">&#9658;';
+				if (vAudioSlide == "yes") {
+					replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '">&#9658;';
+				} else {
+					replace_str = '<a href="' + vURL + '" target="_blank">&#9658;</a>';
+				};
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			} else if (vFileType == "video") {
 				//-------------------------
 				//-----VIDEO---------------
 				//-------------------------
 				console.log("Video Found: "+vURL+" with Type: "+vFileType);
-				replace_str = '<p><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></p>'
+				if (vAudioSlide == "yes") {
+					replace_str = '<p><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></p>'
+				} else {
+					replace_str = '<p><a href="' + vURL + '" target="_blank"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video><a href="' + vURL + '" target="_blank">&#9658;</a></p>';
+				};
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			//} else if ((vFileType == "svg") || (vFileType == "img")) {

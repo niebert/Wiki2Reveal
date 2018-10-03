@@ -1489,6 +1489,9 @@ this.process_normal = function(wikitext) {
 				//-----VIDEO---------------
 				//-------------------------
 				console.log("Video Found: "+vURL+" with Type: "+vFileType);
+				replace_str = '<p><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></p>'
+				//replace_str = '<video src="'+vURL+'"></video>'
+				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			//} else if ((vFileType == "svg") || (vFileType == "img")) {
 			} else {
 				//-------------------------
@@ -2374,6 +2377,7 @@ this.process_normal = function(wikitext) {
 	//# last modifications 2018/01/21 17:17:18
 	//#################################################################
 	this.getWikiMediaURL = function(pFileName) {
+		//console.log("getWikiMediaURL('"+pFileName+"')");
 		pFileName = pFileName.replace(/^\[\[(File|Image|Datei):/gi,"");
 		pFileName = pFileName.replace(/[\]]+$/gi,"");
 		pFileName = pFileName.replace(/\s/g,"_");

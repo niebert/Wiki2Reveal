@@ -354,8 +354,29 @@ function WikiConvert () {
 				if (line) {
 				 	console.log("Line "+(i+1)+" Checker");
 					//if (line.match(/^[\:]+.*?<math[^>]*>/)) {
-					if (line.indexOf("<math")>=0) {
-							console.log("MATH BLOCK found");
+					if ((lines[i]).match(/^[\:]+\s*?<math[^>]*>/i)) {
+						console.log("Indent MATH BLOCK found");
+						(lines[i]).replace(/^[\:]+\s*?/i,"&nbsp;");
+						var mathblock = "<br>\n"+line;
+						while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
+							// find end line of </math>
+							console.log("Add MATH Block Line: "+lines[i]);
+							mathblock += lines[i];
+							i++;
+						};
+						html +=   mathblock + "\n";
+					} else if ((lines[i]).match(/^[\:]+.*?<math[^>]*>/i)) {
+						console.log("Indent MATH INLINE found");
+						var mathinline = line;
+						while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
+							// find end line of </math>
+							console.log("Add MATH Block Line: "+lines[i]);
+							mathinline += lines[i];
+							i++;
+						};
+						html += mathinline
+					} else if (line.indexOf("<math")>=0) {
+							console.log("Simple MATH INLINE found"+lines[i]);
 						if ((lines[i].toLowerCase()).indexOf("</math>") >= 0) {
 							html += line;
 						} else {
@@ -436,16 +457,7 @@ function WikiConvert () {
 				i++;
 				console.log("("+(i)+"/"+lines.length+") LINE END iteration end line="+(lines[i] || "undefined"));
 				if (i<lines.length) {
-					if ((lines[i]).match(/^[\:]+.*?<math[^>]*>/i)) {
-						console.log("Indent MATH INLINE found");
-						html += line;
-						while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
-							// find end line of </math>
-							console.log("Add MATH Block Line: "+lines[i]);
-							html += lines[i];
-							i++;
-						};
-					}
+
 				}
 
 			};
@@ -1200,7 +1212,7 @@ this.process_normal = function(wikitext) {
 			this.process_indent = function(lines,start,end) {
 				var i = start;
 
-				var html = "<dl>";
+				var html = "</p><dl>";
 
 				for(var i=start;i<=end;i++) {
 
@@ -1225,7 +1237,7 @@ this.process_normal = function(wikitext) {
 					html += "</dd>";
 				}
 
-				html += "</dl>";
+				html += "</dl><p class=\"textleft\" style=\"text-align: left;\">";
 				return html;
 			}
 
@@ -1483,7 +1495,7 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType);
 				if (vAudioSlide == "yes") {
-					replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '">&#9658;';
+					replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '"><a href="#" onclick="alert(\'Press Play Button in Audio Player below\');return false">&#9658;</a>';
 				} else {
 					replace_str = '<a href="' + vURL + '" target="_blank">&#9658;</a>';
 				};

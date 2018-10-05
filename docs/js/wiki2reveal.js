@@ -148,7 +148,9 @@ function replaceMath4Reveal(pMarkdown) {
 }
 
 function postprocessMath4Reveal(pMarkdown) {
-  pMarkdown = pMarkdown.replace(/XXXspan/g,"span")
+  pMarkdown = pMarkdown.replace(/XXXspan/g,"span");
+  //pMarkdown = pMarkdown.replace(/___MATH_END_BLOCK___/g,"</p><p class=\"textleft\" style=\"text-align: left;\">");
+
   return pMarkdown;
 }
 

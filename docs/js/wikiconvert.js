@@ -1083,7 +1083,18 @@ this.process_normal = function(wikitext) {
 	  //    var vMyInstance = new WikiConvert();
 	  //    vMyInstance.clean_unsupported_wiki(pWikiCode);
 	  //-------------------------------------------------------
-		pWikiCode = pWikiCode.replace(/\{\{[^}]\}\}/g, '');
+	  if (pWikiCode) {
+      	// (1) References without a citaion label
+      	pWikiCode = pWikiCode.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref> ?/gi,"");
+      	// (2) Cite a reference by a label WITHOUT reference
+      	// replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
+      	pWikiCode = pWikiCode.replace(/ ?<ref[\s]+name=["']([^"'])["'][^>]{0,200}?\/> ?/gi,"");
+      	// (3) Reference with citation label that is used multiple time in a document by (2)
+      	pWikiCode = pWikiCode.replace(/ ?<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,1000}?)<\/ref> ?/gi,"");
+      	pWikiCode = pWikiCode.replace(/\{\{[^}]\}\}/g, '');
+	  } else {
+      	pwiki = " ";
+      }
 	  return pWikiCode;
 
 	};

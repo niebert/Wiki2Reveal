@@ -24,6 +24,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // perform the post processing after pMarkdown compilation
   pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
+  pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown);
   // create a Title slide and place the slide before output
   pMarkdown = createTitleSlide(link2title(pTitle),pAuthor) + "\n" + pMarkdown;
   // replace the Math-Tags for Reveal output

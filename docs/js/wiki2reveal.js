@@ -45,7 +45,14 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
 };
 
 function link2title(pArticle) {
-  return pArticle.replace(/_/g," ");
+  if (pArticle) {
+    //pArticle = pArticle.substr()
+    pArticle = pArticle.replace(/\//g," / ");
+    pArticle = pArticle.replace(/_/g," ");
+  } else {
+    pArticle = "Undefined Title"
+  }
+  return pArticle
 };
 
 function external_links2href(pMarkdown) {

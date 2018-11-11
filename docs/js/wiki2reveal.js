@@ -47,7 +47,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
 function link2title(pArticle) {
   if (pArticle) {
     //pArticle = pArticle.substr()
-    pArticle = pArticle.replace(/\//g," / ");
+    pArticle = pArticle.replace(/\//g," - ");
     pArticle = pArticle.replace(/_/g," ");
   } else {
     pArticle = "Undefined Title"
@@ -163,6 +163,7 @@ function postprocessMath4Reveal(pMarkdown) {
 }
 
 function createTitleSlide(pTitle,pAuthor) {
+  pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";

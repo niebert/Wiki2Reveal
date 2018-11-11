@@ -22,13 +22,14 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
+  pMarkdown = replaceMath4Reveal(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown);
   // create a Title slide and place the slide before output
   pMarkdown = createTitleSlide(link2title(pTitle),pAuthor) + "\n" + pMarkdown;
   // replace the Math-Tags for Reveal output
-  pMarkdown = replaceMath4Reveal(pMarkdown);
+  //pMarkdown = replaceMath4Reveal(pMarkdown);
   // generate Reveal html output
   console.log("Call: wtf.reveal(pMarkdown)");
   //var vDoc = wtf(pMarkdown);
@@ -197,7 +198,9 @@ function replaceMathBlock4Reveal(pMarkdown) {
     var vSearchStr = "";
     while (vResult = vSearch.exec(pMarkdown)) {
       vCount++;
-      vSearchStr = vResult[1]+vResult[2]+vResult[3];
+      var vMathBlock = vResult[2];
+      vMathBlock = vMathBlock.replace(/\n/g," ");
+      vSearchStr = vResult[1]+vMathBlock+vResult[3];
       pMarkdown = pMarkdown.replace(vSearchStr,'\n<XXXspan id="math'+vCount+'block" class="math display">\\[' + vResult[2] +'\\]</XXXspan>');
       console.log("Math Block Expression "+vCount+" found: '"+vResult[2]+"'");
       vCount++;

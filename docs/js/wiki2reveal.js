@@ -190,7 +190,7 @@ function replaceMathInline4Reveal(pMarkdown) {
 
 function replaceMathBlock4Reveal(pMarkdown) {
    // <math>(.*?)<\/math>
-   var vSearch = /(\n[:]+[\s]*<math>)(.*?)(<\/math>)/i;
+   var vSearch = /(\n[:]+[\s]*?<math>)(.*?)(<\/math>)/i;
    var vResult;
     var vCount = 0;
     var vTagInsert = "";
@@ -206,6 +206,42 @@ function replaceMathBlock4Reveal(pMarkdown) {
     return pMarkdown;
 };
 
+function tokenizeMathBlock (wikicode, data, options) {
+  let timeid = data.timeid;
+  console.log("parseMathBlock() Time ID="+data.timeid);
+  if (wikicode) {
+    // create the mathexpr array if
+    //var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
+    var vSearch = /\n[:]+[\s]*?<math[^>]*?>(.*?)<\/math>/gi;
+    //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
+    // \n            # newline
+    // [:]+          # one or more colons
+    // [\s]*?        # (optional) tabs and white space
+    // <math[^>]*?>  # opening <math> tag
+    // (.*?)         # enclosed math expression
+    //(<\/math>)     # closing </math> tag
+    //
+    // gi            # g global, i ignore caps
+    var vResult;
+    var vCount =0;
+    var vLabel = "";
+    console.log("wikicode defined");
+    while (vResult = vSearch.exec(wikicode)) {
+      vCount++;
+      console.log("Math Expression "+vCount+": '" + vResult[1] + "' found");
+      vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
+      var vFound = vResult[1];
+      data.mathexpr.push({
+        "type":"block",
+        "label":vLabel,
+        "math":vFound
+      });
+      wikicode = replaceString(wikicode,vResult[0],vLabel);
+      //wikicode = replaceString(wikicode,vFound,vLabel);
+    };
+  };
+  return wikicode
+}
 
 function replaceString(pString,pSearch,pReplace)
 // replaces in the string "pString" multiple substrings "pSearch" by "pReplace"

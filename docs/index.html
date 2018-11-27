@@ -27,6 +27,15 @@
         window.open(vURL);
       };
 
+      function callWikiFooter() {
+        var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        vURL += "&title="+encodeURI(el("tTitle").value);
+        vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
+
     </script>
     <hr>
       <center>
@@ -67,10 +76,10 @@
       </tr>
       <tr>
         <td>
-          <b>Author</b>
+          <b>Course/Author</b>
         </td>
         <td>
-          <input type="text" size="80" name="author" id="tAuthor" value="Wikiversity Authors">
+          <input type="text" size="80" name="author" id="tAuthor" value="Kurs:Funktionalanalysis">
         </td>
       </tr>
       <tr>
@@ -143,6 +152,7 @@
         </td>
         <td>
           <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
+          <input type="button" id="bWikiFooter" value="Wiki Footer" onclick="callWikiFooter()">
           <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
           <input type="submit" id="bSubmit" value="Download Presentation">
         </td>

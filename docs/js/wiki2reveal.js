@@ -10,10 +10,12 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown);
+  // replace the Math-Tags for Reveal output
   //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown);
   console.log("wiki2reveal.js:14 - Sections replaced!");
+  pMarkdown = replaceMath4Reveal(pMarkdown);
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
@@ -22,14 +24,11 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
-  pMarkdown = replaceMath4Reveal(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown);
   // create a Title slide and place the slide before output
   pMarkdown = createTitleSlide(link2title(pTitle),pAuthor) + "\n" + pMarkdown;
-  // replace the Math-Tags for Reveal output
-  //pMarkdown = replaceMath4Reveal(pMarkdown);
   // generate Reveal html output
   console.log("Call: wtf.reveal(pMarkdown)");
   //var vDoc = wtf(pMarkdown);
@@ -49,6 +48,7 @@ function link2title(pArticle) {
   if (pArticle) {
     //pArticle = pArticle.substr()
     pArticle = pArticle.replace(/\//g," - ");
+    pArticle = pArticle.replace(/:/g,": ");
     pArticle = pArticle.replace(/_/g," ");
   } else {
     pArticle = "Undefined Title"
@@ -185,7 +185,6 @@ function replaceMathInline4Reveal(pMarkdown) {
       pMarkdown = pMarkdown.replace(vSearchStr,'<XXXspan id="math'+vCount+'inline" class="math inline">\\(' +vResult[2]+'\\)</XXXspan>');
       console.log("Math Inline Expression "+vCount+" found: '"+vResult[2]+"'");
     };
-    pMarkdown = pMarkdown.replace(/<\/div>/g,"</section>");
     return pMarkdown;
 };
 
@@ -205,9 +204,13 @@ function replaceMathBlock4Reveal(pMarkdown) {
       console.log("Math Block Expression "+vCount+" found: '"+vResult[2]+"'");
       vCount++;
     };
-    pMarkdown = pMarkdown.replace(/<\/div>/g,"</section>");
     return pMarkdown;
 };
+
+function hackMathBlock4Reveal(pMarkdown) {
+  return pMarkdown;
+};
+
 
 function tokenizeMathBlock (wikicode, data, options) {
   let timeid = data.timeid;

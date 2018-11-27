@@ -361,7 +361,7 @@ function WikiConvert () {
 						while (i < lines.length && (lines[i].toLowerCase()).indexOf("</math>") < 0) {
 							// find end line of </math>
 							console.log("Add MATH Block Line: "+lines[i]);
-							mathblock += lines[i];
+							mathblock += " "+lines[i];
 							i++;
 						};
 						html +=   mathblock + "\n";
@@ -414,7 +414,8 @@ function WikiConvert () {
 						while (i < lines.length && lines[i].match(/^\:+/)!=null) i++;
 						i--;
 
-						html += this.processIndent(lines,start,i);
+						//html += this.processIndent4MathBlock(lines,start,i);
+						html += this.process_indent(lines,start,i);
 					} else if (line.match(/^----+(\s*)$/)!=null) {
 						console.log("horizontal line");
 						html += "<hr/>";
@@ -502,6 +503,32 @@ function WikiConvert () {
 			return out
 		}
 
+	this.processIndent4MathBlock = function(lines,start,i) {
+		var vSearch = /(^[:][\s]*?<math>)(.*?)(<\/math>)/i;
+		var vSearchBlock = /(^[:][\s]*?<math>)/i;
+    var vResult;
+    var vTagInsert = "";
+    var vSearchStr = "";
+		var vMarkDown = lines[start];
+		var html = "";
+		// One Line MathBlock
+    if (vResult = vSearch.exec(vMarkDown)) {
+       vCount++;
+       var vMathBlock = vResult[2];
+       vMathBlock = vMathBlock.replace(/\n/g," ");
+       vSearchStr = vResult[1]+vMathBlock+vResult[3];
+       html = vMarkDown.replace(vSearchStr,'<XXXspan id="math'+start+'block" class="math display">\\[' + vMathBlock +'\\]</XXXspan>');
+       console.log("INDENT: Math Block Expression line "+start+" found: '"+vMathBlock+"'");
+     } else if (vResult = vSearchBlock.exec(vMarkDown)) {
+			 vSearchStr = vResult[1];
+ 			 html = vMarkDown.replace(vSearchStr,'<XXXspan id="math'+start+'block" class="math display">\\[');
+ 			 console.log("INDENT: Math Block Expression multiline "+start+" found: '"+vMathBlock+"'");
+
+     } else {
+			 html = this.process_indent(lines,start,i)
+		 };
+     return html;
+	}
 
 	this.open_indent_block = function() {
 		switch (this.aOutFormat) {

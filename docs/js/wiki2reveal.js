@@ -200,7 +200,7 @@ function replaceMathBlock4Reveal(pMarkdown) {
       var vMathBlock = vResult[2];
       vMathBlock = vMathBlock.replace(/\n/g," ");
       vSearchStr = vResult[1]+vMathBlock+vResult[3];
-      pMarkdown = pMarkdown.replace(vSearchStr,'\n<XXXspan id="math'+vCount+'block" class="math display">\\[' + vResult[2] +'\\]</XXXspan>');
+      pMarkdown = pMarkdown.replace(vSearchStr,'\n<center><XXXspan id="math'+vCount+'block" class="math inline"> \\( \\displaystyle ' + vResult[2] +'\\)</XXXspan></center>');
       console.log("Math Block Expression "+vCount+" found: '"+vResult[2]+"'");
       vCount++;
     };

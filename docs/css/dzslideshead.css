@@ -52,7 +52,10 @@ h2 {
   font-size: 40px;
 }
 h3 {
-  margin: 100px 0 50px 100px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 35px;
+  /* margin: 100px 0 50px 100px; */
 }
 
 ul {

@@ -1171,6 +1171,7 @@ this.process_normal = function(wikitext) {
 	  //-------------------------------------------------------
 		pWikiCode = this.replaceString(pWikiCode,"[[Image:"," [[File:");
 		pWikiCode = this.replaceString(pWikiCode,"[[Datei:"," [[File:");
+		pWikiCode = this.replaceString(pWikiCode,"[[Kategorie:"," [[Category:");
 		pWikiCode = this.replaceString(pWikiCode,"|thumbnail|","|thumb|");
 		pWikiCode = this.replaceString(pWikiCode,"|thumbnail]]","|thumb| ]] ");
 		pWikiCode = this.replaceString(pWikiCode,"|mini|","|thumb|");
@@ -1498,6 +1499,7 @@ this.process_normal = function(wikitext) {
 			//while(tokens = vCatRegEx.exec(pWikiCode)) {
 			//}
 			pWikiCode = pWikiCode.replace(/\[\[Category:(.[^\]]*)\]\]/g, '');
+			pWikiCode = pWikiCode.replace(/\[\[Kategorie:(.[^\]]*)\]\]/g, '');
 
 			return pWikiCode;
 

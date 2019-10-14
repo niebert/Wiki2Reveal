@@ -1,0 +1,994 @@
+
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Tailored Spatial Risk and Resource Management - A Conceptual Framework for Public Health in Costal Regions </title>
+  <meta name="author" content="Engelbert Niehaus">
+  <meta name="course" content="ESA Southampton">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="reveal/css/reveal.css">
+  <link rel="stylesheet" href="reveal/css/theme/beige.css" id="theme">
+  <!-- Original Settings do not have the following CSS inserted directly -->
+  <script src="js/wtf_wikipedia.min.js"></script>
+  <script src="js/wiki2reveal_generator.js"></script>
+  <script src="js/wikiconvert.js"></script>
+  <script src="js/linkparam.js"></script>
+
+<!-- link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' -->
+
+<style>
+  html, .view body { background-color: black;  counter-reset: slideidx; }
+  body, .view section { background-color: black; border-radius: 12px }
+  /* A section is a slide. It's size is 800x600, and this will never change */
+  section, .view head > title {
+      /* The font from Google */
+      font-family: 'Oswald', arial, serif;
+      font-size: 30px;
+  }
+
+  .view section:after {
+    counter-increment: slideidx;
+    content: counter(slideidx, decimal-leading-zero);
+    position: absolute; bottom: -80px; right: 100px;
+    color: white;
+  }
+
+  .view head > title {
+    color: white;
+    text-align: center;
+    margin: 1em 0 1em 0;
+  }
+
+  h1, h2 {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 80px;
+  }
+  h3 {
+    margin: 100px 0 50px 100px;
+  }
+
+  ul {
+      margin: 50px 200px;
+  }
+  li > ul {
+      margin: 15px 50px;
+  }
+
+  p {
+    margin: 75px;
+    font-size: 50px;
+  }
+
+  blockquote {
+    height: 100%;
+    background-color: black;
+    color: white;
+    font-size: 60px;
+    padding: 50px;
+  }
+  blockquote:before {
+    content: open-quote;
+  }
+  blockquote:after {
+    content: close-quote;
+  }
+
+  /* Figures are displayed full-page, with the caption
+     on top of the image/video */
+  figure {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+  }
+  figure > * {
+    position: absolute;
+  }
+  figure > img, figure > video {
+    width: 100%; height: 100%;
+  }
+  figcaption {
+    margin: 70px;
+    font-size: 50px;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 40px;
+    text-align: right;
+    background-color: #F3F4F8;
+    border-top: 1px solid #CCC;
+  }
+
+  /* Transition effect */
+  /* Feel free to change the transition effect for original
+     animations. See here:
+     https://developer.mozilla.org/en/CSS/CSS_transitions
+     How to use CSS3 Transitions: */
+  section {
+    -moz-transition: left 400ms linear 0s;
+    -webkit-transition: left 400ms linear 0s;
+    -ms-transition: left 400ms linear 0s;
+    transition: left 400ms linear 0s;
+  }
+  .view section {
+    -moz-transition: none;
+    -webkit-transition: none;
+    -ms-transition: none;
+    transition: none;
+  }
+
+  .view section[aria-selected] {
+    border: 5px red solid;
+  }
+
+  /* Before */
+  section { left: -150%; }
+  /* Now */
+  section[aria-selected] { left: 0; }
+  /* After */
+  section[aria-selected] ~ section { left: +150%; }
+
+  /* Incremental elements */
+
+  /* By default, visible */
+  .incremental > * { opacity: 1; }
+
+  /* The current item */
+  .incremental > *[aria-selected] { opacity: 1; }
+
+  /* The items to-be-selected */
+  .incremental > *[aria-selected] ~ * { opacity: 0; }
+
+  /* The progressbar, at the bottom of the slides, show the global
+     progress of the presentation. */
+  #progress-bar {
+    height: 2px;
+    background: #AAA;
+  }
+</style>
+<script>
+//---------------------------------------
+//------DEFAULT VALUES-------------------
+//---------------------------------------
+var vTitle = "Normen, Metriken, Topologie";
+var vAuthor = "Wikiversity DE";
+var vLanguage = "de";
+var vDomain = "wikiversity";
+var vAudioSlide = "no";
+//---------------------------------------
+var vOffline = false; // set to true for Debugging in offline mode
+//---------------------------------------
+
+//var vWikiConvert = new WikiConvert();
+var vWikiConvert = new WikiConvert();
+wtf.wikiconvert = new WikiConvert();
+wtf.reveal = wtf.html;
+
+function el(pID) {
+  return document.getElementById(pID)
+};
+
+function setWikiID() {
+  el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
+};
+
+function callWikiDisplay() {
+  var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
+  vURL += encodeURI(el("wikiarticle").value);
+  document.location.href=vURL;
+};
+
+</script>
+
+</head>
+<body>
+
+  <section id="wiki-formate-als-datensenken" class="slide level2">
+<h1>Wiki-Formate als Datensenken</h1>
+<p>WikiMedia-Syntax wird als Format in</p>
+<ul>
+<li>Wikipedia</li>
+<li>Wikiversity (OER)</li>
+<li>OLAT (closed Doc Development)</li>
+<li>....</li>
+</ul>
+<p>verwendet.</p>
+</section>
+<section id="wikimedia-konzept" class="slide level2">
+<h1>WikiMedia-Konzept</h1>
+<ul>
+<li>Offene kollaborative Inhaltsentwicklung</li>
+<li>Versionierung der Inhalte</li>
+<li>Diskussionsseiten jeweils zu allen Inhalten</li>
+<li>Qualtitätsicherung mit externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
+</ul>
+</section>
+<section id="wikiversity-und-bildungsprozesse" class="slide level2">
+<h1>Wikiversity und Bildungsprozesse</h1>
+<ul>
+<li>Primary Education (Grundschulen)</li>
+<li>Secondary Education (Weiterführende Schulen)</li>
+<li>Tertiary Education (Universitäten)</li>
+<li>Non-formal Education (Handwerkliche Techniken, Alltagswissen, ...)</li>
+</ul>
+</section>
+<section id="aus-datensenken-andere-formate-erzeugen" class="slide level2">
+<h1>Aus Datensenken andere Formate erzeugen</h1>
+<ul>
+<li>Markdown</li>
+<li>Präsentationen (RevealJS, DZSlides, LaTeX Beamer)</li>
+<li>LibreOffice-Dokumente mit Style-Templates,</li>
+<li>Microsoft Office-Dokumente mit Style-Templates,</li>
+<li>LaTeX-Dokumente,</li>
+<li>PDF, ...</li>
+</ul>
+</section>
+<section id="pandoc-electron" class="slide level2">
+<h1>PanDoc Electron</h1>
+<figure>
+<img src="./images/PanDocElectronMain.png" width="700" />
+</figure>
+</section>
+<section id="pandoc-electron-1" class="slide level2">
+<h1>PanDoc Electron</h1>
+<figure>
+<img src="./images/PanDocElectronMain.png" width="250" />
+</figure>
+<ul>
+<li><strong>Electron</strong> = Browser mit vollem Zugriff auf das Dateisystem</li>
+<li><strong>Download (PanDocElectron):</strong> <a href="http://niebert.github.io/PanDocElectron"><a href="http://niebert.github.io/PanDocElectron" class="uri">http://niebert.github.io/PanDocElectron</a></a></li>
+</ul>
+</section>
+<section id="reveal-präsentationen" class="slide level2">
+<h1>Reveal-Präsentationen</h1>
+<ul>
+<li>In Standard <a href="https://github.com/hakimel/reveal.js">reveal.js</a>-Präsentationen werden mathematische Formel mit MathJax erzeugt.</li>
+<li>Eingabeformate LaTeX (und ASCII-MathI)</li>
+<li>URL: <a href="https://github.com/mathjax/MathJax" class="uri">https://github.com/mathjax/MathJax</a></li>
+<li>Homepage: <a href="http://www.mathjax.org" class="uri">http://www.mathjax.org</a></li>
+</ul>
+</section>
+<section id="mathemtatik" class="slide level2">
+<h1>Mathemtatik</h1>
+<ul>
+<li>z.B. Taylorentwickung <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mo>∞</mo></msubsup><mfrac><mrow><msup><mi>f</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>n</mi><mo>!</mo></mrow></mfrac><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>a</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n</annotation></semantics></math><br />
+</li>
+</ul>
+<p>Abgesetzte mathematische Formeln <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>a</mi><mi>k</mi></msub><msub><mi>b</mi><mi>k</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>≤</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msubsup><mi>a</mi><mi>k</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msubsup><mi>b</mi><mi>k</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\displaystyle  \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)</annotation></semantics></math></p>
+<ul>
+<li>Grundlage LaTeX with in WikiMedia, MathJax, ... unterstützt</li>
+</ul>
+</section>
+<section id="audio-video" class="slide level2">
+<h1>Audio Video</h1>
+<ul>
+<li>Die Mediendateien werden in einen Unterverzeichnis der Projekte gespeichert <em>/audio</em>, <em>/video</em> and <em>/images</em></li>
+<li>die Unterordner der Projekte Medien (Video, Audio, Images, ...),</li>
+<li>insbesondere für Audiodateien zu Präsentationen <em>audio1.mp3, audio2.mp3, ...</em></li>
+</ul>
+</section>
+<section id="wikimedia-quelle" class="slide level2">
+<h1>WikiMedia Quelle</h1>
+<figure>
+<img src="./images/PanDocWikiversity.png" width="650" />
+</figure>
+<p><a href="https://commons.wikimedia.org/wiki/User:Bert_Niehaus" class="uri" title="wikilink">https://commons.wikimedia.org/wiki/User:Bert_Niehaus</a></p>
+</section>
+<section id="pandoc-ausgabe-libreoffice" class="slide level2">
+<h1>PanDoc-Ausgabe: LibreOffice</h1>
+<figure>
+<img src="./images/PanDocLibreOffice1col.png" width="650" />
+</figure>
+</section>
+<section id="pandoc-ausgabe-libreoffice-layout" class="slide level2">
+<h1>PanDoc-Ausgabe: LibreOffice Layout</h1>
+<figure>
+<img src="./images/PanDocLibreOffice2col.png" width="650" />
+</figure>
+</section>
+<section id="pandoc-ausgabe-word-layout" class="slide level2">
+<h1>PanDoc-Ausgabe: Word Layout</h1>
+<figure>
+<img src="./images/PanDocWord2col.png" width="650" />
+</figure>
+</section>
+<section id="pandoc-von-der-kommandozeile" class="slide level2">
+<h1>PanDoc von der Kommandozeile</h1>
+<pre><code>pandoc -f mediawiki -t html5 --template=tpl4reveal.html \
+     --standalone --section-divs \
+     --variable theme=&#39;beige&#39; \
+     --variable transition=&amp;quot;slide&amp;quot; --mathjax \
+     wikipedia.wiki -o wikipedia.html</code></pre>
+</section>
+<section id="github-versionierung-einer-qualitätssicherung" class="slide level2">
+<h1>GitHub: Versionierung einer Qualitätssicherung</h1>
+<ul>
+<li>GitHub zur Versionierung von Quelltexten (i.d. Programmcode)</li>
+<li>für OER angewendet auf WikiMedia Quelltextes</li>
+<li>Lese-Zugriff frei/offen</li>
+<li>Schreibzugriff auf die Versionierung nur durch Gutachterteam</li>
+<li>Gutachter-Innen nicht anonym</li>
+</ul>
+</section>
+<section id="tutorials-für-markdown-wikimedia" class="slide level2">
+<h1>Tutorials für Markdown &amp; WikiMedia</h1>
+<ul>
+<li>Tutorial Markdown <a href="http://www.markdowntutorial.com" class="uri">http://www.markdowntutorial.com</a></li>
+<li>Tutorial WikiMedia <a href="https://en.wikipedia.org/wiki/Wikipedia:Tutorial" class="uri">https://en.wikipedia.org/wiki/Wikipedia:Tutorial</a></li>
+</ul>
+</section>
+<section id="zusammenfassung" class="slide level2">
+<h1>Zusammenfassung</h1>
+<ul>
+<li><strong>Wikiversity:</strong> Offene kollaborative Inhaltsentwicklung für OER</li>
+<li><strong>Versionierung:</strong> Inhalte werden versioniert inkl. Diskussionsseiten</li>
+<li><strong>PanDoc(Electron):</strong> Tools für Konvertierung der Inhalte in andere Formate</li>
+<li><strong>Qualtitätsicherung:</strong> Externer Github-Versionierung und Querverweis zu Wiki-Referenz</li>
+</ul>
+</section>
+      <section id="finalslide" class="slide level2"  style="background: black">
+        <center>
+         <br/>
+          <table width="80%" style="color:white;">
+            <tr>
+              <td valign="top">
+                <b>Title</b>
+              </td>
+              <td>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b>Conference</b>
+              </td>
+              <td>
+                ESA Southampton
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b>Author</b>
+              </td>
+              <td>
+                Engelbert Niehaus
+              </td>
+             </tr>
+             <tr>
+               <td>
+                 <b>Date</b>
+               </td>
+               <td>
+                 2019/01/20 13:32:32
+               </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                This presentation was created with <a href="https://niebert.github.io/Wiki2Reveal" target="_blank">Wiki2Reveak for DZSlides output</a>.
+                As underlying web-based presentation framework <a href="https://paulrouget.com/dzslides" target="_blank">DZ-Slides</a> was used and integrated.
+                </td>
+              </tr>
+          </table>
+        </center>
+      </section>
+  <div class="reveal">
+      <div class="slides" id="divslides">
+      Waiting for Wiki-Download ...
+    </div>
+  </div>
+<div style="display:none">
+  <h2>Emulated Wiki Source:</h2>
+    <textarea id="wikisrc" rows="12" cols="120">
+== Wiki2Reveal Demo ==
+Converter used in Offline mode without internet connectivity!
+  </textarea>
+</div>
+
+
+<!-- dzslides core
+#
+#
+#     __  __  __       .  __   ___  __
+#    |  |  / /__  |    | |  | |__  /__
+#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :
+#
+#
+# The following block of code is not supposed to be edited.
+# But if you want to change the behavior of these slides,
+# feel free to hack it!
+#
+-->
+
+<div id="progress-bar"></div>
+
+<!-- Default Style -->
+<style>
+  * { margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+  [role="note"] { display: none; }
+  body {
+    width: 800px; height: 600px;
+    margin-left: -400px; margin-top: -300px;
+    position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
+    display: none;
+  }
+  .view body {
+    position: static;
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    display: inline-block;
+    overflow: visible; overflow-x: hidden;
+    /* undo Dz.onresize */
+    transform: none !important;
+    -moz-transform: none !important;
+    -webkit-transform: none !important;
+    -o-transform: none !important;
+    -ms-transform: none !important;
+  }
+  .view head, .view head > title { display: block }
+  section {
+    position: absolute;
+    pointer-events: none;
+    width: 100%; height: 100%;
+  }
+  .view section {
+    pointer-events: auto;
+    position: static;
+    width: 800px; height: 600px;
+    margin: -150px -200px;
+    float: left;
+
+    transform: scale(.4);
+    -moz-transform: scale(.4);
+    -webkit-transform: scale(.4);
+    -o-transform: scale(.4);
+    -ms-transform: scale(.4);
+  }
+  .view section > * { pointer-events: none; }
+  section[aria-selected] { pointer-events: auto; }
+  html { overflow: hidden; }
+  html.view { overflow: visible; }
+  body.loaded { display: block; }
+  .incremental {visibility: hidden; }
+  .incremental[active] {visibility: visible; }
+  #progress-bar{
+    bottom: 0;
+    position: absolute;
+    -moz-transition: width 400ms linear 0s;
+    -webkit-transition: width 400ms linear 0s;
+    -ms-transition: width 400ms linear 0s;
+    transition: width 400ms linear 0s;
+  }
+  .view #progress-bar {
+    display: none;
+  }
+</style>
+
+<script>
+  var Dz = {
+    remoteWindows: [],
+    idx: -1,
+    step: 0,
+    html: null,
+    slides: null,
+    progressBar : null,
+    params: {
+      autoplay: "1"
+    }
+  };
+
+  Dz.init = function() {
+    document.body.className = "loaded";
+    this.slides = Array.prototype.slice.call($$("body > section"));
+    this.progressBar = $("#progress-bar");
+    this.html = document.body.parentNode;
+    this.setupParams();
+    this.onhashchange();
+    this.setupTouchEvents();
+    this.onresize();
+    this.setupView();
+  }
+
+  Dz.setupParams = function() {
+    var p = window.location.search.substr(1).split('&');
+    p.forEach(function(e, i, a) {
+      var keyVal = e.split('=');
+      Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
+    });
+  // Specific params handling
+    if (!+this.params.autoplay)
+      $$.forEach($$("video"), function(v){ v.controls = true });
+  }
+
+  Dz.onkeydown = function(aEvent) {
+    // Don't intercept keyboard shortcuts
+    if (aEvent.altKey
+      || aEvent.ctrlKey
+      || aEvent.metaKey
+      || aEvent.shiftKey) {
+      return;
+    }
+    if ( aEvent.keyCode == 37 // left arrow
+      || aEvent.keyCode == 38 // up arrow
+      || aEvent.keyCode == 33 // page up
+    ) {
+      aEvent.preventDefault();
+      this.back();
+    }
+    if ( aEvent.keyCode == 39 // right arrow
+      || aEvent.keyCode == 40 // down arrow
+      || aEvent.keyCode == 34 // page down
+    ) {
+      aEvent.preventDefault();
+      this.forward();
+    }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
+    if (aEvent.keyCode == 32) { // space
+      aEvent.preventDefault();
+      this.toggleContent();
+    }
+    if (aEvent.keyCode == 70) { // f
+      aEvent.preventDefault();
+      this.goFullscreen();
+    }
+    if (aEvent.keyCode == 79) { // o
+      aEvent.preventDefault();
+      this.toggleView();
+    }
+  }
+
+  /* Touch Events */
+
+  Dz.setupTouchEvents = function() {
+    var orgX, newX;
+    var tracking = false;
+
+    var db = document.body;
+    db.addEventListener("touchstart", start.bind(this), false);
+    db.addEventListener("touchmove", move.bind(this), false);
+
+    function start(aEvent) {
+      aEvent.preventDefault();
+      tracking = true;
+      orgX = aEvent.changedTouches[0].pageX;
+    }
+
+    function move(aEvent) {
+      if (!tracking) return;
+      newX = aEvent.changedTouches[0].pageX;
+      if (orgX - newX > 100) {
+        tracking = false;
+        this.forward();
+      } else {
+        if (orgX - newX < -100) {
+          tracking = false;
+          this.back();
+        }
+      }
+    }
+  }
+
+  Dz.setupView = function() {
+    document.body.addEventListener("click", function ( e ) {
+      if (!Dz.html.classList.contains("view")) return;
+      if (!e.target || e.target.nodeName != "SECTION") return;
+
+      Dz.html.classList.remove("view");
+      Dz.setCursor(Dz.slides.indexOf(e.target) + 1);
+    }, false);
+  }
+
+  /* Adapt the size of the slides to the window */
+
+  Dz.onresize = function() {
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
+    var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
+
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    db.style.msTransform = transform;
+    db.style.transform = transform;
+  }
+
+
+  Dz.getNotes = function(aIdx) {
+    var s = $("section:nth-of-type(" + aIdx + ")");
+    var d = s.$("[role='note']");
+    return d ? d.innerHTML : "";
+  }
+
+  Dz.onmessage = function(aEvent) {
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+    var win = aEvent.source;
+    if (argv[0] === "REGISTER" && argc === 1) {
+      this.remoteWindows.push(win);
+      this.postMsg(win, "REGISTERED", document.title, this.slides.length);
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+      return;
+    }
+    if (argv[0] === "BACK" && argc === 1)
+      this.back();
+    if (argv[0] === "FORWARD" && argc === 1)
+      this.forward();
+    if (argv[0] === "START" && argc === 1)
+      this.goStart();
+    if (argv[0] === "END" && argc === 1)
+      this.goEnd();
+    if (argv[0] === "TOGGLE_CONTENT" && argc === 1)
+      this.toggleContent();
+    if (argv[0] === "SET_CURSOR" && argc === 2)
+      window.location.hash = "#" + argv[1];
+    if (argv[0] === "GET_CURSOR" && argc === 1)
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+    if (argv[0] === "GET_NOTES" && argc === 1)
+      this.postMsg(win, "NOTES", this.getNotes(this.idx));
+  }
+
+  Dz.toggleContent = function() {
+    // If a Video is present in this new slide, play it.
+    // If a Video is present in the previous slide, stop it.
+    var s = $("section[aria-selected]");
+    if (s) {
+      var video = s.$("video");
+      if (video) {
+        if (video.ended || video.paused ) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+      var audio = s.$("audio");
+      if (audio) {
+        if (audio.ended || audio.paused ) {
+          audio.play();
+        } else {
+          audio.pause();
+          audio.stop();
+        }
+      }
+    }
+  }
+
+  Dz.setCursor = function(aIdx, aStep) {
+    // If the user change the slide number in the URL bar, jump
+    // to this slide.
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : ".0";
+    window.location.hash = "#" + aIdx + aStep;
+    //alert("aIdx="+aIdx+"  aStep="+aStep);
+  }
+
+  Dz.onhashchange = function() {
+    var cursor = window.location.hash.split("#"),
+        newidx = 1,
+        newstep = 0;
+    if (cursor.length == 2) {
+      newidx = ~~cursor[1].split(".")[0];
+      newstep = ~~cursor[1].split(".")[1];
+      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
+        newstep = 0;
+        newidx++;
+      }
+    }
+    this.setProgress(newidx, newstep);
+    if (newidx != this.idx) {
+      this.setSlide(newidx);
+    }
+    if (newstep != this.step) {
+      this.setIncremental(newstep);
+    }
+    for (var i = 0; i < this.remoteWindows.length; i++) {
+      this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
+    }
+  }
+
+  Dz.back = function() {
+    if (this.idx == 1 && this.step == 0) {
+      return;
+    }
+    if (this.step == 0) {
+      this.setCursor(this.idx - 1,
+                     this.slides[this.idx - 2].$$('.incremental > *').length);
+    } else {
+      this.setCursor(this.idx, this.step - 1);
+    }
+  }
+
+  Dz.forward = function() {
+    if (this.idx >= this.slides.length &&
+        this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+        return;
+    }
+    if (this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+      this.setCursor(this.idx + 1, 0);
+    } else {
+      this.setCursor(this.idx, this.step + 1);
+    }
+  }
+
+  Dz.goStart = function() {
+    this.setCursor(1, 0);
+  }
+
+  Dz.goEnd = function() {
+    var lastIdx = this.slides.length;
+    var lastStep = this.slides[lastIdx - 1].$$('.incremental > *').length;
+    this.setCursor(lastIdx, lastStep);
+  }
+
+  Dz.toggleView = function() {
+    this.html.classList.toggle("view");
+
+    if (this.html.classList.contains("view")) {
+      $("section[aria-selected]").scrollIntoView(true);
+    }
+  }
+
+  Dz.setSlide = function(aIdx) {
+    this.idx = aIdx;
+    var old = $("section[aria-selected]");
+    var next = $("section:nth-of-type("+ this.idx +")");
+    if (old) {
+      old.removeAttribute("aria-selected");
+      var video = old.$("video");
+      if (video) {
+        video.pause();
+      }
+      var audio = old.$("audio");
+      if (audio) {
+        audio.pause();
+        //audio.stop();
+      }
+    }
+    if (next) {
+      next.setAttribute("aria-selected", "true");
+      if (this.html.classList.contains("view")) {
+        next.scrollIntoView();
+      }
+      var video = next.$("video");
+      if (video && !!+this.params.autoplay) {
+        video.play();
+      }
+      var audio = next.$("audio");
+      if (audio && !!+this.params.autoplay) {
+        audio.play();
+      }
+    } else {
+      // That should not happen
+      this.idx = -1;
+      // console.warn("Slide doesn't exist.");
+    }
+  }
+
+  Dz.setIncremental = function(aStep) {
+    this.step = aStep;
+    var old = this.slides[this.idx - 1].$('.incremental > *[aria-selected]');
+    if (old) {
+      old.removeAttribute('aria-selected');
+    }
+    var incrementals = $$('.incremental');
+    if (this.step <= 0) {
+      $$.forEach(incrementals, function(aNode) {
+        aNode.removeAttribute('active');
+      });
+      return;
+    }
+    var next = this.slides[this.idx - 1].$$('.incremental > *')[this.step - 1];
+    if (next) {
+      next.setAttribute('aria-selected', true);
+      next.parentNode.setAttribute('active', true);
+      var found = false;
+      $$.forEach(incrementals, function(aNode) {
+        if (aNode != next.parentNode)
+          if (found)
+            aNode.removeAttribute('active');
+          else
+            aNode.setAttribute('active', true);
+        else
+          found = true;
+      });
+    } else {
+      setCursor(this.idx, 0);
+    }
+    return next;
+  }
+
+  Dz.goFullscreen = function() {
+    var html = $('html'),
+        requestFullscreen = html.requestFullscreen || html.requestFullScreen || html.mozRequestFullScreen || html.webkitRequestFullScreen;
+    if (requestFullscreen) {
+      requestFullscreen.apply(html);
+    }
+  }
+
+  Dz.setProgress = function(aIdx, aStep) {
+    var slide = $("section:nth-of-type("+ aIdx +")");
+    if (!slide)
+      return;
+    var steps = slide.$$('.incremental > *').length + 1,
+        slideSize = 100 / (this.slides.length - 1),
+        stepSize = slideSize / steps;
+    this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
+  }
+
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
+  }
+
+  function init() {
+    Dz.init();
+    window.onkeydown = Dz.onkeydown.bind(Dz);
+    window.onresize = Dz.onresize.bind(Dz);
+    window.onhashchange = Dz.onhashchange.bind(Dz);
+    window.onmessage = Dz.onmessage.bind(Dz);
+  }
+
+  window.onload = init;
+</script>
+
+
+<script> // Helpers
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+
+      // closest thing possible to the ECMAScript 5 internal IsCallable
+      // function
+      if (typeof this !== "function")
+      throw new TypeError(
+        "Function.prototype.bind - what is trying to be fBound is not callable"
+      );
+
+      var aArgs = Array.prototype.slice.call(arguments, 1),
+          fToBind = this,
+          fNOP = function () {},
+          fBound = function () {
+            return fToBind.apply( this instanceof fNOP ? this : oThis || window,
+                   aArgs.concat(Array.prototype.slice.call(arguments)));
+          };
+
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+
+      return fBound;
+    };
+  }
+
+  var $ = (HTMLElement.prototype.$ = function(aQuery) {
+    return this.querySelector(aQuery);
+  }).bind(document);
+
+  var $$ = (HTMLElement.prototype.$$ = function(aQuery) {
+    return this.querySelectorAll(aQuery);
+  }).bind(document);
+
+  function callDZSlildesInit() {
+    $$.forEach = function(nodeList, fun) {
+      Array.prototype.forEach.call(nodeList, fun);
+    }
+  }
+
+</script>
+<!-- vim: set fdm=marker: -->
+</body>
+
+    <script>
+    //---------------------------------------
+    //------READ LINKPARAMETER---------------
+    //---------------------------------------
+    var vLinkParam = new LinkParam();
+    vLinkParam.init(document);
+    //------ TiTLE --------------------------
+    if (vLinkParam.exists("title")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vTitle= vLinkParam.getValue("title");
+    };
+    //------ AUTHOR -------------------------
+    if (vLinkParam.exists("author")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      vAuthor = vLinkParam.getValue("author");
+    };
+    //------ LANGUAGE ----------------------
+    if (vLinkParam.exists("language")) {
+      // e.g. index.html?language=de
+      vLanguage = vLinkParam.getValue("language");
+    };
+    //------ DOMAIN ------------------------
+    if (vLinkParam.exists("domain")) {
+      // e.g. index.html?domain=wikipedia
+      vDomain = vLinkParam.getValue("domain");
+    };
+    //------ AUDIO SLIDE ------------------------
+    if (vLinkParam.exists("audioslide")) {
+      // e.g. index.html?domain=wikipedia
+      vAudioSlide = vLinkParam.getValue("audioslide");
+    };
+    //--------------------------------------
+    function callWikiDownload() {
+        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
+    };
+
+      function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
+        //alert("Emulate MediaWiki Download");
+        console.log("CALL:downloadWikiDoc()\nWiki Title: '"+pTitle+"'\n URL: 'https://"+pLanguage+"."+pDomain+".org'");
+        if (vOffline == true) {
+          offlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+        } else {
+          onlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+        }
+      };
+
+      function offlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+        //alert("Emulate MediaWiki Download");
+        var markup = document.getElementById("wikisrc").value;
+        console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
+        // store markup result in textarea
+        processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+      };
+
+      function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+        var vWikiID = pLanguage+pDomain;
+        var vVersion = "?.?.?";
+        var vFetchExists = false;
+        if (wtf) {
+          console.log("wtf exists!");
+          for (var variable in wtf) {
+            if (wtf.hasOwnProperty(variable)) {
+              console.log("wtf."+variable+" Type: "+typeof(wtf[variable])+" exists!");
+              switch (variable) {
+                case "version":
+                  vVersion = wtf.version;
+                break;
+                case "fetch":
+                  vFetchExists = true;
+                break;
+                default:
+
+              }
+            } else {
+              console.log("wtf."+variable+" exists, but does not have ownProperty()!");
+            }
+          };
+          console.log("VERSION (wtf_wikipedia) "+vVersion);
+          if (vFetchExists == true) {
+            wtf.fetch(pArticle, vWikiID, function(err, doc) {
+              var markup = doc.wiki;
+              processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+            });
+          }
+        } else {
+          console.log("'wtf' is not defined!");
+        };
+      }
+
+      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
+        // el("divslides").innerHTML = wtf.reveal(markup);
+        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain);
+        // store JSON parse result in textarea
+        el("divslides").innerHTML = htmlout; //el("revealsource").value;
+        //el("divslides").innerHTML = el("revealsource").value;
+        //var vWikiJSON = wtf.parse(markup);
+        //setTimeout("callRevealInit()",3000)
+        // setTimeout("callDZSlildesInit()",3000)
+      }
+      callWikiDownload();
+      //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");
+    </script>
+
+</html>

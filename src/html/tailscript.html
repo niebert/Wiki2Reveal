@@ -1,0 +1,18 @@
+<!-- BEGIN:   src/html/tailscript.html -->
+<script>
+  function callWikiDownload() {
+      downloadWikiDoc(el("wikiarticle").value,el("wikiid").value);
+  };
+
+  function downloadWikiDoc(pArticle,pWikiID) {
+    wtf.from_api(pArticle, pWikiID, function(markup){// Callback function after success
+      console.log("LOG (PlainText result): "+wtf.plaintext(markup));
+      // store markup result in textarea
+      document.getElementById("wikimarkup").value = markup;
+      // store JSON parse result in textarea
+      var data = wtf.parse(markup);
+      document.getElementById("wikijson").value = JSON.stringify(data,null,4);
+    })
+  }
+</script>
+<!-- END:   src/html/tailscript.html -->

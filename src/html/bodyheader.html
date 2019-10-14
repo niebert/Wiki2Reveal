@@ -1,0 +1,45 @@
+</head>
+<body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
+  <script>
+    function el(pID) {
+      return document.getElementById(pID)
+    };
+
+    function callWikiDisplay() {
+      var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
+      vURL += encodeURI(el("tTitle").value);
+      //document.location.href=vURL;
+      window.open(vURL);
+    };
+
+    function callWikiSource() {
+      var vURL = "wiki2reveal_textarea.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+      vURL += "&title="+encodeURI(el("tTitle").value);
+      vURL += "&author="+encodeURI(el("tAuthor").value);
+      vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+      //document.location.href=vURL;
+      window.open(vURL);
+    };
+
+    function callWikiFooter() {
+      var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+      vURL += "&title="+encodeURI(el("tTitle").value);
+      vURL += "&author="+encodeURI(el("tAuthor").value);
+      vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+      //document.location.href=vURL;
+      window.open(vURL);
+    };
+
+  </script>
+  <hr>
+    <center>
+      <h2>___PKG_EXPORTVAR___ Starter</h2>
+      <h3><i>based on Library: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a></i></h3>
+    </center>
+  <hr>
+  <center>
+  <p>
+    <a href="https://www.github.com/niebert/___PKG_EXPORTVAR___" target="_blank">___PKG_EXPORTVAR___</a> can download a Wiki source text on the fly and create a <a href="https://github.com/hakimel/reveal.js" target="_blank">RevealJS presentation</a>.<br>
+    The Wiki source text should be separated in small sections that fit on a page (see <a href="https://en.wikiversity.org/wiki/PanDocElectron/Presentation" target="_blank">PanDocElectron-SLIDE</a>)
+  </p>
+  <br>

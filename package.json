@@ -1,5 +1,6 @@
 {
   "name": "wiki2reveal",
+  "exportvar": "Wiki2Reveal",
   "version": "1.0.0",
   "description": "Converts Wiki Source Text to RevealJS Presentation including Download the online source",
   "main": "main.js",
@@ -29,7 +30,15 @@
     "Document",
     "Converter"
   ],
+  "build": {
+    "readme": "README_build.md",
+    "html": "docs/index_build.html",
+    "css": "docs/css/main.css",
+    "htmlsrc": "docs/index_src_libs.html"
+  },
   "author": "Engelbert Niehaus",
+  "gituser": "niebert",
+  "gitdomain": "github",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/niebert/Wiki2Reveal/issues"
@@ -37,5 +46,8 @@
   "homepage": "https://github.com/niebert/Wiki2Reveal#readme",
   "dependencies": {
     "nodemw": "^0.12.0"
+  },
+  "devDependencies": {
+    "build4code": "^0.3.13"
   }
 }

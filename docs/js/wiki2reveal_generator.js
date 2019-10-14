@@ -25,6 +25,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
   pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
+  console.log("Slide Type: "+ wtf.wikiconvert.check_audio_slide(pMarkdown));
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown);
   // create a Title slide and place the slide before output
@@ -126,7 +127,6 @@ function callRevealInit() {
 }
 
 
-
 function addSectionReveal(pMarkdown) {
     var vSearch = /(<section[^>]*>)/i;
     var vResult;
@@ -146,33 +146,24 @@ function addSectionReveal(pMarkdown) {
     return pMarkdown;
 };
 
-function replaceMath4Reveal(pMarkdown) {
+function replaceMath4Reveal(pMarkdown,pOptions) {
   if (pMarkdown) {
-    pMarkdown = replaceMathBlock4Reveal(pMarkdown);
-    pMarkdown = replaceMathInline4Reveal(pMarkdown);
+    pMarkdown = replaceMathBlock4Reveal(pMarkdown,pOptions);
+    pMarkdown = replaceMathInline4Reveal(pMarkdown,pOptions);
   } else {
     pMarkdown = "undefined pMarkdown"
   }
   return pMarkdown;
 }
 
-function postprocessMath4Reveal(pMarkdown) {
+function postprocessMath4Reveal(pMarkdown,pOptions) {
   pMarkdown = pMarkdown.replace(/XXXspan/g,"span");
   //pMarkdown = pMarkdown.replace(/___MATH_END_BLOCK___/g,"</p><p class=\"textleft\" style=\"text-align: left;\">");
 
   return pMarkdown;
 }
 
-function createTitleSlide(pTitle,pAuthor) {
-  pTitle = link2title(pTitle);
-  var slide0 = "\n<section id=\"titleslide\">";
-  slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
-  slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
-  slide0 += "\n</section>\n";
-  return slide0;
-}
-
-function replaceMathInline4Reveal(pMarkdown) {
+function replaceMathInline4Reveal(pMarkdown,pOptions) {
    // <math>(.*?)<\/math>
     var vSearch = /(<math>)(.*?)(<\/math>)/i;
     var vResult;
@@ -188,7 +179,7 @@ function replaceMathInline4Reveal(pMarkdown) {
     return pMarkdown;
 };
 
-function replaceMathBlock4Reveal(pMarkdown) {
+function replaceMathBlock4Reveal(pMarkdown,pOptions) {
    // <math>(.*?)<\/math>
    var vSearch = /(\n[:]+[\s]*?<math>)(.*?)(<\/math>)/i;
    var vResult;
@@ -207,7 +198,7 @@ function replaceMathBlock4Reveal(pMarkdown) {
     return pMarkdown;
 };
 
-function hackMathBlock4Reveal(pMarkdown) {
+function hackMathBlock4Reveal(pMarkdown,pOptions) {
   return pMarkdown;
 };
 
@@ -247,6 +238,15 @@ function tokenizeMathBlock (wikicode, data, options) {
     };
   };
   return wikicode
+}
+
+function createTitleSlide(pTitle,pAuthor) {
+  pTitle = link2title(pTitle);
+  var slide0 = "\n<section id=\"titleslide\">";
+  slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
+  slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
+  slide0 += "\n</section>\n";
+  return slide0;
 }
 
 function replaceString(pString,pSearch,pReplace)

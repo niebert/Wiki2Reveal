@@ -1,0 +1,12 @@
+/* File: src/css/main.css */
+body {
+  margin: 3em;
+  background-color: #CACACA; /* Grey */
+}
+button {
+  background-color: blue; /* Blue #008CBA */
+  color: white
+}
+.demolist {
+  background-color: white;
+}

@@ -490,12 +490,12 @@ function WikiConvert () {
 				case "reveal":
 					//out += delimiter[level] + match + delimiter[level] + "\n";
 					if (this.aSectionCount > 0) {
-							out += "</p>";
+							out += "</div>";
 							out += "</section>\n";
 					};
 					this.aSectionCount++;
 					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\">\n\t<h"+level+">"+match+"</h"+level+">"
-					out += "\n<p class=\"textleft\" style=\"text-align: left;\">";
+					out += "\n<div class=\"textleft\" style=\"text-align: left;\">";
 					break;
 				default:
 					out += delimiter[level] + match + delimiter[level] + "\n";
@@ -553,6 +553,19 @@ function WikiConvert () {
 		}
 	}
 
+
+	this.check_audio_slide = function (pMarkdown) {
+		var vLoc = document.location.href || "nolocation.html";
+		var vReturn = "undefined_type";
+		if (vLoc.indexOf("dzslides") >= 0) {
+			console.log("Slide Type: DZSlides");
+			vReturn = "dzslides"
+		} else {
+			console.log("Slide Type: RevealJS");
+			vReturn = "reveal"
+		}
+	  return vReturn;
+	}
 
 	this.close_indent_block = function() {
 		switch (this.aOutFormat) {
@@ -1156,12 +1169,12 @@ this.process_normal = function(wikitext) {
 	  //    var vMyInstance = new WikiConvert();
 	  //    vMyInstance.clean_source(pWikiCode);
 	  //-------------------------------------------------------
-		pWikiCode = this.replaceString(pWikiCode,"[[Image:","[[File:");
-		pWikiCode = this.replaceString(pWikiCode,"[[Datei:","[[File:");
+		pWikiCode = this.replaceString(pWikiCode,"[[Image:"," [[File:");
+		pWikiCode = this.replaceString(pWikiCode,"[[Datei:"," [[File:");
 		pWikiCode = this.replaceString(pWikiCode,"|thumbnail|","|thumb|");
-		pWikiCode = this.replaceString(pWikiCode,"|thumbnail]]","|thumb| ]]");
+		pWikiCode = this.replaceString(pWikiCode,"|thumbnail]]","|thumb| ]] ");
 		pWikiCode = this.replaceString(pWikiCode,"|mini|","|thumb|");
-		pWikiCode = this.replaceString(pWikiCode,"|mini]]","|thumb| ]]");
+		pWikiCode = this.replaceString(pWikiCode,"|mini]]","|thumb| ]] ");
 		//pWikiCode = pWikiCode.replace(/[|](thumbnail|mini)(\]|\|)/g,"|thumb$2");
 	  pWikiCode = pWikiCode.replace(/\r/g, '');
 	  return pWikiCode;
@@ -1492,6 +1505,7 @@ this.process_normal = function(wikitext) {
 		//----End of Method removeCategories Definition
 
 
+
 	//#################################################################
 	//# PUBLIC Method: replaceImages()
 	//#    used in Class: WikiConvert
@@ -1523,6 +1537,10 @@ this.process_normal = function(wikitext) {
 		var vCaption = "";
 		var tokens;
 		var replace_str="";
+		var vAudioCount = 0;
+		var vAudioID = "";
+		var vAudioType = "ogg";
+		var vAudioTag = " "
 		// vImgCenter centers the image directly with a style attribute
 		var vImgCenter='display: block; margin-left: auto;margin-right: auto;';
 	  while(tokens = image.exec(pWikiCode)) {
@@ -1537,12 +1555,33 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//-----AUDIO---------------
 				//-------------------------
-				console.log("Audio Found: "+vURL+" with Type: "+vFileType);
-				if (vAudioSlide == "yes") {
-					replace_str = '</p><p class="fragment" data-audio-src="' + vURL + '"><a href="#" onclick="alert(\'Press Play Button in Audio Player below\');return false">&#9658;</a>';
+				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
+				vAudioCount++;
+				vAudioID = "audio_src_"+vAudioCount;
+				vAudioID += vAudioType;
+				if (vURL.indexOf(".mp3") > 0) {
+					vAudioType = "mpeg";
+				} else if (vURL.indexOf(".ogg") > 0) {
+					vAudioType = "ogg";
 				} else {
-					replace_str = '<a href="' + vURL + '" target="_blank">&#9658;</a>';
+					console.warn("Audio Type of '" + vURL + "' undefined  user 'audio/ogg' with Audio Tag: "+vAudioTag);
+					vAudioType = "ogg";
 				};
+				vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
+				if (vAudioSlide == "yes") {
+					if (this.check_audio_slide(pWikiCode) == "dzslides") {
+						replace_str = vAudioTag;
+					} else {
+						replace_str = '<p class="fragment" data-audio-src="' + vURL + '"><a href="#" onclick="alert(\'Press Play Button in Audio Player below\');return false">&#9658;</a></p>';
+						//replace_str = vAudioTag;
+					}
+				} else {
+					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
+					//replace_str = " ";
+					replace_str = '<audio id="' + vAudioID + '" ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					};
+				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			} else if (vFileType == "video") {
 				//-------------------------
@@ -1550,9 +1589,9 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				console.log("Video Found: "+vURL+" with Type: "+vFileType);
 				if (vAudioSlide == "yes") {
-					replace_str = '<p><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></p>'
+					replace_str = '<div class="videodiv"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></div>'
 				} else {
-					replace_str = '<p><a href="' + vURL + '" target="_blank"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video><a href="' + vURL + '" target="_blank">&#9658;</a></p>';
+					replace_str = '<div class="videodiv"><a href="' + vURL + '" target="_blank"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video><a href="' + vURL + '" target="_blank">&#9658;</a></div>';
 				};
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
@@ -1563,18 +1602,21 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				console.log("Image Found: "+vURL+" with Type: "+vFileType);
 				if (vLinkSplit.length == 1) {
+					console.log("IMAGE SPLIT 1: "+vURL+" with Type: "+vFileType);
 					//replace_str = '___IMG_OPEN___File:' + vURL + '___IMG_CLOSE___';
 					//replace_str = '<section data-background-image="'+vURL+'" data-background-size="cover"></section>\n';
 					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+'width: 50%;">';
 					pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 				} else {
 					if (vLinkSplit.length == 2) {
+						console.log("IMAGE SPLIT 2: "+vURL+" with Type: "+vFileType);
 						vCaption = this.checkCaption(vLinkSplit[1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + '|' + vCaption + '___IMG_CLOSE___';
 						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					} else {
 						// var vMediaParam = "";
+						console.log("IMAGE SPLIT 3: "+vURL+" with Type: "+vFileType);
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
 						for (var i = 1; i < (vLinkSplit.length-1); i++) {

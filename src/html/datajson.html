@@ -1,0 +1,27 @@
+<!-- BEGIN: src/html/datajson.html -->
+  <script language="javascript">
+   // vDataJSON is the main JSON storage for the privacy friendly WebApp
+   // File Loaded into vDataJSON by script tag
+   var vDataJSON = {};
+   vDataJSON.tpl = {};
+   /* TEMPLATES
+   vDataJSON.tpl contains the following templates:
+     * vDataJSON.tpl["javascript"] File: tpl/javascript_tpl.js
+       for creating the the Source Code for the UML class in javascript
+     * vDataJSON.tpl["docu4github"] File: tpl/docu4github_tpl.js
+       for creating the GitHub documentation from the UML source of the class
+   */
+
+   vDataJSON.out = {};
+   /* HANDLEBARS COMPILERS
+   vDataJSON.tpl contains the Handlebars compilers:
+     * vDataJSON.out["javascript"] Compiler for template: tpl/javascript_tpl.js
+       This compiler is used in the compileCode() method
+       var mySource = vJSONEditor.compileCode.javascript(pJSON)
+       creates the source code for the UML class in javascript
+     * vDataJSON.out["docu4github"] Compiler for template: tpl/docu4github_tpl.js
+       This compiler is used in the compileCode() method
+       var mySource = vJSONEditor.compileCode.docu4github(pJSON)
+   */
+  </script>
+<!-- END: src/html/datajson.html -->

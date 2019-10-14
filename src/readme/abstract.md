@@ -1,0 +1,5 @@
+<!-- BEGIN: src/readme/abstract.md -->
+
+* **(Analogy - Load in Desktop Applications)** In standard desktop application like [LibreOffice](https://www.libreoffice.org/) users are able to load files and process/edit the document. `LoadFile4DOM` does the same for WebApps and loads data (e.g. text files) for processing or editing into WebApp (which is defined by HTML and Javascript-Code). `LoadFile4DOM` provides Load Dialog and programmers define withn `onload` handlers, what to do with the uploaded file (see [list of examples](https://niehausbert.gitlab.io/loadfile4dom)).
+* **(File Access to Local Filesystem)** For security reason browsers are not allowed to access the local file system. On the other hand sending user data to a remote server can be avoided by processing the data in the browser without submitting the data to a remote server.\nSee a first example, in which users can load a textfile into textarea.\nWhen you have the text in the textarea you can process the content in the browser and show the results to the user in the textarea.
+<!-- END: src/readme/abstract.md -->

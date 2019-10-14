@@ -1,0 +1,163 @@
+html, .view body {
+   /* background-color: black;  */
+   counter-reset: slideidx;
+ }
+
+ html {
+   background: #f7f2d3;
+   background: -moz-radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
+   background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, white), color-stop(100%, #f7f2d3));
+   background: -webkit-radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
+   background: -o-radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
+   background: -ms-radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
+   background: radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
+   background-color: #f7f3de;
+   text-decoration-line: none;
+
+ }
+
+body, .view section { background-color: black; border-radius: 12px }
+/* A section is a slide. It's size is 800x600, and this will never change */
+section, .view head > title {
+    /* The font from Google */
+    font-family: 'Oswald', arial, serif;
+    font-size: 30px;
+    text-decoration-line: none;
+}
+img, video {
+  max-width: 100%;
+  max-height: 100%;
+}
+.view section:after {
+  counter-increment: slideidx;
+  content: counter(slideidx, decimal-leading-zero);
+  position: absolute; bottom: -80px; right: 100px;
+  color: white;
+}
+
+.view head > title {
+  color: white;
+  text-align: center;
+  margin: 1em 0 1em 0;
+}
+
+h1 {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 50px;
+}
+h2 {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 40px;
+}
+h3 {
+  margin: 100px 0 50px 100px;
+}
+
+ul {
+    margin: 20px 60px;
+}
+li > ul {
+    margin: 15px 50px;
+}
+
+p {
+  margin-top: 20px;
+  margin: 45px;
+  font-size: 30px;
+}
+
+blockquote {
+  height: 100%;
+  background-color: black;
+  color: white;
+  font-size: 60px;
+  padding: 50px;
+}
+blockquote:before {
+  content: open-quote;
+}
+blockquote:after {
+  content: close-quote;
+}
+
+/* Figures are displayed full-page, with the caption
+   on top of the image/video */
+figure {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+}
+figure > * {
+  position: absolute;
+}
+figure > img, figure > video {
+  width: 100%; height: 100%;
+}
+figcaption {
+  margin: 70px;
+  font-size: 50px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 40px;
+  text-align: right;
+  background-color: #F3F4F8;
+  border-top: 1px solid #CCC;
+}
+
+/* Transition effect */
+/* Feel free to change the transition effect for original
+   animations. See here:
+   https://developer.mozilla.org/en/CSS/CSS_transitions
+   How to use CSS3 Transitions: */
+section {
+  -moz-transition: left 400ms linear 0s;
+  -webkit-transition: left 400ms linear 0s;
+  -ms-transition: left 400ms linear 0s;
+  transition: left 400ms linear 0s;
+}
+.view section {
+  -moz-transition: none;
+  -webkit-transition: none;
+  -ms-transition: none;
+  transition: none;
+}
+
+.view section[aria-selected] {
+  border: 5px red solid;
+}
+
+/* Before */
+section { left: -150%; }
+/* Now */
+section[aria-selected] { left: 0; }
+/* After */
+section[aria-selected] ~ section { left: +150%; }
+
+/* Incremental elements */
+
+/* By default, visible */
+.incremental > * { opacity: 1; }
+
+/* The current item */
+.incremental > *[aria-selected] { opacity: 1; }
+
+/* The items to-be-selected */
+.incremental > *[aria-selected] ~ * { opacity: 0; }
+
+/* The progressbar, at the bottom of the slides, show the global
+   progress of the presentation. */
+#progress-bar {
+  height: 2px;
+  background: #AAA;
+}
+
+.textleft {
+  margin-top: 50px
+  color:"#AA0000"
+}

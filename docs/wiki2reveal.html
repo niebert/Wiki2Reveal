@@ -13,9 +13,10 @@
   <!-- Original Settings do not have the following CSS inserted directly -->
   <link rel="stylesheet" href="reveal/css/print/paper.css"/>
   <script src="js/wtf_wikipedia.min.js"></script>
-  <script src="js/wiki2reveal.js"></script>
+  <script src="js/wiki2reveal_generator.js"></script>
   <script src="js/wikiconvert.js"></script>
   <script src="js/linkparam.js"></script>
+  <script src="js/audioplayer.js"></script>
   <!-- Printing and PDF exports -->
   <script>
     var link = document.createElement( 'link' );
@@ -42,6 +43,11 @@
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
+  // vDataJSON.wikipage will be populated by db/wikipage_db.js
+  var vDataJSON = {
+    "wikipage": "== My Title ==\nMy content of Wikipage"
+  };
+  //---------------------------------------
 
   //var vWikiConvert = new WikiConvert();
   var vWikiConvert = new WikiConvert();
@@ -63,6 +69,12 @@
   };
 
 </script>
+<!--
+   LOAD DATA with JS Librar
+   Load the local default wikipage it mode is "offline"
+   (i.e. vOffline = true)
+-->
+<script src="db/wikipage_db.js"></script>
 
 </head>
 <body>
@@ -71,13 +83,15 @@
       Waiting for Wiki-Download ...
     </div>
   </div>
-<div style="display:none">
-  <h2>Emulated Wiki Source:</h2>
-    <textarea id="wikisrc" rows="12" cols="120">
-== Wiki2Reveal Demo ==
-Converter used in Offline mode without internet connectivity!
-  </textarea>
-</div>
+  <!--
+  <div style="display:none">
+    <h2>Emulated Wiki Source:</h2>
+      <textarea id="wikisrc" rows="12" cols="120">
+  == Wiki2Reveal Demo ==
+  Converter used in Offline mode without internet connectivity!
+    </textarea>
+  </div>
+  -->
 </body>
 
   <script src="reveal/lib/js/head.min.js"></script>
@@ -131,7 +145,8 @@ Converter used in Offline mode without internet connectivity!
 
       function offlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
         //alert("Emulate MediaWiki Download");
-        var markup = document.getElementById("wikisrc").value;
+        //var markup = document.getElementById("wikisrc").value;
+        var markup = vDataJSON.wikipage;
         console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
         // store markup result in textarea
         processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);

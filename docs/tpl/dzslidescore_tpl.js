@@ -30,7 +30,7 @@ vDataJSON.tpl.dzslidescore = `
   audio {
     position: fixed;
     bottom: 0;
-    right: 0;
+    right: 200;
     width: 200px;
   }
   a {

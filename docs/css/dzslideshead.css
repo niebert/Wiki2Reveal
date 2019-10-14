@@ -167,6 +167,6 @@ section[aria-selected] ~ section { left: +150%; }
 }
 
 .textleft {
-  margin-top: 50px
+  margin-top: 10px
   color:"#AA0000"
 }

@@ -1,5 +1,9 @@
 function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions) {
   console.log("getWiki2Reveal()-Call");
+  if (document.location.href.indexOf("dzslides") >= 0) {
+    pOptions.slidetype = "dzslides";
+    console.log("Set slidetype to 'dzslides'");
+  }
   var vWikiID = pLanguage+pDomain;
   var page_identifier = pTitle.replace(/ /g,"_");
   var vDocJSON = {}; // vDocJSON stores parsed content
@@ -241,10 +245,25 @@ function tokenizeMathBlock (wikicode, data, pOptions) {
 }
 
 function createTitleSlide(pTitle,pAuthor,pOptions) {
+  console.log("CALL: createTitleSlide()");
   pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
+  if (pOptions) {
+    if (pOptions.slidetype) {
+      if (pOptions.slidetype == "dzslides") {
+        console.log("CALL: createTitleSlide() - Slide Type: '"+ pOptions.slidetype+ "' - Title generated for DZSlides");
+        slide0 += "\n  <center><img class=\"titlelogo\" width='150' src=\"img/Wiki2Reveal_Logo.svg\"></center>";
+      } else {
+        console.log("CALL: createTitleSlide()  - Slide Type: '"+ pOptions.slidetype+ "' - Title generated for RevealJS");
+      }
+    } else {
+      console.warn("CALL: createTitleSlide() - pOptions.slidetype undefined");
+    }
+  } else {
+    console.warn("CALL: createTitleSlide() - pOptions undefined");
+  }
   slide0 += "\n</section>\n";
   return slide0;
 }

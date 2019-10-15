@@ -48,6 +48,14 @@
     "wikipage": "== My Title ==\nMy content of Wikipage"
   };
   //---------------------------------------
+  // Options for getWiki2Reveal() Call
+  var vOptions = {
+    "domain": "wikiversity",
+    "language": "en",
+    "audioslide":"no",
+    "slidetype":"reveal"
+  };
+//---------------------------------------
 
   //var vWikiConvert = new WikiConvert();
   var vWikiConvert = new WikiConvert();
@@ -117,16 +125,25 @@
     if (vLinkParam.exists("language")) {
       // e.g. index.html?language=de
       vLanguage = vLinkParam.getValue("language");
+      vOptions.language = vLinkParam.getValue("language");
     };
     //------ DOMAIN ------------------------
     if (vLinkParam.exists("domain")) {
       // e.g. index.html?domain=wikipedia
       vDomain = vLinkParam.getValue("domain");
+      vOptions.domain = vLinkParam.getValue("domain");
     };
     //------ AUDIO SLIDE ------------------------
     if (vLinkParam.exists("audioslide")) {
       // e.g. index.html?domain=wikipedia
       vAudioSlide = vLinkParam.getValue("audioslide");
+      vOptions.audioslide = vLinkParam.getValue("audioslide");
+    };
+    //------ SLIDE TYPE------------------------
+    if (vLinkParam.exists("slidetype")) {
+      // e.g. index.html?domain=wikipedia
+      vSlideType = vLinkParam.getValue("slidetypee");
+      vOptions.slidetype = vLinkParam.getValue("slidetype");
     };
     //--------------------------------------
     function callWikiDownload() {
@@ -189,7 +206,8 @@
 
       function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
         // el("divslides").innerHTML = wtf.reveal(markup);
-        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain);
+        // vOptions = update_options(vOptions);
+        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
         // store JSON parse result in textarea
         el("divslides").innerHTML = htmlout; //el("revealsource").value;
         //el("divslides").innerHTML = el("revealsource").value;

@@ -1,4 +1,4 @@
-function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
+function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions) {
   console.log("getWiki2Reveal()-Call");
   var vWikiID = pLanguage+pDomain;
   var page_identifier = pTitle.replace(/ /g,"_");
@@ -6,38 +6,38 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   // init "wikiconvert" the Wiki Source - necessary for expanding relative URLs for images and local links
   wtf.wikiconvert.init(pLanguage,pDomain,vDocJSON,"reveal");
   // init the article name with the page_identifier, also necessary for handling relative links
-  wtf.wikiconvert.initArticle(page_identifier);
+  wtf.wikiconvert.initArticle(page_identifier,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
-  pMarkdown = wtf.wikiconvert.clean_source(pMarkdown);
+  pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
   //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
-  pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown);
-  pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown);
+  pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown,pOptions);
+  pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown,pOptions);
   console.log("wiki2reveal.js:14 - Sections replaced!");
-  pMarkdown = replaceMath4Reveal(pMarkdown);
+  pMarkdown = replaceMath4Reveal(pMarkdown,pOptions);
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
   // by a remote url to the Wiki article e.g. [https://en.wikipedia.org/wiki/Other_Article Other Article]
-  pMarkdown = wtf.wikiconvert.replaceWikiLinks(pMarkdown);
+  pMarkdown = wtf.wikiconvert.replaceWikiLinks(pMarkdown,pOptions);
   pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
-  pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown);
-  console.log("Slide Type: "+ wtf.wikiconvert.check_audio_slide(pMarkdown));
-  pMarkdown = wtf.wikiconvert.post_process(pMarkdown);
-  pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown);
+  pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown,pOptions);
+  console.log("Slide Type: "+ wtf.wikiconvert.check_audio_slide(pMarkdown,pOptions));
+  pMarkdown = wtf.wikiconvert.post_process(pMarkdown,pOptions);
+  pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown,pOptions);
   // create a Title slide and place the slide before output
-  pMarkdown = createTitleSlide(link2title(pTitle),pAuthor) + "\n" + pMarkdown;
+  pMarkdown = createTitleSlide(link2title(pTitle),pAuthor,pOptions) + "\n" + pMarkdown;
   // generate Reveal html output
   console.log("Call: wtf.reveal(pMarkdown)");
   //var vDoc = wtf(pMarkdown);
   //var htmlout =  vDoc.html(pMarkdown)
   var htmlout =  pMarkdown;
 
-  htmlout = addSectionReveal(htmlout);
-  htmlout = postprocessMath4Reveal(htmlout);
+  htmlout = addSectionReveal(htmlout,pOptions);
+  htmlout = postprocessMath4Reveal(htmlout,pOptions);
   htmlout = htmlout.replace(/<imgXXX /g,"<img ");
   htmlout = htmlout.replace(/___aXXX___ /g,"<a ");
   htmlout = htmlout.replace(/___aXXXC___/g,">"); // closing ">" of openening <a ..
@@ -45,7 +45,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain) {
   return htmlout;
 };
 
-function link2title(pArticle) {
+function link2title(pArticle,pOptions) {
   if (pArticle) {
     //pArticle = pArticle.substr()
     pArticle = pArticle.replace(/\//g," - ");
@@ -57,14 +57,14 @@ function link2title(pArticle) {
   return pArticle
 };
 
-function external_links2href(pMarkdown) {
+function external_links2href(pMarkdown,pOptions) {
   var RE_ext_link = /\[([^\s\]]+)[[\s]+?([^\]]+)\]/gm;
   pMarkdown = pMarkdown.replace(RE_ext_link, '___aXXX___ href="$1" target="_blank"___aXXXC___$2 ___/aXXX___');
 
   return pMarkdown
 }
 
-function callRevealInit() {
+function callRevealInit(pOptions) {
   console.log("callRevealInit()");
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
@@ -127,7 +127,7 @@ function callRevealInit() {
 }
 
 
-function addSectionReveal(pMarkdown) {
+function addSectionReveal(pMarkdown,pOptions) {
     var vSearch = /(<section[^>]*>)/i;
     var vResult;
     var vCount = 0;
@@ -203,7 +203,7 @@ function hackMathBlock4Reveal(pMarkdown,pOptions) {
 };
 
 
-function tokenizeMathBlock (wikicode, data, options) {
+function tokenizeMathBlock (wikicode, data, pOptions) {
   let timeid = data.timeid;
   console.log("parseMathBlock() Time ID="+data.timeid);
   if (wikicode) {
@@ -240,7 +240,7 @@ function tokenizeMathBlock (wikicode, data, options) {
   return wikicode
 }
 
-function createTitleSlide(pTitle,pAuthor) {
+function createTitleSlide(pTitle,pAuthor,pOptions) {
   pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";

@@ -27,12 +27,14 @@ vDataJSON.tpl.dzslidescore = `
     overflow: hidden;
     display: none;
   }
+  /*
   audio {
     position: fixed;
     bottom: 0;
     right: 200;
     width: 200px;
   }
+  */
   a {
     color: #8b743d;
     text-decoration: none;

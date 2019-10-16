@@ -270,6 +270,17 @@ function WikiConvert () {
 	};
 	//----End of Method init Definition
 
+	this.content_before_section(pMarkdown,pOptions) {
+		var vMarkDown = pMarkdown;
+		vMarkDown = vMarkDown.replace(/^[ \n\t]+/,"");
+		if (vMarkDown.indexOf("=") == 0) {
+			console.log("Wiki markdown begins with section");
+		} else {
+			console.warn("Section inserted for text without section header");
+			vMarkDown = "== Inserted ==\n" + vMarkDown;
+		}
+		return vMarkDown;
+	}
 
 	//#################################################################
 	//# PUBLIC Method: section2id()

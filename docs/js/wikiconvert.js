@@ -1558,7 +1558,7 @@ this.process_normal = function(wikitext) {
 		var vAudioType = "ogg";
 		var vAudioTag = " "
 		// vImgCenter centers the image directly with a style attribute
-		var vImgCenter='display: block; margin-left: auto;margin-right: auto;';
+		var vImgCenter='display: block; margin-left: auto;margin-right: auto;border-width: 0px;';
 	  while(tokens = image.exec(pWikiCode)) {
 			vTitle = "";
 			vAltText = "";

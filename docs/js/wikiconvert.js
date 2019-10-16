@@ -495,8 +495,10 @@ function WikiConvert () {
 					};
 					this.aSectionCount++;
 					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\">\n\t<h"+level+">"+match+"</h"+level+">"
-					out += "\n<div class=\"textleft\" style=\"text-align: left;\">";
-					//out += '<p class="fragment" data-audio-src="audio/silence.ogg"></p>';
+					out += "\n<div class=\"textleft\" style=\"text-align: left;\">\n";
+					//if (document.location.href.indexOf("reveal") >= 0) {
+				  //	out += '<p class="fragment" data-audio-src="audio/silence.ogg">';
+					//}
 					break;
 				default:
 					out += delimiter[level] + match + delimiter[level] + "\n";
@@ -1578,15 +1580,17 @@ this.process_normal = function(wikitext) {
 						replace_str = vAudioTag;
 					} else {
 						// RevealJS with Audio
-						replace_str = '<p class="fragment" data-audio-src="' + vURL + '"><a href="#" onclick="alert(\'Press Play Button in Audio Player below\');return false">&#9658;</a></p>';
-						//replace_str = vAudioTag;
+						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';
+						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+						replace_str = vAudioTag + ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
 					}
 				} else {
 					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
-					//replace_str = " ";
-					replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-					};
+					replace_str = " ";
+					vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+						//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+				};
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			} else if (vFileType == "video") {

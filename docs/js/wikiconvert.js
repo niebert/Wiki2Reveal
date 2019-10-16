@@ -270,7 +270,7 @@ function WikiConvert () {
 	};
 	//----End of Method init Definition
 
-	this.content_before_section(pMarkdown,pOptions) {
+	this.content_before_section = function (pMarkdown,pOptions) {
 		var vMarkDown = pMarkdown;
 		vMarkDown = vMarkDown.replace(/^[ \n\t]+/,"");
 		if (vMarkDown.indexOf("=") == 0) {

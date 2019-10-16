@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/wtf_wikipedia.js"></script>
+    <script src="js/linkparam.js"></script>
   </head>
   <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
     <script>
@@ -20,7 +21,10 @@
       };
 
       function callWikiSource() {
-        var vURL = "wiki2reveal_textarea.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        var vURL = "wiki2";
+        vURL += el("sSlideType").value + "_textarea.html?";
+        vURL += "language="+el("sWikiLanguage").value;
+        vURL += "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
@@ -118,7 +122,7 @@
           </td>
           <td>
             <select name="slidetype" id="sSlideType">
-                 <option value="revealjs" selected>Reveal JS</option>
+                 <option value="reveal" selected>Reveal JS</option>
                  <option value="dzslides">DZ Slides</option>
             </select>
             <select name="audioslide" id="sAudioSlide">
@@ -188,8 +192,8 @@
           <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
           <input type="button" id="bWikiFooter" value="Wiki Footer" onclick="callWikiFooter()">
           <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
-          <input type="button" id="bWiki2Presentation" value="Display Presentation" onclick="submit2presentation()">
           <!--
+          <input type="button" id="bWiki2Presentation" value="Display Presentation" onclick="submit2presentation()">
           <input type="submit" id="bSubmit" onclick="submit2presentation()" value="Download Presentation">
          -->
         </td>
@@ -229,5 +233,43 @@
         document.getElementById("wikijson").value = JSON.stringify(data,null,4);
       })
     }
+
+    //---------------------------------------
+    //------READ LINKPARAMETER---------------
+    //---------------------------------------
+    var vLinkParam = new LinkParam();
+    vLinkParam.init(document);
+    //------ TiTLE --------------------------
+    if (vLinkParam.exists("title")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      el("tTitle").value = vLinkParam.getValue("title");
+    };
+    //------ AUTHOR -------------------------
+    if (vLinkParam.exists("author")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      el("tAuthor").value = vLinkParam.getValue("author");
+    };
+    //------ LANGUAGE ----------------------
+    if (vLinkParam.exists("language")) {
+      // e.g. index.html?language=de
+      el("sWikiLanguage").value = vLinkParam.getValue("language");
+    };
+    //------ DOMAIN ------------------------
+    if (vLinkParam.exists("domain")) {
+      // e.g. index.html?domain=wikipedia
+      el("sWikiDomain").value  = vLinkParam.getValue("domain");
+    };
+    //------ AUDIO SLIDE ------------------------
+    if (vLinkParam.exists("audioslide")) {
+      // e.g. index.html?domain=wikipedia
+      el("sAudioSlide").value = vLinkParam.getValue("audioslide");
+    };
+    //------ SLIDE TYPE------------------------
+    if (vLinkParam.exists("slidetype")) {
+      // e.g. index.html?domain=wikipedia
+      el("sSlideType").value = vLinkParam.getValue("slidetypee");
+    };
+    //--------------------------------------
+
   </script>
 </html>

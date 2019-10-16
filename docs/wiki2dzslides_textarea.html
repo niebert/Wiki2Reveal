@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc EN">
+  <title>wiki2reveal</title>
+  <!-- Original Settings do not have the following CSS inserted directly -->
+  <script src="js/wtf_wikipedia.min.js"></script>
+  <script src="js/wiki2reveal_generator.js"></script>
+  <script src="js/wikiconvert.js"></script>
+  <script src="js/linkparam.js"></script>
+  <script src="js/indent.js"></script>
+  <script src="js/audioplayer.js"></script>
+  <!-- Printing and PDF exports -->
+    <!--[if lt IE 9]>
+  <script src="reveal/lib/js/html5shiv.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+  <![endif]-->
+
+  <script>
+  //---------------------------------------
+  //------DEFAULT VALUES-------------------
+  //---------------------------------------
+  var vTitle = "Normen, Metriken, Topologie";
+  var vAuthor = "Wikiversity DE";
+  var vLanguage = "de";
+  var vDomain = "wikiversity";
+  var vAudioSlide = "yes";
+  //---------------------------------------
+  var vOffline = false; // set to true for Debugging in offline mode
+  //---------------------------------------
+  // vDataJSON.wikipage will be populated by db/wikipage_db.js
+  var vDataJSON = {
+    "wikipage": "== My Title ==\nMy content of Wikipage"
+  };
+  //---------------------------------------
+  // Options for getWiki2Reveal() Call
+  var vOptions = {
+    "domain": "wikiversity",
+    "language": "en",
+    "audioslide":"no",
+    "slidetype":"reveal"
+  };
+//---------------------------------------
+
+  //var vWikiConvert = new WikiConvert();
+  var vWikiConvert = new WikiConvert();
+  wtf.wikiconvert = new WikiConvert();
+  wtf.reveal = wtf.html;
+
+  function el(pID) {
+    return document.getElementById(pID)
+  };
+
+  function setWikiID() {
+    el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
+  };
+
+  function callWikiDisplay() {
+    var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
+    vURL += encodeURI(el("wikiarticle").value);
+    document.location.href=vURL;
+  };
+
+</script>
+<!--
+   LOAD DATA with JS Librar
+   Load the local default wikipage it mode is "offline"
+   (i.e. vOffline = true)
+-->
+<script src="db/wikipage_db.js"></script>
+
+</head>
+<body>
+  <div class="reveal">
+    <H2 class="slides" id="divslides">
+      Waiting for Wiki-Download ...
+    </H2>
+    <br>
+    <br>
+    <br>
+    <br>
+      <textarea id="revealout" rows="140" cols="120">
+    output
+    </textarea>
+  </div>
+<!--
+<div style="display:none">
+  <b>Emulated Wiki Source:</b></br>
+    <textarea id="wikisrc" rows="12" cols="120">
+== Wiki2Reveal Demo ==
+Converter used in Offline mode without internet connectivity!
+  </textarea>
+</div>
+-->
+</body>
+
+  <!--
+  <script src="reveal/lib/js/head.min.js"></script>
+  <script src="reveal/js/reveal.js"></script>
+-->
+    </body>
+
+    <script>
+    //---------------------------------------
+    //------READ LINKPARAMETER---------------
+    //---------------------------------------
+    var vLinkParam = new LinkParam();
+    vLinkParam.init(document);
+    //------ TiTLE --------------------------
+    if (vLinkParam.exists("title")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vTitle= vLinkParam.getValue("title");
+    };
+    //------ AUTHOR -------------------------
+    if (vLinkParam.exists("author")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      vAuthor = vLinkParam.getValue("author");
+    };
+    //------ LANGUAGE ----------------------
+    if (vLinkParam.exists("language")) {
+      // e.g. index.html?language=de
+      vLanguage = vLinkParam.getValue("language");
+      vOptions.language = vLinkParam.getValue("language");
+    };
+    //------ DOMAIN ------------------------
+    if (vLinkParam.exists("domain")) {
+      // e.g. index.html?domain=wikipedia
+      vDomain = vLinkParam.getValue("domain");
+      vOptions.domain = vLinkParam.getValue("domain");
+    };
+    //------ AUDIO SLIDE ------------------------
+    if (vLinkParam.exists("audioslide")) {
+      // e.g. index.html?domain=wikipedia
+      vAudioSlide = vLinkParam.getValue("audioslide");
+      vOptions.audioslide = vLinkParam.getValue("audioslide");
+    };
+    //------ SLIDE TYPE------------------------
+    if (vLinkParam.exists("slidetype")) {
+      // e.g. index.html?domain=wikipedia
+      vSlideType = vLinkParam.getValue("slidetypee");
+      vOptions.slidetype = vLinkParam.getValue("slidetype");
+    };
+    //--------------------------------------
+    
+
+    function callWikiDownload() {
+        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
+    };
+
+      function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
+        //alert("Emulate MediaWiki Download");
+        console.log("CALL:downloadWikiDoc()\nWiki Title: '"+pTitle+"'\n URL: 'https://"+pLanguage+"."+pDomain+".org'");
+        if (vOffline == true) {
+          offlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+        } else {
+          onlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+        }
+      };
+
+      function offlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+        //alert("Emulate MediaWiki Download");
+        //var markup = document.getElementById("wikisrc").value;
+        var markup = vDataJSON.wikipage;
+        console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
+        // store markup result in textarea
+        processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+      };
+
+      function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+        var vWikiID = pLanguage+pDomain;
+        var vVersion = "?.?.?";
+        var vFetchExists = false;
+        if (wtf) {
+          console.log("wtf exists!");
+          for (var variable in wtf) {
+            if (wtf.hasOwnProperty(variable)) {
+              console.log("wtf."+variable+" Type: "+typeof(wtf[variable])+" exists!");
+              switch (variable) {
+                case "version":
+                  vVersion = wtf.version;
+                break;
+                case "fetch":
+                  vFetchExists = true;
+                break;
+                default:
+
+              }
+            } else {
+              console.log("wtf."+variable+" exists, but does not have ownProperty()!");
+            }
+          };
+          console.log("VERSION (wtf_wikipedia) "+vVersion);
+          if (vFetchExists == true) {
+            wtf.fetch(pArticle, vWikiID, function(err, doc) {
+              var markup = doc.wiki;
+              processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+            });
+          }
+        } else {
+          console.log("'wtf' is not defined!");
+        };
+      }
+
+      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
+        // el("divslides").innerHTML = wtf.reveal(markup);
+        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
+        // store JSON parse result in textarea
+        //el("divslides").innerHTML = htmlout; //el("revealsource").value;
+        var indented = indent.html(htmlout, {tabString: '\n   '});
+        console.log("Call indent.js");
+        el("revealout").value = htmlout; //indented; //el("revealsource").value;
+        //setTimeout("callRevealInit()",3000)
+      }
+      callWikiDownload();
+      //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");
+    </script>
+
+</html>

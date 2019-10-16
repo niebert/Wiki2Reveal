@@ -277,7 +277,7 @@ function WikiConvert () {
 			console.log("Wiki markdown begins with section");
 		} else {
 			console.warn("Section inserted for text without section header");
-			vMarkDown = "== Inserted ==\n" + vMarkDown;
+			vMarkDown = "==== &nbsp; ====\n" + vMarkDown;
 		}
 		return vMarkDown;
 	}

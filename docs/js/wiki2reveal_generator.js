@@ -252,9 +252,9 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + pTitle + "' target='_blank'>"+pTitle+"</a></h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
-  if (document.location.href.indexOf("reveal") >= 0) {
-    slide0 += '<p class="fragment" data-audio-src="audio/silence.ogg">';
-  }
+  //if (document.location.href.indexOf("reveal") >= 0) {
+  //  slide0 += '<p class="fragment" data-audio-src="audio/silence.ogg">';
+  //}
   if (pOptions) {
     if (pOptions.slidetype) {
       if (pOptions.slidetype == "dzslides") {
@@ -269,10 +269,14 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   } else {
     console.warn("CALL: createTitleSlide() - pOptions undefined");
   }
-  slide0 += "\n<center><a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(pTitle) + "&author=" + pAuthor + "&audioslide=" + pOptions.audioslide + "\" target='_blank'>Wiki2Reveal</a></center>\n";
-  if (document.location.href.indexOf("reveal") >= 0) {
-    slide0 += "</p>";
-  }
+  slide0 += "\n<center>"
+  slide0 += "\n  <a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(pTitle) + "&author=" + pAuthor + "&audioslide=" + pOptions.audioslide + "\" target='_blank'>Wiki2Reveal</a>";
+  slide0 += " - ";
+  slide0 += "\n  <a href=\"https://" + pOptions.language + "." + pOptions.domain+ ".org/wiki/" + encodeURIComponent(pTitle) + "\" target='_blank'>Wiki Source</a>";
+  slide0 += "\n</center>\n";
+  //if (document.location.href.indexOf("reveal") >= 0) {
+  //  slide0 += "</p>";
+  //}
   slide0 += "\n</section>\n";
   return slide0;
 }

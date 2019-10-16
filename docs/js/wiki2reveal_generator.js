@@ -248,7 +248,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   console.log("CALL: createTitleSlide()");
   pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
-  slide0 += "\n  <h1 class=\"title\">"+pTitle+"</h1>";
+  slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + pTitle + "' target='_blank'>"+pTitle+"</a></h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
   if (pOptions) {
     if (pOptions.slidetype) {
@@ -264,6 +264,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   } else {
     console.warn("CALL: createTitleSlide() - pOptions undefined");
   }
+  slide0 += "\n<center><a src=\"https://en.wikiversity.org/wiki/Wiki2Reveal\" target='_blank'>Wiki2Reveal</a></center>\n";
   slide0 += "\n</section>\n";
   return slide0;
 }

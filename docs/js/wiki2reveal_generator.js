@@ -264,7 +264,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   } else {
     console.warn("CALL: createTitleSlide() - pOptions undefined");
   }
-  slide0 += "\n<center><a src=\"https://en.wikiversity.org/wiki/Wiki2Reveal\" target='_blank'>Wiki2Reveal</a></center>\n";
+  slide0 += "\n<center><a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(pTitle) + "&author=" + pAuthor + "\" target='_blank'>Wiki2Reveal</a></center>\n";
   slide0 += "\n</section>\n";
   return slide0;
 }

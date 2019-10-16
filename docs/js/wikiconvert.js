@@ -496,6 +496,7 @@ function WikiConvert () {
 					this.aSectionCount++;
 					out += "<section class=\"level"+level+"\" id=\""+this.section2id(match)+"\">\n\t<h"+level+">"+match+"</h"+level+">"
 					out += "\n<div class=\"textleft\" style=\"text-align: left;\">";
+					//out += '<p class="fragment" data-audio-src="audio/silence.ogg"></p>';
 					break;
 				default:
 					out += delimiter[level] + match + delimiter[level] + "\n";
@@ -821,7 +822,7 @@ this.close_bullet_item = function (pChar) {
 	}
 }
 
-this.insert_newline = function () {
+this.insert_newline = function (pOptions) {
 	switch (this.aOutFormat) {
 		case "reveal":
 		case "html":
@@ -1573,15 +1574,18 @@ this.process_normal = function(wikitext) {
 				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 				if (vAudioSlide == "yes") {
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
+						// DZSlides with Audio
 						replace_str = vAudioTag;
 					} else {
+						// RevealJS with Audio
 						replace_str = '<p class="fragment" data-audio-src="' + vURL + '"><a href="#" onclick="alert(\'Press Play Button in Audio Player below\');return false">&#9658;</a></p>';
 						//replace_str = vAudioTag;
 					}
 				} else {
+					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 					//replace_str = " ";
-					replace_str = '<audio id="' + vAudioID + '" ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 					};
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);

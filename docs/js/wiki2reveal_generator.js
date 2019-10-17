@@ -13,7 +13,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   wtf.wikiconvert.init(pLanguage,pDomain,vDocJSON,"reveal");
   // init the article name with the page_identifier, also necessary for handling relative links
   wtf.wikiconvert.initArticle(page_identifier,pOptions);
-  pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);  
+  pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
@@ -260,7 +260,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
     if (pOptions.slidetype) {
       if (pOptions.slidetype == "dzslides") {
         console.log("CALL: createTitleSlide() - Slide Type: '"+ pOptions.slidetype+ "' - Title generated for DZSlides");
-        slide0 += "\n  <center><img class=\"titlelogo\" width='150' src=\"img/Wiki2Reveal_Logo.svg\"></center>";
+        slide0 += "\n  <center><img class=\"titlelogo\" width='150' src=\"img/Wiki2Reveal_Logo.png\"></center>";
       } else {
         console.log("CALL: createTitleSlide()  - Slide Type: '"+ pOptions.slidetype+ "' - Title generated for RevealJS");
       }

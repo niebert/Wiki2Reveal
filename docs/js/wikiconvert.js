@@ -1589,8 +1589,10 @@ this.process_normal = function(wikitext) {
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
-						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						replace_str = vAudioTag + ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
+						vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+						vAudioTag += ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
+						vAudioTag += ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').stop();return false">&#10074;&#10074;</a> &nbsp; ';
+						replace_str = vAudioTag;
 					} else {
 						// RevealJS with Audio
 						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';

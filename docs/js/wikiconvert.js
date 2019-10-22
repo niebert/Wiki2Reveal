@@ -1590,7 +1590,7 @@ this.process_normal = function(wikitext) {
 					vAudioType = "ogg";
 				};
 				vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-
+				//vAudioSlide = "controls";
 				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 				if (vAudioSlide == "yes") {
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
@@ -1605,12 +1605,15 @@ this.process_normal = function(wikitext) {
 						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 						replace_str = vAudioTag + vAudioPlayPause;
 					}
+				} else if (vAudioSlide == "controls") {
+					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 				} else {
 					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 					replace_str = " ";
 					//vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 					//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+
 				};
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);

@@ -142,8 +142,11 @@
     //------ SLIDE TYPE------------------------
     if (vLinkParam.exists("slidetype")) {
       // e.g. index.html?domain=wikipedia
-      vSlideType = vLinkParam.getValue("slidetypee");
+      vSlideType = vLinkParam.getValue("slidetype");
       vOptions.slidetype = vLinkParam.getValue("slidetype");
+      if (vSlideType == "dzslides") {
+        document.location = "wiki2dzslides.html"+vLinkParam.getParam4URL();
+      }
     };
     //--------------------------------------
     function callWikiDownload() {

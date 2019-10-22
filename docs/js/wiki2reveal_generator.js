@@ -126,7 +126,7 @@ function callRevealInit(pOptions) {
         84: function() { Recorder.fetchTTS(); } 	// press 't' to fetch TTS audio files
       }
     };
-    if (vAudioSlide == "yes") {
+    if (vAudioSlide == "yes4reveal") {
       vConfigReveal.dependencies.push({ src: 'reveal/plugin/audio-slideshow/slideshow-recorder.js'});
       vConfigReveal.dependencies.push({ src: 'reveal/plugin/audio-slideshow/audio-slideshow.js'});
     };

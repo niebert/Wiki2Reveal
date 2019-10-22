@@ -1557,9 +1557,10 @@ this.process_normal = function(wikitext) {
 		var vAudioID = "";
 		var vAudioType = "ogg";
 		var vAudioTag = " "
-		// vImgCenter centers the image directly with a style attribute
+		var vAudioPlayPause = "";
+	  // vImgCenter centers the image directly with a style attribute
 		var vImgCenter='display: block; margin-left: auto;margin-right: auto;border-width: 0px;';
-	  while(tokens = image.exec(pWikiCode)) {
+		while(tokens = image.exec(pWikiCode)) {
 			vTitle = "";
 			vAltText = "";
 			//[[File:my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment]]
@@ -1573,6 +1574,11 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
 				vAudioCount++;
+				vAudioPlayPause  = '<table border=1><tr><td> ';
+				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
+				vAudioPlayPause += '</td><td>';
+				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').pause();return false">&#10074;&#10074;</a> &nbsp; ';
+				vAudioPlayPause += '</td></tr></table> ';
 				vAudioID = "audio_src_"+vAudioCount;
 				vAudioID += vAudioType;
 				if (vURL.indexOf(".mp3") > 0) {
@@ -1584,27 +1590,27 @@ this.process_normal = function(wikitext) {
 					vAudioType = "ogg";
 				};
 				vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+
 				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 				if (vAudioSlide == "yes") {
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
 						vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						vAudioTag += ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
-						vAudioTag += ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').stop();return false">&#10074;&#10074;</a> &nbsp; ';
+						vAudioTag += vAudioPlayPause;
 						replace_str = vAudioTag;
 					} else {
 						// RevealJS with Audio
 						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';
 						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						replace_str = vAudioTag + ' <a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
+						replace_str = vAudioTag + vAudioPlayPause;
 					}
 				} else {
 					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 					replace_str = " ";
-					vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					//vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 				};
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
@@ -1612,12 +1618,19 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//-----VIDEO---------------
 				//-------------------------
+				var vVideoTag = '<div class="videodiv">';
+				vVideoTag += '<video width="80%" controls>';
+				vVideoTag += '<source  src="'+vURL+'">';
+				vVideoTag += '</video>'
+				vVideoTag += '</div>';
 				console.log("Video Found: "+vURL+" with Type: "+vFileType);
-				if (vAudioSlide == "yes") {
-					replace_str = '<div class="videodiv"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></div>'
+				//replace_str = '<div class="videodiv"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></div>'
+				if (this.check_audio_slide(pWikiCode) == "dzslides") {
+					replace_str = vVideoTag;
 				} else {
-					replace_str = '<div class="videodiv"><a href="' + vURL + '" target="_blank"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video><a href="' + vURL + '" target="_blank">&#9658;</a></div>';
-				};
+					// replace_str = '<div class="videodiv"><video width="80%" preload="auto" data-audio-controls  src="'+vURL+'"></video></div>'
+						replace_str = vVideoTag;
+				}
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			//} else if ((vFileType == "svg") || (vFileType == "img")) {

@@ -7,6 +7,7 @@
 //# email:                niehaus@uni-landau.de
 //# created               21.1.2018
 //# last modifications    2018/01/21 17:17:18
+//# Version:              1.1.1
 //# GNU Public License V3 - OpenSource
 //#
 //# created with JavaScript Class Creator JSCC
@@ -1519,9 +1520,25 @@ this.process_normal = function(wikitext) {
 
 		};
 		//----End of Method removeCategories Definition
+/*
+	this.get_wiki_image_size = function (pLinkSplit,pDefault) {
+		var vSize = pDefault || "width: 50%;";
+		var vSizeRE = /[0-9]+px/;
+		if (pLinkSplit) {
+			for (var i = 1; i < (pLinkSplit.length); i++) {
+				// vMediaParam += "|"+vLinkSplit[i];
+				if (vSizeRE.test(pLinkSplit[i])) {
+					vSize = "width: "+pLinkSplit[i]+";";
+				};
+			};
 
-
-
+		} else {
+			console.error("CALL: get_wiki_image_size() - pLinkSplit undefined");
+		}
+		console.log("URL:"+pLinkSplit[0]+" Size="+vSize);
+		return vSize;
+	}
+*/
 	//#################################################################
 	//# PUBLIC Method: replaceImages()
 	//#    used in Class: WikiConvert
@@ -1574,7 +1591,7 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
 				vAudioCount++;
-				vAudioPlayPause  = '<table border=1><tr><td> ';
+				vAudioPlayPause  = '<table class="audioplayer"><tr><td> ';
 				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
 				vAudioPlayPause += '</td><td>';
 				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').pause();return false">&#10074;&#10074;</a> &nbsp; ';
@@ -1642,33 +1659,36 @@ this.process_normal = function(wikitext) {
 				//-----IMAGE---------------
 				//-------------------------
 				console.log("Image Found: "+vURL+" with Type: "+vFileType);
+				//var vSize = this.get_wiki_image_size(vLinkSplit);
+				var vSize = "width: 50%";
+				for (var i = 1; i < (vLinkSplit.length-1); i++) {
+							// vMediaParam += "|"+vLinkSplit[i];
+							if (vSizeRE.test(vLinkSplit[i])) {
+								// vSize = " width='"+vLinkSplit[i]+"'";
+								vSize = " width: "+vLinkSplit[i]+";";
+								console.log("URL:"+vURL+" Size="+vLinkSplit[i] + " - vSize='" + vSize +"'");
+							};
+				};
 				if (vLinkSplit.length == 1) {
 					console.log("IMAGE SPLIT 1: "+vURL+" with Type: "+vFileType);
 					//replace_str = '___IMG_OPEN___File:' + vURL + '___IMG_CLOSE___';
 					//replace_str = '<section data-background-image="'+vURL+'" data-background-size="cover"></section>\n';
-					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+'width: 50%;">';
+					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+vSize+'">';
 					pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 				} else {
 					if (vLinkSplit.length == 2) {
 						console.log("IMAGE SPLIT 2: "+vURL+" with Type: "+vFileType);
 						vCaption = this.checkCaption(vLinkSplit[1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;">';
+						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					} else {
 						// var vMediaParam = "";
 						console.log("IMAGE SPLIT 3: "+vURL+" with Type: "+vFileType);
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
-						for (var i = 1; i < (vLinkSplit.length-1); i++) {
-							// vMediaParam += "|"+vLinkSplit[i];
-							if (vSizeRE.test(vLinkSplit[i])) {
-								vSize = " width='"+vLinkSplit[i]+"'";
-								console.log("URL:"+vURL+" Size="+vLinkSplit[i]);
-							};
-						};
 						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+'width: 50%;" '+vSize+'>';
+						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'" >';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length

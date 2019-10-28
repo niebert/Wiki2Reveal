@@ -1620,7 +1620,7 @@ this.process_normal = function(wikitext) {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
 						vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						vAudioTag += vAudioPlayPause;
+						vAudioTag += "<center>" + vAudioPlayPause + "</center>";
 						replace_str = vAudioTag;
 					} else {
 						// RevealJS with Audio

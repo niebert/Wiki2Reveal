@@ -1539,6 +1539,17 @@ this.process_normal = function(wikitext) {
 		return vSize;
 	}
 */
+
+	this.check_firefox = function () {
+		var vBool = false;
+		var browser = navigator.userAgent.toLowerCase();
+		if (browser.indexOf('firefox') > -1) {
+    	console.log('Browser is Firefox');
+			vBool = true;
+		};
+		return vBool;
+	}
+
 	//#################################################################
 	//# PUBLIC Method: replaceImages()
 	//#    used in Class: WikiConvert
@@ -1575,6 +1586,7 @@ this.process_normal = function(wikitext) {
 		var vAudioType = "ogg";
 		var vAudioTag = " "
 		var vAudioPlayPause = "";
+		var isFirefox = this.check_firefox();
 	  // vImgCenter centers the image directly with a style attribute
 		var vImgCenter='display: block; margin-left: auto;margin-right: auto;border-width: 0px;';
 		while(tokens = image.exec(pWikiCode)) {
@@ -1612,25 +1624,36 @@ this.process_normal = function(wikitext) {
 				//vAudioPlayPause += '<a href="#" onclick="pause_audio(\\"' + vAudioID + '\\");return false">&#10074;&#10074;</a> &nbsp; ';
 				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="pause_audio(\'' + vAudioID + '\');" value="&#10074;&#10074;">';
 				vAudioPlayPause += '</td></tr></table> ';
-				vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-				//vAudioSlide = "controls";
-				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
-				if (vAudioSlide == "yes") {
+				if (isFirefox == true) {
+					// Firefox Browser
+					vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
-						vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 						vAudioTag += "<center>" + vAudioPlayPause + "</center>";
-						replace_str = vAudioTag;
 					} else {
 						// RevealJS with Audio
 						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';
 						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-						replace_str = vAudioTag + vAudioPlayPause;
 					}
+				} else {
+					// Chrome or Safari
+					vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> ';
+					vAudioTag = "<center>" + vAudioTag + "</center>";
+					vAudioPlayPause = " ";
+				}
+				replace_str = " ";
+				//vAudioSlide = "controls";
+				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
+				console.log("AUDIOSLIDES: " + vAudioSlide);
+				if (vAudioSlide == "yes") {
+					console.log("AUDIOSLIDES: Buttons" );
+					replace_str = vAudioTag + vAudioPlayPause;
 				} else if (vAudioSlide == "controls") {
+					console.log("AUDIOSLIDES: Use Controls" );
 					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 				} else {
+					console.log("AUDIOSLIDES: no audio" );
 					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 					replace_str = " ";

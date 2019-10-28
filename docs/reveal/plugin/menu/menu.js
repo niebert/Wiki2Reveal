@@ -711,6 +711,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						//var vIconNode = document.createTextNode("<");
 						var vIconNode = document.createElement('img');
 						vIconNode.setAttribute('src', hamburger_icon);
+						vIconNode.setAttribute('width', '25px');
 						link.appendChild(vIconNode);
 						div.appendChild(link);
 						select('.reveal').appendChild(div);

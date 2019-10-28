@@ -1550,6 +1550,11 @@ this.process_normal = function(wikitext) {
 		return vBool;
 	}
 
+	this.check_chrome = function () {
+		// Chrome 1 - 71
+    return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+	}
+
 	//#################################################################
 	//# PUBLIC Method: replaceImages()
 	//#    used in Class: WikiConvert
@@ -1639,7 +1644,15 @@ this.process_normal = function(wikitext) {
 				} else {
 					// Chrome or Safari
 					vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> ';
-					vAudioTag = "<center>" + vAudioTag + "</center>";
+					if (this.check_chrome() == true) {
+						// Audio OK
+						//alert("Browser is Chrome");
+						vAudioTag = "<center>" + vAudioTag + "</center>";
+					} else {
+						//alert("Browser is Safari, ");
+						//vAudioTag = "<center><a href='#' onclick=\"alert('Use Firefox or Chrome to listen to Audio Comments.'); return false;\">&#9658</a></center>";
+						vAudioTag = "<center>" + vAudioTag + "</center>";
+					}
 					vAudioPlayPause = " ";
 				}
 				replace_str = " ";

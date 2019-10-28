@@ -1589,15 +1589,6 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//-----AUDIO---------------
 				//-------------------------
-				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
-				vAudioCount++;
-				vAudioID = "audioslide"+vAudioCount;
-				vAudioID += vAudioType;
-				vAudioPlayPause  = '<table class="audioplayer"><tr><td> ';
-				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
-				vAudioPlayPause += '</td><td>';
-				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').pause();return false">&#10074;&#10074;</a> &nbsp; ';
-				vAudioPlayPause += '</td></tr></table> ';
 				if (vURL.indexOf(".mp3") > 0) {
 					vAudioType = "mpeg";
 				} else if (vURL.indexOf(".ogg") > 0) {
@@ -1606,6 +1597,21 @@ this.process_normal = function(wikitext) {
 					console.warn("Audio Type of '" + vURL + "' undefined  user 'audio/ogg' with Audio Tag: "+vAudioTag);
 					vAudioType = "ogg";
 				};
+				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
+				vAudioCount++;
+				vAudioID = "audioslide"+vAudioCount;
+				vAudioID += vAudioType;
+				vAudioPlayPause  = '<table class="audioplayer"><tr><td> ';
+				//vAudioPlayPause += '<a href="#" onclick="document.getElementById(\\"' + vAudioID + '\\").play();return false">&#9658;</a>';
+				//vAudioPlayPause += '<a href="#" onclick="play_audio(\\"' + vAudioID + '\\");return false">&#9658;</a>';
+				//vAudioPlayPause += '<input type="button" onclick="play_audio(\\"' + vAudioID + '\\")" value="&#9658">';
+				//vAudioPlayPause += '<input type="button" onclick="play_audio(\'' + vAudioID + '\');console.log(\'Play ' + vAudioID + '\')" value="&#9658">';
+				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="play_audio(\'' + vAudioID + '\');" value="&#9658">';
+				vAudioPlayPause += '</td><td>';
+				//vAudioPlayPause += '<a href="#" onclick="document.getElementById(\\"' + vAudioID + '\\").pause();return false">&#10074;&#10074;</a> &nbsp; ';
+				//vAudioPlayPause += '<a href="#" onclick="pause_audio(\\"' + vAudioID + '\\");return false">&#10074;&#10074;</a> &nbsp; ';
+				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="pause_audio(\'' + vAudioID + '\');" value="&#10074;&#10074;">';
+				vAudioPlayPause += '</td></tr></table> ';
 				vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
 				//vAudioSlide = "controls";
 				//vAudioTag += ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';

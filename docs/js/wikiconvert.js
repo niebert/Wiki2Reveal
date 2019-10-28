@@ -1664,7 +1664,7 @@ this.process_normal = function(wikitext) {
 					replace_str = vAudioTag + vAudioPlayPause;
 				} else if (vAudioSlide == "controls") {
 					console.log("AUDIOSLIDES: Use Controls" );
-					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> ';
 				} else {
 					console.log("AUDIOSLIDES: no audio" );
 					// vAudioSlide = "no"

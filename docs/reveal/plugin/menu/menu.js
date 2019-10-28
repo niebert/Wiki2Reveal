@@ -1,4 +1,4 @@
-/*
+ /*
  * Reveal.js menu plugin
  * MIT licensed
  * (c) Greg Denehy 2015
@@ -702,13 +702,16 @@ var RevealMenu = window.RevealMenu || (function(){
 					//
 					// Open menu options
 					//
+					var hamburger_icon = "data:image/svg+xml;utf8,<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n\t width=\"14px\" height=\"14px\" viewBox=\"0 0 14 14\" style=\"enable-background:new 0 0 14 14;\" xml:space=\"preserve\">\n<path d=\"M1,4h12c0.553,0,1-0.447,1-1s-0.447-1-1-1H1C0.447,2,0,2.447,0,3S0.447,4,1,4z M13,6H1C0.447,6,0,6.447,0,7\n\tc0,0.553,0.447,1,1,1h12c0.553,0,1-0.447,1-1C14,6.447,13.553,6,13,6z M13,10H1c-0.553,0-1,0.447-1,1s0.447,1,1,1h12\n\tc0.553,0,1-0.447,1-1S13.553,10,13,10z\"/>\n</svg>\n";
 					if (openButton) {
 						// add menu button
 						var div = create('div', {class: 'slide-menu-button'});
 						var link = create('a', {href: '#'});
 						// link.appendChild(create('i', {class: 'fas fa-bars'}));
-						var vTextNode = document.createTextNode("<");
-						link.appendChild(vTextNode);
+						//var vIconNode = document.createTextNode("<");
+						var vIconNode = document.createElement('img');
+						vIconNode.setAttribute('src', hamburger_icon);
+						link.appendChild(vIconNode);
 						div.appendChild(link);
 						select('.reveal').appendChild(div);
 						div.onclick = openMenu;

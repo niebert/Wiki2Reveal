@@ -1591,13 +1591,13 @@ this.process_normal = function(wikitext) {
 				//-------------------------
 				//console.log("Audio Found: "+vURL+" with Type: "+vFileType);
 				vAudioCount++;
+				vAudioID = "audioslide"+vAudioCount;
+				vAudioID += vAudioType;
 				vAudioPlayPause  = '<table class="audioplayer"><tr><td> ';
 				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').play();return false">&#9658;</a>';
 				vAudioPlayPause += '</td><td>';
 				vAudioPlayPause += '<a href="#" onclick="document.getElementById(\'' + vAudioID + '\').pause();return false">&#10074;&#10074;</a> &nbsp; ';
 				vAudioPlayPause += '</td></tr></table> ';
-				vAudioID = "audio_src_"+vAudioCount;
-				vAudioID += vAudioType;
 				if (vURL.indexOf(".mp3") > 0) {
 					vAudioType = "mpeg";
 				} else if (vURL.indexOf(".ogg") > 0) {

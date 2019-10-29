@@ -36,7 +36,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown,pOptions);
   // create a Title slide and place the slide before output
-  pMarkdown = createTitleSlide(link2title(pTitle),pAuthor,pOptions) + "\n" + pMarkdown;
+  pMarkdown = createTitleSlide(pTitle,pAuthor,pOptions) + "\n" + pMarkdown;
   // generate Reveal html output
   console.log("Call: wtf.reveal(pMarkdown)");
   //var vDoc = wtf(pMarkdown);
@@ -252,7 +252,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   var vWikiLink = pTitle;
   pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
-  slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + pTitle + "' target='_blank'>"+pTitle+"</a></h1>";
+  slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + encodeURIComponent(vWikiLink) + "' target='_blank'>"+pTitle+"</a></h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";
   //if (document.location.href.indexOf("reveal") >= 0) {
   //  slide0 += '<p class="fragment" data-audio-src="audio/silence.ogg">';
@@ -272,7 +272,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
     console.warn("CALL: createTitleSlide() - pOptions undefined");
   }
   slide0 += "\n<center>"
-  slide0 += "\n  <a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(pTitle) + "&author=" + pAuthor + "&audioslide=" + pOptions.audioslide + "\" target='_blank'>Wiki2Reveal</a>";
+  slide0 += "\n  <a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(vWikiLink) + "&author=" + pAuthor + "&audioslide=" + pOptions.audioslide + "\" target='_blank'>Wiki2Reveal</a>";
   slide0 += " - ";
   slide0 += "\n  <a href=\"https://" + pOptions.language + "." + pOptions.domain+ ".org/wiki/" + encodeURIComponent(vWikiLink) + "\" target='_blank'>Wiki Source</a>";
   slide0 += "\n</center>\n";

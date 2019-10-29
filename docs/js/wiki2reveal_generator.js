@@ -249,6 +249,7 @@ function tokenizeMathBlock (wikicode, data, pOptions) {
 
 function createTitleSlide(pTitle,pAuthor,pOptions) {
   console.log("CALL: createTitleSlide()");
+  var vWikiLink = pTitle;
   pTitle = link2title(pTitle);
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + pTitle + "' target='_blank'>"+pTitle+"</a></h1>";
@@ -273,7 +274,7 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   slide0 += "\n<center>"
   slide0 += "\n  <a href=\"https://niebert.github.io/Wiki2Reveal/index.html?language=" + pOptions.language + "&domain=" + pOptions.domain+ "&article=" + encodeURIComponent(pTitle) + "&author=" + pAuthor + "&audioslide=" + pOptions.audioslide + "\" target='_blank'>Wiki2Reveal</a>";
   slide0 += " - ";
-  slide0 += "\n  <a href=\"https://" + pOptions.language + "." + pOptions.domain+ ".org/wiki/" + encodeURIComponent(pTitle) + "\" target='_blank'>Wiki Source</a>";
+  slide0 += "\n  <a href=\"https://" + pOptions.language + "." + pOptions.domain+ ".org/wiki/" + encodeURIComponent(vWikiLink) + "\" target='_blank'>Wiki Source</a>";
   slide0 += "\n</center>\n";
   //if (document.location.href.indexOf("reveal") >= 0) {
   //  slide0 += "</p>";

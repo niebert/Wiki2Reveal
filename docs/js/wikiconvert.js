@@ -1635,7 +1635,7 @@ this.process_normal = function(wikitext) {
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
-						vAudioTag += "<center>" + vAudioPlayPause + "</center>";
+						vAudioTag += "<center>" + vAudioTag + "</center>";
 					} else {
 						// RevealJS with Audio
 						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';

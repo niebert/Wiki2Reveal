@@ -247,6 +247,10 @@
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       el("tTitle").value = vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("article")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      el("tTitle").value = vLinkParam.getValue("article");
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus

@@ -19,8 +19,6 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   var data = {
     "mathexpr": []
   };
-  pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
-  console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
   //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
@@ -29,7 +27,9 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   console.log("wiki2reveal.js:28 - Sections replaced!");
   // pMarkdown = replaceMath4Reveal(pMarkdown,pOptions);
   console.log("wiki2reveal.js:30 - execute Math4Reveal replaced!");
-  console.log("JSON data:"+JSON.stringify(data,null,4));
+  //console.log("JSON data:"+JSON.stringify(data,null,4));
+  pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
+  console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
   console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   // store pMarkdown result in textarea
@@ -162,6 +162,14 @@ function addSectionReveal(pMarkdown,pOptions) {
     return pMarkdown;
 };
 
+function replaceMathNewLines(pMath) {
+  var vMath = " undefined mathematical expression in replaceMathNewLines()-call";
+  if (pMath) {
+    vMath = pMath.replace(/\n/g," ");
+  }
+  return vMath;
+}
+
 function replaceMath4Reveal(pMarkdown,pOptions) {
   if (pMarkdown) {
     pMarkdown = replaceMathBlock4Reveal(pMarkdown,pOptions);
@@ -205,7 +213,8 @@ function replaceMathBlock4Reveal(pMarkdown,pOptions) {
     while (vResult = vSearch.exec(pMarkdown)) {
       vCount++;
       var vMathBlock = vResult[2];
-      vMathBlock = vMathBlock.replace(/\n/g," ");
+      vMathBlock = replaceMathNewLines(vMathBlock);
+      //vMathBlock = vMathBlock.replace(/\n/g," ");
       vSearchStr = vResult[1]+vMathBlock+vResult[3];
       pMarkdown = pMarkdown.replace(vSearchStr,'\n<center><XXXspan id="math'+vCount+'block" class="math inline"> \\( \\displaystyle ' + vResult[2] +'\\)</XXXspan></center>');
       console.log("Math Block Expression "+vCount+" found: '"+vResult[2]+"'");
@@ -215,6 +224,7 @@ function replaceMathBlock4Reveal(pMarkdown,pOptions) {
 };
 
 function getMathBlockTag4Reveal(pCount,pMath) {
+  pMath = replaceMathNewLines(pMath);
   var vTag = '\n<center><XXXspan id="math' + pCount +
             'block" class="math inline"> \\( \\displaystyle ' +
             pMath +'\\)</XXXspan></center>';
@@ -222,6 +232,7 @@ function getMathBlockTag4Reveal(pCount,pMath) {
 }
 
 function getMathInlineTag4Reveal(pCount,pMath) {
+  pMath = replaceMathNewLines(pMath);
   var vTag = '<XXXspan id="math'+pCount+'inline" class="math inline">\\(' +pMath+'\\)</XXXspan>';
   return vTag;
 }

@@ -1,10 +1,11 @@
 /* ---------------------------------------
  Exported Module Variable: LinkParam
  Package:  linkparam
- Version:  1.1.3
+ Version:  1.1.8
  Homepage: https://github.com/niebert/LinkParam#readme
  Author:   Engelbert Niehaus
  License:  MIT
+ Date:     2018/12/31 9:26:21
  Require Module with:
     const LinkParam = require('linkparam');
  ------------------------------------------ */
@@ -560,7 +561,7 @@ LinkParam.prototype.getEditTableHTML = function (pPrefixID) {
         vOut += "</td>";
         vOut += "<td>";
         // second parameter vWrapCode = true for non textarea use;
-        vOut += "<textarea id='"+vPrefix+iID+"'' cols='90' rows='"+vRows+"''>";
+        vOut += "<textarea id='"+vPrefixID+iID+"'' cols='90' rows='"+vRows+"''>";
         vOut += vContent;
         vOut += "</textarea>";
         vOut += "</td>";
@@ -643,7 +644,7 @@ LinkParam.prototype.encodeHTML = function (pValue,pWrapCode) {
       vValue = vValue.replace(/>/g,"&gt;");
       vValue = vValue.replace(/&/g,"&amp;");
   }
-  if (pWrapCode && (pWrapCode == true)) {
+  if (pWrapCode && (pWrapCode === true)) {
       vValue = "<pre><code>"+vValue+"</code></pre>";
   }
   return vValue
@@ -709,7 +710,7 @@ LinkParam.prototype.param2DOM = function (pLinkID,pDOMID,pOutType) {
   //    vMyInstance.param2DOM(pLinkID,pDOMID,pOutType);
   //-------------------------------------------------------
 
-  var vOutType = pOutType || "html";
+  var vOutType = pOutType || "html";
   if (this.exists(pLinkID)) {
       var vDOMID = pDOMID || pLinkID; // vDOMID is set by parameter pLinkID otherwise pDOMID == pLinkID;
       var vOutDOM = document.getElementById(vDOMID);

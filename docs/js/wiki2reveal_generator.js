@@ -16,13 +16,22 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
+  var data = {
+    "mathexpr": []
+  };
+  pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
+  console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
   //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown,pOptions);
-  console.log("wiki2reveal.js:14 - Sections replaced!");
-  pMarkdown = replaceMath4Reveal(pMarkdown,pOptions);
+  console.log("wiki2reveal.js:28 - Sections replaced!");
+  // pMarkdown = replaceMath4Reveal(pMarkdown,pOptions);
+  console.log("wiki2reveal.js:30 - execute Math4Reveal replaced!");
+  console.log("JSON data:"+JSON.stringify(data,null,4));
+  pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
+  console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
@@ -188,7 +197,7 @@ function replaceMathInline4Reveal(pMarkdown,pOptions) {
 
 function replaceMathBlock4Reveal(pMarkdown,pOptions) {
    // <math>(.*?)<\/math>
-   var vSearch = /(\n[:]+[\s]*?<math>)(.*?)(<\/math>)/i;
+   var vSearch = /(\n[:]+[\s]*?<math[^>]*?>)(.*?)(<\/math>)/i;
    var vResult;
     var vCount = 0;
     var vTagInsert = "";
@@ -205,18 +214,65 @@ function replaceMathBlock4Reveal(pMarkdown,pOptions) {
     return pMarkdown;
 };
 
-function hackMathBlock4Reveal(pMarkdown,pOptions) {
+function getMathBlockTag4Reveal(pCount,pMath) {
+  var vTag = '\n<center><XXXspan id="math' + pCount +
+            'block" class="math inline"> \\( \\displaystyle ' +
+            pMath +'\\)</XXXspan></center>';
+  return vTag;
+}
+
+function getMathInlineTag4Reveal(pCount,pMath) {
+  var vTag = '<XXXspan id="math'+pCount+'inline" class="math inline">\\(' +pMath+'\\)</XXXspan>';
+  return vTag;
+}
+
+
+function replaceToken2Math(pMarkdown,data,pOptions) {
+  var vSearch = "";
+  var vReplace = "";
+  var vType = "inline";
+  var vCount = 0;
+  console.log("replace tokens back to mathematical expression for RevealJS");
+  for (var i = 0; i < data.mathexpr.length; i++) {
+    vCount++;
+    vSearch = data.mathexpr[i].label;
+    vType = data.mathexpr[i].type || "inline";
+    vMath = data.mathexpr[i].math || " ";
+    switch (vType) {
+      case "inline":
+        vReplace = getMathInlineTag4Reveal(vCount,vMath);
+      break;
+      case "block":
+        vReplace = getMathBlockTag4Reveal(vCount,vMath);
+      break;
+      default:
+        vReplace = getMathInlineTag4Reveal(vCount,vMath);
+        console.warn("Undefined Math Expression Type '" + vType + "' for '" + vMath + "'");
+    }
+    pMarkdown = replaceString(pMarkdown,vSearch,vReplace);
+  }
   return pMarkdown;
-};
+}
 
 
-function tokenizeMathBlock (wikicode, data, pOptions) {
-  let timeid = data.timeid;
-  console.log("parseMathBlock() Time ID="+data.timeid);
+function tokenizeMath (wikicode, data, pOptions) {
+  var vNow = new Date();
+  data.timeid = data.timeid || vNow.getTime();
+  var timeid = data.timeid;
+  var vFound = "";
+  var vMathExpr = "";
+  console.log("tokenizeMathBlock() Time ID="+data.timeid);
   if (wikicode) {
     // create the mathexpr array if
     //var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
-    var vSearch = /\n[:]+[\s]*?<math[^>]*?>(.*?)<\/math>/gi;
+    data = data || {};
+    data.mathexpr = data.mathexpr || {};
+    var vResult;
+    var vCount =0;
+    var vLabel = "";
+    console.log("wikicode defined");
+    //----- MATH BLOCK TOKENIZE -----
+    var vSearchBlock = new RegExp("\n([:]+[\s]*?<math[^>]*?>)(.*?)(<\/math>)","i");
     //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
     // \n            # newline
     // [:]+          # one or more colons
@@ -226,25 +282,61 @@ function tokenizeMathBlock (wikicode, data, pOptions) {
     //(<\/math>)     # closing </math> tag
     //
     // gi            # g global, i ignore caps
-    var vResult;
-    var vCount =0;
-    var vLabel = "";
-    console.log("wikicode defined");
-    while (vResult = vSearch.exec(wikicode)) {
+    while (vResult = vSearchBlock.exec(wikicode)) {
       vCount++;
-      console.log("Math Expression "+vCount+": '" + vResult[1] + "' found");
       vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
-      var vFound = vResult[1];
+      vFound = vResult[1] + vResult[2] + vResult[3];
+      vMathExpr = vResult[2];
+      console.log("Tokenize Math Expression Block"+vCount+": '" + vFound + "' found");
+      //console.log("Push Block Data JSON="+JSON.stringify(data,null,4));
       data.mathexpr.push({
         "type":"block",
         "label":vLabel,
-        "math":vFound
+        "math": vMathExpr
       });
-      wikicode = replaceString(wikicode,vResult[0],vLabel);
+      console.log("Push Block Data" + vCount + " - done");
+      //wikicode = replaceString(wikicode,vResult[0],vLabel);
       //wikicode = replaceString(wikicode,vFound,vLabel);
+      //console.log("Execute replace on wikicode for '" + vFound + "'");
+      //wikicode = wikicode.replace(vFound,vLabel);
+      wikicode = replaceString(wikicode,vFound,vLabel);
+      //console.log("Replace on wikicode executed for '" + vFound + "'");
     };
-  };
-  return wikicode
+    //----- MATH INLINE TOKENIZE -----
+    // console.log("Tokenize Inline Math JSON:" + JSON.stringify(data,null,4));
+    var vSearchInline = new RegExp("(<math[^>]*?>)(.*?)(<\/math>)","i");
+    //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
+    // <math[^>]*?>  # opening <math> tag
+    // (.*?)         # enclosed math expression
+    //(<\/math>)     # closing </math> tag
+    //
+    // i            #  i ignore caps, g global
+    //console.log("Tokenize Inline Math - RegExp defined");
+    while (vResult = vSearchInline.exec(wikicode)) {
+      vCount++;
+      vLabel = "___MATH_INLINE_"+data.timeid+"_ID_"+vCount+"___";
+      //console.log("Tokenize Inline Math - Label: '" + vLabel + "'");
+
+      vFound = vResult[1] + vResult[2] + vResult[3];
+      vMathExpr = vResult[2];
+      console.log("Tokenize Math Expression Inline"+vCount+": '" + vFound + "' found");
+      //console.log("Push Data JSON="+JSON.stringify(data,null,4));
+      data.mathexpr.push({
+        "type":"inline",
+        "label":vLabel,
+        "math": vMathExpr
+      });
+      // console.log("Tokenize Math Expression - Push Inline Data" + vCount + "  - done");
+      //wikicode = replaceString(wikicode,vResult[0],vLabel);
+      //wikicode = replaceString(wikicode,vFound,vLabel);
+     //  console.log("Execute replace on wikicode for '" + vFound + "'");
+      wikicode = wikicode.replace(vFound,vLabel);
+      //console.log("Replace on wikicode executed for '" + vFound + "'");
+    };
+    //console.log("DONE Tokenize Inline Math JSON:" + JSON.stringify(data,null,4));
+
+  }
+  return wikicode;
 }
 
 function createTitleSlide(pTitle,pAuthor,pOptions) {
@@ -283,18 +375,18 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   return slide0;
 }
 
-function replaceString(pString,pSearch,pReplace)
+function replaceString(pString,pSearch,pReplace) {
 // replaces in the string "pString" multiple substrings "pSearch" by "pReplace"
-{
+  var vReturnString = "undefined string for replaceString-call!";
   //alert("cstring.js - replaceString() "+pString);
   if (!pString) {
-    alert("replaceString()-Call - pString not defined!");
+    console.log("replaceString()-Call - pString not defined!");
   } else if (pString != '') {
     {
     //alert("cstring.js - replaceString() "+pString);
       var vHelpString = '';
       var vN = pString.indexOf(pSearch);
-      var vReturnString = '';
+      vReturnString = '';
       while (vN >= 0)
       {
         if (vN > 0)
@@ -303,12 +395,13 @@ function replaceString(pString,pSearch,pReplace)
               if (vN + pSearch.length < pString.length) {
           pString = pString.substring(vN+pSearch.length, pString.length);
         } else {
-          pString = ''
+          pString = '';
         }
         vN = pString.indexOf(pSearch);
-      };
-    };
-    return vReturnString + pString;
+      }
+    }
+     vReturnString += pString;
   }
-
-};
+  console.log("replaceString() finalized for '"+pString+"'");
+  return vReturnString;
+}

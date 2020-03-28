@@ -1,0 +1,393 @@
+
+
+<section  class="titleslide" id="slide0" >
+   <h1 class="title"><a href='https://de.wikiversity.org/wiki/Normen%2C%20Metriken%2C%20Topologie' target='_blank'>Normen, Metriken, Topologie</a></h1>
+   <h2 class="author">Kurs:Funktionalanalysis</h2>
+   <center>
+      <a href="https://niebert.github.io/Wiki2Reveal/index.html?language=de&domain=wikiversity&article=Normen%2C%20Metriken%2C%20Topologie&author=Kurs:Funktionalanalysis&audioslide=yes" target='_blank'>Wiki2Reveal</a> -
+      <a href="https://de.wikiversity.org/wiki/Normen%2C%20Metriken%2C%20Topologie" target='_blank'>Wiki Source</a>
+   </center>
+</section>
+<section  class="level2" id="slide1" >
+   <h2> Audiokommentierte Folien - Wiki2Reveal </h2>
+   <div class="textleft" style="text-align: left;">
+      Diese Wikiversityseite ist als <a href="https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=wikiversity&title=Normen%2C+Metriken%2C+Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="_blank">Foliensatz </a> für <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external" >Wiki2Reveal</a> erstellt worden.
+      <audio id="audioslide1ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio0_intro_normen_metrik_topologie.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide1ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide1ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide2" >
+   <h2> Topologischer Raum </h2>
+   <div class="textleft" style="text-align: left;">
+      Ein <b>Topologischer Raum</b> ist der grundlegende Gegenstand der Teildisziplin <a href="https://de.wikipedia.org/wiki/Topologie_(Mathematik)" target="_blank">Topologie </a> der <a href="https://de.wikipedia.org/wiki/Mathematik" target="_blank">Mathematik </a>. Durch die Einführung einer topologischen Struktur auf einer Menge lassen sich
+      <ul>
+         <li>intuitive Lagebeziehungen wie „Nähe“ und</li>
+         <li>„Konvergenz gegen“ aus den reellen Zahlen <span id="math5inline" class="math inline">\({\mathbb R}\)</span> bzw. aus dem <span id="math6inline" class="math inline">\({\mathbb R}^{n}\)</span></li>
+      </ul>
+      auf viele und sehr allgemeine Strukturen übertragen (wie z.B. die Topologie von Funktionenräumen).
+      <audio id="audioslide2ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio1_topologie_abstraktion.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide2ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide2ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide3" >
+   <h2> Definition: Topologie </h2>
+   <div class="textleft" style="text-align: left;">
+      Eine <i>Topologie</i> ist ein <a href="https://de.wikipedia.org/wiki/Mengensystem" target="_blank">Mengensystem </a> <span id="math7inline" class="math inline">\(\cal T\)</span> bestehend aus Teilmengen (<i><a href="https://de.wikipedia.org/wiki/offene_Menge" target="_blank">offene Mengen </a></i> genannt) einer Grundmenge <span id="math8inline" class="math inline">\(X\)</span>, für die  die folgenden <a href="https://de.wikipedia.org/wiki/Axiom" target="_blank">Axiome </a> erfüllt sind
+      <ul>
+         <li>(T1) <span id="math9inline" class="math inline">\(\emptyset, X \in \cal T\)</span></li>
+         <li>(T2) <span id="math10inline" class="math inline">\(U \cap V \in \cal T\)</span> für alle <span id="math11inline" class="math inline">\(U,V \in  \cal T\)</span>.</li>
+         <li>(T3) Für eine beliebige Indexmenge <span id="math12inline" class="math inline">\(I\)</span> und <span id="math13inline" class="math inline">\(U_i \in \cal T\)</span> für alle <span id="math14inline" class="math inline">\(i \in I\)</span> gilt: <span id="math15inline" class="math inline">\(\bigcup_{i \in I} U_i \in \cal T\)</span>.</li>
+      </ul>
+      Eine Menge <span id="math16inline" class="math inline">\(X\)</span> zusammen mit einer Topologie <span id="math17inline" class="math inline">\(\cal T\)</span> auf <span id="math18inline" class="math inline">\(X\)</span> heißt <i><a href="https://de.wikipedia.org/wiki/Topologischer_Raum" target="_blank">topologischer Raum </a></i> <span id="math19inline" class="math inline">\((X,\cal T)\)</span>.
+      <audio id="audioslide3ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio2_def_topologie.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide3ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide3ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide4" >
+   <h2> Beispiel: Topologie auf Texten </h2>
+   <div class="textleft" style="text-align: left;">
+      In der Regel geht man davon aus, dass Topologien auf mathematischen Objekten definiert werden (z.B. Zahlenräume, Funktionenräume, (topologische) Gruppen, Vektorräume, ...). Die Allgemeinheit der Definition macht es aber auch möglich, eine <a href="https://de.wikiversity.org/wiki/Topologie_auf_Texten" target="_blank" class="external" >Topologie auf Texten</a> zu definieren. Dies Beispiel wurde ergänzt, weil rein anschaulich z.B. Texte in der deutschen Sprache
+      <ul>
+         <li>eine ähnliche Aussage haben können und</li>
+         <li>unterschiede Wörter verwenden.</li>
+      </ul>
+      <audio id="audioslide4ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio3_topologie_texte.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide4ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide4ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide5" >
+   <h4> &nbsp; </h4>
+   <div class="textleft" style="text-align: left;">
+      <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Beziehungen_zwischen_mathematischen_Räumen.svg" alt="Hierarchie Topologischer Räume"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;" >
+      <audio id="audioslide5ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio4_hierarchie.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide5ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide5ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide6" >
+   <h2> Bedeutung: Notation Topologie </h2>
+   <div class="textleft" style="text-align: left;">
+      <ul>
+         <li>(T1) <span id="math20inline" class="math inline">\(\emptyset, X \in \mathcal{T}\)</span> <a href="https://de.wikipedia.org/wiki/leere_Menge" target="_blank">leere Menge </a> und die <a href="https://de.wikipedia.org/wiki/Grundmenge" target="_blank">Grundmenge </a> <span id="math21inline" class="math inline">\(X\)</span> sind offene Mengen</li>
+         <li>(T2) <span id="math22inline" class="math inline">\(U \cap V \in \mathcal{T}\)</span> für alle <span id="math23inline" class="math inline">\(U,V \in \mathcal{T}\)</span>: Der <a href="https://de.wikipedia.org/wiki/Schnittmenge" target="_blank">Durchschnitt </a> endlich vieler offener Mengen ist eine offene Menge.</li>
+      </ul>
+      <ul>
+         <li>(T3) Die <a href="https://de.wikipedia.org/wiki/Vereinigungsmenge" target="_blank">Vereinigung </a> beliebig vieler offener Mengen ist wieder eine offene Menge.</li>
+      </ul>
+   </div>
+</section>
+<section  class="level2" id="slide7" >
+   <h2> Semantik: Metrik </h2>
+   <div class="textleft" style="text-align: left;">
+      Eine Metrik <span id="math24inline" class="math inline">\(d\)</span> ordnet mit <span id="math25inline" class="math inline">\(d(x,y)\)</span> zwei Elementen <span id="math26inline" class="math inline">\(x,y \in X\)</span> aus einem Grundraum <span id="math27inline" class="math inline">\(X\)</span> den Abstand <span id="math28inline" class="math inline">\(d(x,y)\)</span> zwischen <span id="math29inline" class="math inline">\(x\)</span> und <span id="math30inline" class="math inline">\(y\)</span> zu.
+      <audio id="audioslide7ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio6_metrik_abstand.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide7ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide7ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide8" >
+   <h2> Definition: Metrik </h2>
+   <div class="textleft" style="text-align: left;">
+      Sei <span id="math31inline" class="math inline">\(X\)</span> eine beliebige Menge. Eine <a href="https://de.wikipedia.org/wiki/Funktion_(Mathematik)" target="_blank">Abbildung </a> <span id="math32inline" class="math inline">\(d\colon X\times X\to \mathbb{R}\)</span> heißt Metrik auf <span id="math33inline" class="math inline">\(X\)</span>, wenn für beliebige Elemente <span id="math34inline" class="math inline">\(x\)</span>, <span id="math35inline" class="math inline">\(y\)</span> und <span id="math36inline" class="math inline">\(z\)</span> von <span id="math37inline" class="math inline">\(X\)</span> die folgenden <a href="https://de.wikipedia.org/wiki/Axiom" target="_blank">Axiome </a> erfüllt sind:
+      <ul>
+         <li>(M1) Trennung: <span id="math38inline" class="math inline">\(d\left(x,y\right) = 0 \Leftrightarrow x = y\)</span>,</li>
+         <li>(M2) Symmetrie: <span id="math39inline" class="math inline">\(d\left(x,y\right) = d(y,x)\)</span>,</li>
+         <li>(M3) <a href="https://de.wikipedia.org/wiki/Dreiecksungleichung" target="_blank">Dreiecksungleichung </a>:  <span id="math40inline" class="math inline">\(d\left(x,y\right) \leq d(x,z) + d(z,y)\)</span>.</li>
+      </ul>
+      <audio id="audioslide8ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio7_def_abstand.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide8ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide8ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide9" >
+   <h2> Veranschaulichung: Metrik Dreiecksungleichung </h2>
+   <div class="textleft" style="text-align: left;">
+      <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Metrik_triangle_inequality.svg" alt="Nach der Dreiecksungleichung ist der Abstand zwischen zwei Punkten X,Y höchstens so groß wie Summe der Abstände von X zu Z und von Z zu Y, also einem Umweg über den Punkt Z"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;" >
+      <audio id="audioslide9ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio8_metrik_dreiecksungleichung.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide9ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide9ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide10" >
+   <h2> Nicht-Negativität </h2>
+   <div class="textleft" style="text-align: left;">
+      Aus den drei Eigenschaften der Metrik folgt die Nicht-Negativität, d.h. für alle <span id="math41inline" class="math inline">\(x,y \in X\)</span> gilt. <span id="math42inline" class="math inline">\(d(x,y)\geq0\)</span>. Die Nicht-Negativität folgt aus den anderen Eigenschaften mit:<br>
+      <center><span id="math1block" class="math inline"> \( \displaystyle 0 = \frac{1}{2} d(x, x) \leq \frac{1}{2}(d(x, y) + d(y, x)) = \)</span></center>
+      <span id="math43inline" class="math inline">\(= \frac{1}{2}(d(x, y) + d(y, x)) = \frac{1}{2}(d(x, y) + d(x, y)) = d(x, y).\)</span>
+      <audio id="audioslide10ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio9_nicht_negativitaet.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide10ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide10ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide11" >
+   <h2> Offene Mengen in metrischen Räumen </h2>
+   <div class="textleft" style="text-align: left;">
+      <ul>
+         <li>In einem metrische Raum <span id="math44inline" class="math inline">\((X,d)\)</span> definiert man eine Menge <span id="math45inline" class="math inline">\(U \subset X\)</span> als offen (d.h. <span id="math46inline" class="math inline">\(U \in \mathcal{T}_d\)</span>), wenn es zu jedem <span id="math47inline" class="math inline">\(u\in U\)</span> ein <span id="math48inline" class="math inline">\(\epsilon >0\)</span> gibt, dass die <span id="math49inline" class="math inline">\(\epsilon\)</span>-Kugel <span id="math50inline" class="math inline">\(B_\epsilon^d(u):=\{\ x \in X | \ d(x,u)< \epsilon \}\)</span> ganz in <span id="math51inline" class="math inline">\(U\)</span> liegt (d.h. <span id="math52inline" class="math inline">\(B_\epsilon^d(u) \subset U \)</span>)</li>
+         <li>Zeigen Sie, dass mit diesem definierten <span id="math53inline" class="math inline">\(\mathcal{T}_d\)</span> das Paar  <span id="math54inline" class="math inline">\((X,\mathcal{T}_d)\)</span> ein topologischer Raum ist (d.h. (T1), (T2), (T3) erfüllt).</li>
+      </ul>
+      <audio id="audioslide11ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio10_metrik_topologischer_raum.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide11ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide11ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide12" >
+   <h2> Norm auf Vektorräumen </h2>
+   <div class="textleft" style="text-align: left;">Eine Norm ist eine <a href="https://de.wikipedia.org/wiki/Funktion_(Mathematik)" target="_blank">Abbildung </a> <span id="math55inline" class="math inline">\(\|\cdot\|\)</span> von einem <a href="https://de.wikipedia.org/wiki/Vektorraum" target="_blank">Vektorraum </a> <span id="math56inline" class="math inline">\(V\)</span> über dem <a href="https://de.wikipedia.org/wiki/Körper_(Algebra)" target="_blank">Körper </a> <span id="math57inline" class="math inline">\(\mathbb K\)</span> der <a href="https://de.wikipedia.org/wiki/Reelle_Zahl" target="_blank">reellen </a> oder der <a href="https://de.wikipedia.org/wiki/Komplexe_Zahl" target="_blank">komplexen Zahlen </a> in die Menge der nichtnegativen <a href="https://de.wikipedia.org/wiki/Reelle_Zahl" target="_blank">reellen Zahlen </a> <span id="math58inline" class="math inline">\({\mathbb R}_0^{+}\)</span>.  Dabei ordnet die Norm jedem Vektor <span id="math59inline" class="math inline">\(x \in V\)</span> seine Länge <span id="math60inline" class="math inline">\(\| x \|\)</span> zu.</div>
+</section>
+<section  class="level2" id="slide13" >
+   <h2> Definition: Norm </h2>
+   <div class="textleft" style="text-align: left;">
+      Sei <span id="math61inline" class="math inline">\(V\)</span> ein <span id="math62inline" class="math inline">\(\mathbb{K}\)</span>-Vektorraum und <span id="math63inline" class="math inline">\(\|\cdot\|\colon V\to{\mathbb R}_0^{+}, \; x \mapsto \| x \|,\)</span> eine AbbildungErfüllt <span id="math64inline" class="math inline">\(\|\cdot\|\)</span> die folgenden Axiome <a href="https://de.wikipedia.org/wiki/Axiom" target="_blank">Axiome </a> N1,N2, N3, so heißt <span id="math65inline" class="math inline">\(\|\cdot\|\)</span> Norm auf <span id="math66inline" class="math inline">\(V\)</span>.
+      <ul>
+         <li>(N1) <a href="https://de.wikipedia.org/wiki/Definitheit" target="_blank">Definitheit </a>:  <span id="math67inline" class="math inline">\(\|x\| = 0  \;\Rightarrow\;  x = 0\)</span> für alle  <span id="math68inline" class="math inline">\(x \in V\)</span>,</li>
+         <li>(N2) <a href="https://de.wikipedia.org/wiki/Homogene_Funktion" target="_blank">absolute Homogenität </a>:  <span id="math69inline" class="math inline">\(\|\lambda\cdot x\| = |\lambda|\cdot\|x\|\)</span> für alle  <span id="math70inline" class="math inline">\(x\in V\)</span> und  <span id="math71inline" class="math inline">\(\lambda\in \mathbb K\)</span></li>
+         <li>(N3) <a href="https://de.wikipedia.org/wiki/Dreiecksungleichung" target="_blank">Dreiecksungleichung </a>:  <span id="math72inline" class="math inline">\(\|x + y\| \leq \|x\| + \|y\|\)</span> für alle <span id="math73inline" class="math inline">\(x, y\in V\)</span>.</li>
+      </ul>
+      <audio id="audioslide12ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio11_def_norm.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide12ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide12ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide14" >
+   <h2> Normierter Raum / Metrischer Raum </h2>
+   <div class="textleft" style="text-align: left;">
+      Ein normierter Raum <span id="math74inline" class="math inline">\((V,\|\cdot\| )\)</span> ist zugleich auch ein metrischer Raum.
+      <ul>
+         <li>Ein Norm  <span id="math75inline" class="math inline">\(\|\cdot\| \)</span> ordnet einem Vektor <span id="math76inline" class="math inline">\(v\in V \)</span> seine Vektorlänge <span id="math77inline" class="math inline">\(\|v\| \)</span> zu.</li>
+         <li>Mit der Norm <span id="math78inline" class="math inline">\(\|\cdot\| \)</span> kann man über <span id="math79inline" class="math inline">\(d(x,y):=\| x-y \| \)</span> eine Metrik definieren.</li>
+         <li>Zeigen Sie, dass die so definierte Abbildung <span id="math80inline" class="math inline">\(d:V\times V \rightarrow \mathbb{R}\)</span> die Eigenschaften einer Metrik erfüllt.</li>
+      </ul>
+      <audio id="audioslide13ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio12_norm_metrik_zusammenhang.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide13ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide13ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide15" >
+   <h2> Notation: Norm </h2>
+   <div class="textleft" style="text-align: left;">
+      <ul>
+         <li>In dem Axiom (N2) <span id="math81inline" class="math inline">\( \| \lambda \cdot x \| = | \lambda | \cdot \|x\| \)</span> bezeichnet <span id="math82inline" class="math inline">\(| \cdot |\)</span> den <a href="https://de.wikipedia.org/wiki/Betragsfunktion" target="_blank">Betrag </a> des <a href="https://de.wikipedia.org/wiki/Skalar" target="_blank">Skalars </a>. <b>"<span id="math83inline" class="math inline">\(\cdot\)</span>"</b>-Zeichen: Äußere Verknüpfung im Vektorraum bzw. Multiplikation <span id="math84inline" class="math inline">\((\mathbb{R},\cdot)\)</span>.</li>
+         <li><span id="math85inline" class="math inline">\(\|x\|\)</span> gibt die Länge des Vektors <span id="math86inline" class="math inline">\(x\in V\)</span> an.</li>
+         <li>In (N3) <span id="math87inline" class="math inline">\(\|x + y\| \leq \|x\| + \|y\|\)</span> für alle <span id="math88inline" class="math inline">\(x, y\in V\)</span>. <b>"<span id="math89inline" class="math inline">\(+\)</span>"</b>-Zeichen bezeichnet zwei unterschiedliche Verknüpfungen (d.h. Addition in <span id="math90inline" class="math inline">\((V,+)\)</span> bzw. <span id="math91inline" class="math inline">\((\mathbb{R},+)\)</span></li>
+      </ul>
+      <audio id="audioslide14ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio13_notatin_norm.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide14ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide14ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide16" >
+   <h2> Veranschaulichung: Norm Dreiecksungleichung </h2>
+   <div class="textleft" style="text-align: left;">
+      <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Vector-triangle-inequality.svg" alt="Nach der Dreiecksungleichung ist die Länge der Summe zweier Vektoren höchstens so groß wie die Summe der Längen der einzelnen Vektoren"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;" >
+      <audio id="audioslide15ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio14_norm_dreiecksungleichung.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide15ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide15ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide17" >
+   <h2> Def: Konvergenz im normierten Raum </h2>
+   <div class="textleft" style="text-align: left;">
+      Sei <span id="math92inline" class="math inline">\((V,\|\cdot\|)\)</span> ein normierter Raum und <span id="math93inline" class="math inline">\((v_n)_{n\in\mathbb{N}} \in V^{\mathbb{N}}\)</span> eine Folge in <span id="math94inline" class="math inline">\(V\)</span> und <span id="math95inline" class="math inline">\(v_o \in V\)</span>:<br>
+      <center><span id="math2block" class="math inline"> \( \displaystyle  \lim_{n \to \infty}^{\|\cdot\|} v_n = v_o \ :\Longleftrightarrow \ \forall_{\epsilon > 0} \exists_{n_\epsilon \in \mathbb{N}} \forall_{n \geq n_\epsilon} \ : \  \|v_n - v_o\| < \epsilon \)</span></center>
+      <audio id="audioslide16ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio15_def_konvergenz_norm.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide16ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide16ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide18" >
+   <h2> Def: Konvergenz im metrischen Raum </h2>
+   <div class="textleft" style="text-align: left;">
+      Sei <span id="math96inline" class="math inline">\((X,d)\)</span> ein metrischer Raum und <span id="math97inline" class="math inline">\((x_n)_{n\in\mathbb{N}} \in X^{\mathbb{N}}\)</span> eine Folge in <span id="math98inline" class="math inline">\(X\)</span> und <span id="math99inline" class="math inline">\(x_o \in X\)</span>:<br>
+      <center><span id="math3block" class="math inline"> \( \displaystyle  \lim_{n \to \infty}^d x_n = x_o \ :\Longleftrightarrow \ \forall_{\epsilon > 0} \exists_{n_\epsilon \in \mathbb{N}} \forall_{n \geq n_\epsilon} \ : \  d(x_n,x_o) < \epsilon \)</span></center>
+      <audio id="audioslide17ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio16_def_konvergenz_metrik.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide17ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide17ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide19" >
+   <h2> Äquivalenz: Normen </h2>
+   <div class="textleft" style="text-align: left;">
+      Seien zwei Normen <span id="math100inline" class="math inline">\(\|\cdot\|_1 \)</span> und <span id="math101inline" class="math inline">\(\|\cdot\|_2\)</span> auf dem <span id="math102inline" class="math inline">\(\mathbb K\)</span>-Vektorraum <span id="math103inline" class="math inline">\(V\)</span> gegeben. Die beiden Normen sind äquivalent, wenn gilt:<br>
+      <center><span id="math4block" class="math inline"> \( \displaystyle \exists_{C_1,C_2 >0} \forall_{x \in V} \ : \ C_1 \|x\|_1 \leq \|x\|_2 \leq C_2 \|x\|_1\)</span></center>
+      Zeigen Sie, dass eine Folge  genau dann in <span id="math104inline" class="math inline">\(\|\cdot\|_1 \)</span> konvergiert, wenn es auch bzgl. <span id="math105inline" class="math inline">\(\|\cdot\|_2\)</span> konvergiert.
+      <audio id="audioslide18ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio17_aequivalenz_normen.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide18ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide18ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide20" >
+   <h2> Betrag in komplexen Zahlen </h2>
+   <div class="textleft" style="text-align: left;">
+      Sei <span id="math106inline" class="math inline">\(z=z_1 + i\cdot z_2\in \mathbb{C}\)</span> eine komplexe Zahl mit <span id="math107inline" class="math inline">\(z_1, z_2\in \mathbb{R}\)</span>. Zeigen Sie, dass <span id="math108inline" class="math inline">\(|z|:=\sqrt{z\cdot \overline{z}} \)</span> eine Norm auf dem <span id="math109inline" class="math inline">\(\mathbb{R}\)</span>-Vektorraum <span id="math110inline" class="math inline">\(\mathbb{C}\)</span> ist!
+      <audio id="audioslide19ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio18_norm_komplexe_zahlen.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide19ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide19ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide21" >
+   <h2> Historische Anmerkung: Norm </h2>
+   <div class="textleft" style="text-align: left;">
+      Diese axiomatische Definition der Norm wurde von <a href="https://de.wikipedia.org/wiki/Stefan_Banach" target="_blank">Stefan Banach </a> 1922 in seiner Dissertation aufgestellt Das heute übliche Normsymbol wurde erstmals von <a href="https://de.wikipedia.org/wiki/Erhard_Schmidt" target="_blank">Erhard Schmidt </a> 1908 als Abstand <span id="math111inline" class="math inline">\(\|x-y\|\)</span> zwischen Vektoren <span id="math112inline" class="math inline">\(x\)</span> und <span id="math113inline" class="math inline">\(y\)</span> verwendet.
+      <audio id="audioslide20ogg">
+         <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio19_norm_historische_anmerkung.ogg" type="audio/ogg">
+      </audio>
+      &nbsp;
+      <table class="audioplayer">
+         <tr>
+            <td> <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide20ogg');" value="&#9658"></td>
+            <td><input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide20ogg');" value="&#10074;&#10074;"></td>
+         </tr>
+      </table>
+   </div>
+</section>
+<section  class="level2" id="slide22" >
+   <h2> Seiten-Information </h2>
+   <div class="textleft" style="text-align: left;">
+   Der <b><a href="https://niebert.github.io/Wiki2Reveal/index.html?domain=wikiversity&title=Normen%2C+Metriken%2C+Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="_blank">Foliensatz </a></b> wurde für den <b><a href="https://de.wikiversity.org/wiki/Kurs:Funktionalanalysis" target="_blank">Kurs:Funktionalanalysis </a></b> mit <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external" >Wiki2Reveal</a> über den <a href="https://niebert.github.io/Wiki2Reveal/" target="_blank">Linkgenerator </a> erstellt.
+   <ul>
+      <li>
+         Inhalte der Seite basieren auf:
+         <ul>
+            <li><a href="https://de.wikipedia.org/wiki/Topologie_(Mathematik)" target="_blank">https://de.wikipedia.org/wiki/Topologie_(Mathematik) </a></li>
+            <li><a href="https://de.wikipedia.org/wiki/Metrischer_Raum" target="_blank">https://de.wikipedia.org/wiki/Metrischer_Raum </a></li>
+            <li><a href="https://de.wikipedia.org/wiki/Normierter_Raum" target="_blank">https://de.wikipedia.org/wiki/Normierter_Raum </a></li>
+         </ul>
+      </li>
+      <li>Diese Seite ist ein <a href="https://de.wikiversity.org/wiki/PanDocElectron-Presentation" target="_blank">PanDocElectron-SLIDE </a> Dokumententyp</li>
+      <li>Quelle: Wikiversity DE https://de.wikiversity.org/wiki/Normen,_Metriken,_Topologie</li>
+      <li>siehe <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external" >Wiki2Reveal</a> zur Funktionsweise von <a href="https://niebert.github.io/Wiki2Reveal/" target="_blank">Wiki2Reveal </a>.</li>
+      <li>Nächste Inhalte des Kurses sind <a href="https://de.wikiversity.org/wiki/Netze_(Mathematik)" target="_blank" class="external" >Netze</a></li>
+   </ul>
+   <a href="https://de.wikiversity.org/wiki/Category:Wiki2Reveal" target="_blank" class="external" >Category:Wiki2Reveal</a>
+</section>

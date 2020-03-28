@@ -117,6 +117,7 @@ function WikiConvert () {
 	this.aFilePrefix["Image"] = "File";
 
 	this.aMediaArray = [];
+	this.aCatArray = []; //Array of Categories
 	//this.aTplEngine = new TemplateEngine();
 
 
@@ -283,6 +284,37 @@ function WikiConvert () {
 		return vMarkDown;
 	}
 
+
+		this.remove_categories = function (wikicode,pOptions) {
+			console.log("remove_categories() ");
+			if (wikicode) {
+				//var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
+				var vSearch = /(\[\[(Kategorie|Category)\:[^\]]+\]\])/gi;
+				// \[            # "["
+				// (?:            # non-capturing group
+				//  File|Image|Datei        #   "File" or "Image" or "Datei"
+				// )              # end non-capturing group
+				//:             # ":"
+				//(              # group 1
+				//  [^\|\]]+      #   any character except "|" or "]" at least once
+				// )              # end group 1 - this will be the image's name
+				var vResult;
+				var vCount =0;
+				console.log("remove_categories() - wikicode defined");
+				while (vResult = vSearch.exec(wikicode)) {
+					vCount++;
+					console.log("Remove Category "+vCount+": '" + vResult[1] + "' found");
+					var vFound = vResult[1];
+					this.aCatArray.push(vFound);
+					var vReplace = " ";
+					wikicode = this.replaceString(wikicode,vFound,vReplace);
+				};
+			} else {
+				console.error("ERROR: remove_categories() - wikicode not defined!");
+			}
+			return wikicode
+		}
+
 	//#################################################################
 	//# PUBLIC Method: section2id()
 	//#    used in Class: WikiJSON2HTML
@@ -326,17 +358,17 @@ function WikiConvert () {
 			// )              # end group 1 - this will be the image's name
 			var vResult;
 			var vCount =0;
-			console.log("wikicode defined");
-			while (vResult = vSearch.exec(pWikiCode)) {
+			console.log("CALL: removeMathNewlines() with Parameter 'wikicode' defined");
+			while (vResult = vSearch.exec(wikicode)) {
 				vCount++;
 				console.log("Math Expression "+vCount+": '" + vResult[1] + "' found");
 				var vFound = vResult[1];
 				var vReplace = vFound.replace(/\n/g," ");
-				this.replaceString(wikicode,vFound,vReplace);
+				wikicode = this.replaceString(wikicode,vFound,vReplace);
 			};
 		}
 		return wikicode
-}
+};
 
 	//#################################################################
 	//# PUBLIC Method: replaceSections()

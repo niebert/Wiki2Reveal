@@ -1,5 +1,8 @@
 function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions) {
   console.log("getWiki2Reveal()-Call");
+  if (!pMarkdown) {
+    console.error("ERROR: pMarkdown undefined in getWiki2Reveal()-Call ");
+  }
   if (document.location.href.indexOf("dzslides") >= 0) {
     pOptions.slidetype = "dzslides";
     console.log("Set slidetype to 'dzslides'");
@@ -14,6 +17,10 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   // init the article name with the page_identifier, also necessary for handling relative links
   wtf.wikiconvert.initArticle(page_identifier,pOptions);
   pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
+  // console.log("Remove Categories");
+  pMarkdown = wtf.wikiconvert.remove_categories(pMarkdown,pOptions);
+  // console.log("Remove math newlines");
+  pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   var data = {

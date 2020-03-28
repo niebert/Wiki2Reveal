@@ -142,7 +142,7 @@ Converter used in Offline mode without internet connectivity!
       vOptions.slidetype = vLinkParam.getValue("slidetype");
     };
     //--------------------------------------
-    
+
 
     function callWikiDownload() {
         downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
@@ -202,14 +202,15 @@ Converter used in Offline mode without internet connectivity!
         };
       }
 
-      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
+      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pWikiCode) {
         // el("divslides").innerHTML = wtf.reveal(markup);
-        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
+        var htmlout = getWiki2Reveal(pWikiCode,vTitle, vAuthor, vLanguage, vDomain, vOptions);
         // store JSON parse result in textarea
         //el("divslides").innerHTML = htmlout; //el("revealsource").value;
         var indented = indent.html(htmlout, {tabString: '\n   '});
         console.log("Call indent.js");
         el("revealout").value = htmlout; //indented; //el("revealsource").value;
+        el("revealout").value = wtf(pWikiCode).html();
         //setTimeout("callRevealInit()",3000)
       }
       callWikiDownload();

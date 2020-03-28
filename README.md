@@ -3,8 +3,10 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
 
 ## [Wiki2Reveal Online-Demo](http://niebert.github.io/Wiki2Reveal/)
 
-* [**Demo Wikiversity Article as Source**](https://en.wikiversity.org/wiki/PanDocElectron/Wiki2Reveal_Demo) for [Wiki2Reveal](http://niebert.github.io/Wiki2Reveal/)
+* [**Demo Wikiversity Article as Source**](https://en.wikiversity.org/wiki/PanDocElectron/Wiki2Reveal_Demo) for Wiki2Reveal
 * [**Wiki2Reveal Output of Wikiversity Source**](https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=wikiversity&title=PanDocElectron%2FWiki2Reveal_Demo&author=Wikiversity+Authors&language=en&audioslide=yes)
+
+<hr>
 
 ***Table of Contents***
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->

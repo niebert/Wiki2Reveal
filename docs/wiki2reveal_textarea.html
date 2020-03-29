@@ -5,6 +5,7 @@
   <meta name="generator" content="pandoc EN">
   <title>wiki2reveal</title>
   <!-- Original Settings do not have the following CSS inserted directly -->
+  <script src="js/wtf_fetch.js"></script>
   <script src="js/wtf_wikipedia.min.js"></script>
   <script src="js/wiki2reveal_generator.js"></script>
   <script src="js/wikiconvert.js"></script>
@@ -168,38 +169,42 @@ Converter used in Offline mode without internet connectivity!
       };
 
       function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
-        var vWikiID = pLanguage+pDomain;
         var vVersion = "?.?.?";
         var vFetchExists = false;
-        if (wtf) {
-          console.log("wtf exists!");
-          for (var variable in wtf) {
-            if (wtf.hasOwnProperty(variable)) {
-              console.log("wtf."+variable+" Type: "+typeof(wtf[variable])+" exists!");
+        if (wtf_fetch) {
+          console.log("wtf_fetch exists!");
+          for (var variable in wtf_fetch) {
+            if (wtf_fetch.hasOwnProperty(variable)) {
+              console.log("wtf_fetch."+variable+" Type: "+typeof(wtf[variable])+" exists!");
               switch (variable) {
                 case "version":
-                  vVersion = wtf.version;
+                  vVersion = wtf_fetch.version;
                 break;
-                case "fetch":
+                case "getPage":
                   vFetchExists = true;
                 break;
                 default:
 
               }
             } else {
-              console.log("wtf."+variable+" exists, but does not have ownProperty()!");
+              console.log("wtf_fetch."+variable+" exists, but does not have ownProperty()!");
             }
           };
-          console.log("VERSION (wtf_wikipedia) "+vVersion);
-          if (vFetchExists == true) {
-            wtf.fetch(pArticle, vWikiID, function(err, doc) {
+        };
+        console.log("VERSION (wtf_fetch) "+vVersion);
+        if (vFetchExists == true) {
+            //document.location.href=vURL;
+            //window.open(vURL);
+            wtf_fetch.getPage(pArticle,pLanguage,pDomain, function(err, doc) {
+              // doc contains the download
+              //alert(JSON.stringify(doc.wiki))
               var markup = doc.wiki;
               processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+              //console.log(doc);
             });
-          }
         } else {
-          console.log("'wtf' is not defined!");
-        };
+            console.error("wtf_fetch does not exi");
+        }
       }
 
       function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pWikiCode) {

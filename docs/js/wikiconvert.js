@@ -1335,7 +1335,7 @@ this.process_normal = function(wikitext) {
 					}
 
 					if (nested_end > i) {
-						html += wiky.process_indent(lines,i+1,nested_end);
+						html += this.process_indent(lines,i+1,nested_end);
 						i = nested_end;
 					}
 

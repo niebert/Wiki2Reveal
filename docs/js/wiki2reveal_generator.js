@@ -18,6 +18,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   wtf.wikiconvert.initArticle(page_identifier,pOptions);
   pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
   // console.log("Remove Categories");
+  pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions)
   pMarkdown = wtf.wikiconvert.remove_categories(pMarkdown,pOptions);
   // console.log("Remove math newlines");
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown,pOptions);
@@ -355,6 +356,190 @@ function tokenizeMath (wikicode, data, pOptions) {
 
   }
   return wikicode;
+}
+
+function tokenizeCitation (wiki, data, options) {
+  var references = [];
+  if (options && options.parse && options.parse.citations && options.parse.citations == false) {
+    console.log("tokenize citations was not performed - options.parse.citations=false");
+    //wiki = tokenizeRefs(wiki, data, options);
+    // (1) References without a citation label
+    wiki = wiki.replace(/<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
+      // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
+      var vLabel = getCiteLabel(data,references.length);
+      return vLabel;
+    });
+    // (2) Cite a reference by a label WITHOUT reference
+    // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
+    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
+      var vLabel = getCiteLabel(data,references.length);
+      return vLabel;
+    });
+    // (3) Reference with citation label that is used multiple time in a document by (2)
+    //wiki = wiki.replace(/<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
+    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
+        //let vLabel = getCiteLabel(data,name2label(tmpl));
+      var vLabel = name2label(name);
+      if (vLabel) {
+        console.log("tokenizeRefs() created cite label='"+vLabel+"' from name='"+name+"'");
+        vLabel = getCiteLabel(data,vLabel);
+      } else {
+        // convert a standard label with the reference length of the array as unique ID generator
+        vLabel = getCiteLabel(data,references.length);
+      }
+      return vLabel;
+    });
+
+  } else {
+    console.log("tokenize citations performed");
+    wiki = tokenizeRefs(wiki, data, options,references);
+  }
+  return wiki
+}
+
+
+function tokenizeRefs (wiki, data, options, preferences) {
+  var references = [];
+  // (1) References without a citaion label
+  wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
+    // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
+    var vLabel = getCiteLabel(data,references.length);
+    wiki = storeReference(wiki,data,references,tmpl,vLabel);
+    return vLabel;
+  });
+  // (2) Cite a reference by a label WITHOUT reference
+  // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
+  wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"'])["'][^>]{0,200}?\/> ?/gi,function(a, tmpl) {
+    let vLabel = getCiteLabel(data,name2label(tmpl));
+    return vLabel;
+  });
+  // (3) Reference with citation label that is used multiple time in a document by (2)
+  wiki = wiki.replace(/ ?<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, name, tmpl) {
+    /* difference between name, label and cite label
+       (3a) name='my book name#2012'
+       (3b) label='my_book_name_2012'
+       (3c) cite_label='___CITE_7238234792_my_book_label_2012___' is the unique marker in the text
+     the citation label is a marker in the text with a unique time stamp and defined syntax
+     which is very unlikely to have a text element in an article.
+    */
+    // Convert e.g. name='my book name#2012' to 'my_book_name_2012'
+    var vLabel = name2label(name);
+    if (vLabel) {
+      console.log("tokenizeRefs() created cite label='"+vLabel+"' from name='"+name+"'");
+      vLabel = getCiteLabel(data,vLabel);
+    } else {
+      // convert a standard label with the reference length of the array as unique ID generator
+      vLabel = getCiteLabel(data,references.length);
+    };
+    wiki = storeReference(wiki,data,references,tmpl,vLabel);
+    return vLabel;
+  });
+  data.refs4token = references;
+  //data.references = references.map(r => new Reference(r));
+  //now that we're done with xml, do a generic
+  return wiki;
+}
+
+function hasCitation(str) {
+  return /^ *?\{\{ *?(cite|citation)/i.test(str) && /\}\} *?$/.test(str) && /citation needed/i.test(str) === false;
+};
+function getCiteLabel (data,pid) {
+  //replace blank and non characters or digits by underscore "_"
+  //return "___CITE_"+data.timeid+"_"+pid+"___";
+  return "<sup>("+pid+")</sup>";
+}
+
+function parseInline (str) {
+  let obj = parseSentence(str) || {};
+  return {
+    template: 'citation',
+    type: 'inline',
+    data: {},
+    inline: obj
+  };
+};
+
+
+function parseSentence(str) {
+  let obj = {
+    text: postprocess(str)
+  };
+  //pull-out the [[links]]
+  // parseLinks() - 04-sentence/links.js
+  let links = parseLinks(str);
+  if (links) {
+    obj.links = links;
+  }
+  //pull-out the bolds and ''italics''
+  obj = parseFmt(obj);
+  //pull-out things like {{start date|...}}
+  // obj = templates(obj);
+  return new Sentence(obj);
+}
+
+function postprocess(line) {
+  //fix links
+  line = resolve_links(line);
+  //remove empty parentheses (sometimes caused by removing templates)
+  line = line.replace(/\([,;: ]*\)/g, '');
+  //these semi-colons in parentheses are particularly troublesome
+  line = line.replace(/\( *(; ?)+/g, '(');
+  //dangling punctuation
+  line = helpers.trim_whitespace(line);
+  line = line.replace(/ +\.$/, '.');
+  return line;
+}
+
+function parseSentence(str) {
+  return {
+    "sentence": str
+  };
+};
+
+function name2label(pname) {
+  //replace blank and non characters or digits by underscore "_"
+  var vLabel = str.replace(/[^A-Za-z0-9]/g,"_");
+  vLabel = vLabel.replace(/[_]+/g,"_");
+  vLabel = vLabel.replace(/^_/g,"");
+  vLabel = vLabel.replace(/_$/g,"");
+  if (vLabel == "") {
+    vLabel = null;
+  }
+  return vLabel;
+}
+function storeReference (wiki,data,references,tmpl,pLabel) {
+  if (hasCitation(tmpl)) {
+    let obj = parseCitation(tmpl);
+    if (obj) {
+      obj.label = pLabel;
+      references.push(obj);
+    };
+    // Remove Citation from Wiki Source ???
+    //wiki = wiki.replace(tmpl, '');
+  } else {
+    let obj = parseInline(tmpl);
+    obj.label = pLabel;
+    references.push(obj);
+  };
+  return wiki;
+}
+
+function parseCitation (tmpl) {
+  let obj = parseGeneric(tmpl);
+  if (obj) {
+    return obj;
+  }
+  //support {{cite gnis|98734}} format
+  return parsePipe(tmpl);
+};
+
+function parseGeneric(tmpl) {
+  // dummy parseGeneric replace by wtf_wikipedia.js function
+  if (tmpl) {
+    return tmpl;
+  } else {
+    return {};
+  }
 }
 
 function createTitleSlide(pTitle,pAuthor,pOptions) {

@@ -342,8 +342,22 @@ function WikiConvert () {
 
 	};
 	//----End of Method section2id Definition
-
 	this.removeMathNewlines = function(wikicode) {
+		console.log("replaceMathNewLines() "+wikicode);
+		if (wikicode) {
+			//var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
+			wikicode = wikicode.replace(/(<math>)(.*?)(<\/math>)/mg,function(str,p1,pmath,p2) {
+				console.log("BEFORE pmath="+pmath);
+				pmath = pmath.replace(/\n/g," ");
+				pmath = p1 + pmath + p2;
+				console.log("AFTER pmath="+pmath);
+				return pmath
+			});
+		};
+		return wikicode
+	};
+
+	this.removeMathNewlines_X = function(wikicode) {
 		console.log("replaceMathNewLines() "+wikicode);
 		if (wikicode) {
 			//var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;

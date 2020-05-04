@@ -21,7 +21,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions)
   pMarkdown = wtf.wikiconvert.remove_categories(pMarkdown,pOptions);
   // console.log("Remove math newlines");
-  pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown,pOptions);
+  //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   var data = {
@@ -29,7 +29,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   };
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
-  //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
+  pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.replaceSections(pMarkdown,pOptions);
   console.log("wiki2reveal.js:28 - Sections replaced!");
@@ -44,6 +44,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
   // by a remote url to the Wiki article e.g. [https://en.wikipedia.org/wiki/Other_Article Other Article]
+  pMarkdown = pMarkdown.replace(/\[\[Kurs:/gi,"[[c_o_u_r_s_e");
   pMarkdown = wtf.wikiconvert.replaceWikiLinks(pMarkdown,pOptions);
   pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
@@ -66,6 +67,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   htmlout = htmlout.replace(/___aXXX___ /g,"<a ");
   htmlout = htmlout.replace(/___aXXXC___/g,">"); // closing ">" of openening <a ..
   htmlout = htmlout.replace(/___\/aXXX___/g,"</a>");
+  htmlout = htmlout.replace(/c_o_u_r_s_e/g,"Kurs:");
   return htmlout;
 };
 

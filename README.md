@@ -235,5 +235,22 @@ In the `Settings/Options/GitHub pages` of this repository
  https://niebert.github.io/Wiki2Reveal
 * [Browserify and Watchify](https://spapas.github.io/2015/05/27/using-browserify-watchify/) to combine modular Javascript libraries for use in a browser. This is necessary because the browser does not understand the `require(...)` of NodeJS. Browserify parses the libraries and library dependencies and replaces the `require`-command by an aggregated script call of used javascript sources for the WebApp.  
 
+## Reveal - Scroll Down for large Slides
+ToDo: The next release will incorporate scrolling down for large slides with the down and up cursor keys.
+In RevealJS can have down scrolling with subslides per section:
+```html
+<div class="reveal">
+  <div class="slides">
+    <section>Horizontal Slide</section>
+    <section>
+      <section>Vertical Slide Part 1</section>
+      <section>Vertical Slide Part 2</section>
+      <section>Vertical Slide Part 3</section>
+    </section>
+  </div>
+</div>
+```
+All sections are complete slides for vertical parts a top part is removed from part 1 to part 2. From part 2 to part 3 again a part is removed. If last part is visible, then the vertical slide parts stop.
+
 ## Acknowledgement
 * [***wtf_wikipedia.js***](https://github.com/spencermountain/wtf_wikipedia): Thanks to [Spencer Kelly](https://github.com/spencermountain) and [many other contributors](https://github.com/spencermountain/wtf_wikipedia/graphs/contributors) that provide the wikipedia markup parser [`wtf_wikipedia.js`](https://github.com/spencermountain/wtf_wikipedia) to the OpenSource community.

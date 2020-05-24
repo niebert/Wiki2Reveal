@@ -27,6 +27,8 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   var data = {
     "mathexpr": []
   };
+  pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
+  console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
@@ -36,10 +38,6 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   // pMarkdown = replaceMath4Reveal(pMarkdown,pOptions);
   console.log("wiki2reveal.js:30 - execute Math4Reveal replaced!");
   //console.log("JSON data:"+JSON.stringify(data,null,4));
-  pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
-  console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
-  pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
-  console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   // store pMarkdown result in textarea
   //document.getElementById("wikimarkup").value = pMarkdown;
   // replace local  urls (e.g. [[Other Article]])
@@ -54,6 +52,8 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   pMarkdown = wtf.wikiconvert.post_process(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown,pOptions);
   // create a Title slide and place the slide before output
+  pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
+  console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   pMarkdown = createTitleSlide(pTitle,pAuthor,pOptions) + "\n" + pMarkdown;
   // generate Reveal html output
   console.log("Call: wtf.reveal(pMarkdown)");

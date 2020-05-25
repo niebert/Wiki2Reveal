@@ -1749,34 +1749,48 @@ this.process_normal = function(wikitext) {
 				console.log("Image Found: "+vURL+" with Type: "+vFileType);
 				//var vSize = this.get_wiki_image_size(vLinkSplit);
 				var vSize = "width: 50%";
+				var vWidth = this.aDefaultImageWidth;
+
 				for (var i = 1; i < (vLinkSplit.length-1); i++) {
 							// vMediaParam += "|"+vLinkSplit[i];
+							/*
 							if (vSizeRE.test(vLinkSplit[i])) {
 								// vSize = " width='"+vLinkSplit[i]+"'";
 								vSize = " width: "+vLinkSplit[i]+";";
 								console.log("URL:"+vURL+" Size="+vLinkSplit[i] + " - vSize='" + vSize +"'");
 							};
+							*/
+							console.log("vLinkSplit["+i+"]="+vLinkSplit[i]);
+							if ((vLinkSplit[i]).match(/^[0-9]+px$/)) {
+								//vFileSplit[i] = "350px"
+								vSize = " width: "+vLinkSplit[i]+";";
+								vWidth = (vLinkSplit[i]).replace(/[^0-9]/g,"");
+								console.log("Image: '" + vLinkSplit[0] + "' with Width="+vWidth);
+								//vFileSplit[i] = "350"
+							} else if ((vLinkSplit[i] == "center") || (vLinkSplit[i] == "middle")) {
+								vCenterImage = true;
+							};
 				};
 				if (vLinkSplit.length == 1) {
-					console.log("IMAGE SPLIT 1: "+vURL+" with Type: "+vFileType);
+					console.log("IMAGE SPLIT 1: "+vURL+" with Type: "+vFileType+ " Width="+vWidth);
 					//replace_str = '___IMG_OPEN___File:' + vURL + '___IMG_CLOSE___';
 					//replace_str = '<section data-background-image="'+vURL+'" data-background-size="cover"></section>\n';
-					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+vSize+'">';
+					replace_str = '<img class="replaceimg1" src="' + vURL + '" style="'+vImgCenter+vSize+'" width="' + vWidth + '">';
 					pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 				} else {
 					if (vLinkSplit.length == 2) {
-						console.log("IMAGE SPLIT 2: "+vURL+" with Type: "+vFileType);
+						console.log("IMAGE SPLIT 2: "+vURL+" with Type: "+vFileType +" Width="+vWidth);
 						vCaption = this.checkCaption(vLinkSplit[1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'">';
+						replace_str = '<img class="replaceimg2" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'" width="' + vWidth +  '">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					} else {
 						// var vMediaParam = "";
-						console.log("IMAGE SPLIT 3: "+vURL+" with Type: "+vFileType);
+						console.log("IMAGE SPLIT 3: "+vURL+" with Type: "+vFileType +" Width="+vWidth);
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'" >';
+						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + "'>";
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length
@@ -1966,11 +1980,14 @@ this.process_normal = function(wikitext) {
 			// the following code is performed in clean_source()
 			//pWikiCode = this.replaceString(pWikiCode,"[[Image:","[[File:");
 			//pWikiCode = this.replaceString(pWikiCode,"[[Datei:","[[File:");
+			if (pWikiCode) {
+				pWikiCode = this.replaceString(pWikiCode,"[Datei:","[File:");
+			};
 			var vMediaArray = [];
 			// (1) find the image specs "my_image.png|330px|thumb|My Caption" in "[[File:my_image.png|330px|thumb|My Caption]]"
 	    //var vSearch = /\[(File|Datei|Image):([^\|]*)/;
 			// (2) find just the filename "my_image.png" in "[[File:my_image.png|330px|thumb|My Caption]]"
-		    var vSearch = /\[(?:File|Image|Datei):([^\|\]]+)/g;
+		    var vSearch = /\[(?:File|Image):([^\|\]]+)/g;
 		    // \[            # "["
 		    // (?:            # non-capturing group
 		    //  File|Image|Datei        #   "File" or "Image" or "Datei"
@@ -2787,6 +2804,7 @@ this.process_normal = function(wikitext) {
 						if ((vFileSplit[i]).match(/^[0-9]+px$/)) {
 							//vFileSplit[i] = "350px"
 							vWidth = (vFileSplit[i]).replace(/[^0-9]/g,"");
+							console.log("Image: '" + vMediaFile + "' with Width="+vWidth);
 							//vFileSplit[i] = "350"
 						} else if ((vFileSplit[i] == "center") || (vFileSplit[i] == "middle")) {
 							vCenterImage = true;

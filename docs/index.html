@@ -32,6 +32,17 @@
         window.open(vURL);
       };
 
+      function callWTFSource() {
+        var vURL = "wtf2";
+        vURL += "html_textarea.html?";
+        vURL += "language="+el("sWikiLanguage").value;
+        vURL += "&domain=" + el("sWikiDomain").value;
+        vURL += "&title="+encodeURI(el("tTitle").value);
+        vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
       function callWiki2DZSlides() {
         var vURL = "wiki2dzslides.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
@@ -192,6 +203,7 @@
           <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
           <input type="button" id="bWikiFooter" value="Wiki Footer" onclick="callWikiFooter()">
           <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
+          <input type="button" id="bWtfSource" value="WTF WikiSource" onclick="callWTFSource()">
           <!--
           <input type="button" id="bWiki2Presentation" value="Display Presentation" onclick="submit2presentation()">
           <input type="submit" id="bSubmit" onclick="submit2presentation()" value="Download Presentation">

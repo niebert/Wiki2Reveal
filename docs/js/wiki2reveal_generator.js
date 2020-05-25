@@ -16,6 +16,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   wtf.wikiconvert.init(pLanguage,pDomain,vDocJSON,"reveal");
   // init the article name with the page_identifier, also necessary for handling relative links
   wtf.wikiconvert.initArticle(page_identifier,pOptions);
+  pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
   // console.log("Remove Categories");
   pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions)
@@ -29,7 +30,6 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   };
   pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
-  pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   // replace the Math-Tags for Reveal output
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
   pMarkdown = wtf.wikiconvert.replaceImages(pMarkdown,pOptions);
@@ -44,7 +44,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   // by a remote url to the Wiki article e.g. [https://en.wikipedia.org/wiki/Other_Article Other Article]
   pMarkdown = pMarkdown.replace(/\[\[Kurs:/gi,"[[c_o_u_r_s_e");
   pMarkdown = wtf.wikiconvert.replaceWikiLinks(pMarkdown,pOptions);
-  pMarkdown = external_links2href(pMarkdown);
+  //pMarkdown = external_links2href(pMarkdown);
   //pMarkdown = pMarkdown.replace(/<img[\s]+/g,"<imgXXX ");
   // perform the post processing after pMarkdown compilation
   pMarkdown = wtf.wikiconvert.replaceEnumeration(pMarkdown,pOptions);

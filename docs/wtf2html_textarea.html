@@ -13,11 +13,8 @@
   <script src="js/indent.js"></script>
   <script src="js/audioplayer.js"></script>
   <script src="js/showhide.js"></script>
-  <!-- Printing and PDF exports -->
-    <!--[if lt IE 9]>
-  <script src="reveal/lib/js/html5shiv.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-  <![endif]-->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/main.css">
 
   <script>
   //---------------------------------------
@@ -75,10 +72,10 @@
 </head>
 <body style="background:#C0C0C0">
   <div class="reveal">
-    <H2 class="slides" id="hWaiting">
+    <H2 id="hWaiting">
       Waiting for Wiki-Download ...
     </H2>
-    <H2 class="slides" id="hWaiting">
+    <H2  id="hHeader" style="display:none">
       Wiki2Reveal: <kbd>wtf_wikipedia.js</kbd> Result
     </H2>
 
@@ -214,7 +211,7 @@ Converter used in Offline mode without internet connectivity!
       function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pWikiCode) {
         // el("divslides").innerHTML = wtf.reveal(markup);
         //var htmlout = getWiki2Reveal(pWikiCode,vTitle, vAuthor, vLanguage, vDomain, vOptions);
-        
+
         // store JSON parse result in textarea
         //el("divslides").innerHTML = htmlout; //el("revealsource").value;
         //el("revealout").value = htmlout; //indented; //el("revealsource").value;

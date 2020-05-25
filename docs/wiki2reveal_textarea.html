@@ -12,12 +12,11 @@
   <script src="js/linkparam.js"></script>
   <script src="js/indent.js"></script>
   <script src="js/string.js"></script>
+  <script src="js/showhide.js"></script>
   <script src="js/audioplayer.js"></script>
-  <!-- Printing and PDF exports -->
-    <!--[if lt IE 9]>
-  <script src="reveal/lib/js/html5shiv.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-  <![endif]-->
+
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/main.css">
 
   <script>
   //---------------------------------------
@@ -75,8 +74,11 @@
 </head>
 <body style="background:#C0C0C0">
   <div class="reveal">
-    <H2 class="slides" id="divslides">
+    <H2 class="slides" id="hWaiting">
       Waiting for Wiki-Download ...
+    </H2>
+    <H2 class="slides" id="hHeader" style="display:none">
+      Wiki2Reveal Output
     </H2>
     <center>
       <hr>
@@ -223,6 +225,9 @@ Converter used in Offline mode without internet connectivity!
         el("revealout").value = style_html(htmlout); //indented; //el("revealsource").value;
         //el("revealout").value = wtf(pWikiCode).html();
         //setTimeout("callRevealInit()",3000)
+        hide("hWaiting");
+        show("hHeader");
+
       }
       callWikiDownload();
       //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");

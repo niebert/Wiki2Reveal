@@ -59,6 +59,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   console.log("Call: wtf.reveal(pMarkdown)");
   //var vDoc = wtf(pMarkdown);
   //var htmlout =  vDoc.html(pMarkdown)
+  pMarkdown = wtf.wikiconvert.replaceExternalLinks(pMarkdown);
   var htmlout =  pMarkdown;
 
   htmlout = addSectionReveal(htmlout,pOptions);

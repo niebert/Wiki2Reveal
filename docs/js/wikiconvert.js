@@ -2538,6 +2538,55 @@ this.process_normal = function(wikitext) {
 	//----End of Method replaceWikiLinks Definition
 
 	//#################################################################
+	//# PUBLIC Method: replaceWikiLinks()
+	//#    used in Class: WikiConvert
+	//# Parameter:
+	//#    pWikiCode:String
+	//# Comment:
+	//#    Comment for replaceWikiLinks
+	//# Return: String
+	//# created with JSCC  2017/03/05 18:13:28
+	//# last modifications 2018/01/21 17:17:18
+	//#################################################################
+
+	this.replaceExternalLinks = function (pWikiCode) {
+		//----Debugging------------------------------------------
+		console.log("js/wikiconvert.js - Call: replaceExternalLinks(pWikiCode:String):String");
+		// alert("js/wikiconvert.js - Call: replaceWikiLinks(pWikiCode:String):String");
+		//----Create Object/Instance of WikiConvert----
+		//    var vMyInstance = new WikiConvert();
+		//    vMyInstance.replaceExternalLinks(pWikiCode);
+		//-------------------------------------------------------
+
+			// Wiki Links are open with ""
+			var vLinkArray = [];
+			//var vSearch = /\[(File|Datei|Image):([^\|]*)/;
+			var vSearch = /\[(http[^\[\]]+)\]/g;
+			// \[\[         # "[["
+			//(             # group 1
+			//  [^\[\]]+    #   any character except "[" and "]" ":" at least once
+			// )            # end group 1 - this will be the image's name
+			// \]\]         # "]]"
+			var vResult;
+			var vCount =0;
+			var vLink = "";
+			var vLinkSplit;
+			var vType = "";
+			var vFoundBlank = 0;
+			while (vResult = vSearch.exec(pWikiCode)) {
+				vCount++;
+				vFoundBlank = vResult[1].indexOf(" ");
+				if (vFoundBlank > 0) {
+					vLinkSplit = [vResult[1].substr(0,vFoundBlank),vResult[1].substr(vFoundBlank+1)]
+				} else {
+					vLinkSplit = [vResult[1],vResult[1]]
+				};
+				vLink = "<a href=\"" + vLinkSplit[0] +"\" target=\"blank\">" + vLinkSplit[1] + "</a>";
+				pWikiCode = this.replaceString(pWikiCode,"["+vResult[1]+"]",vLink);
+			};
+			return pWikiCode;
+	}
+	//#################################################################
 	//# PUBLIC Method: createLink4Output()
 	//#    used in Class: WikiConvert
 	//# Parameter:
@@ -2561,6 +2610,7 @@ this.process_normal = function(wikitext) {
 			break;
 			case "reveal":
 				//pTitle = pTitle.replace(/:/g," ");
+				vLinkOut = "<a href=\""+pLink+"\" target=\"_blank\" class=\"external\" >"+pTitle+"</a>";
 			case "html":
 				vLinkOut = "<a href=\""+pLink+"\" target=\"_blank\" class=\"external\" >"+pTitle+"</a>";
 			break;

@@ -70,7 +70,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   htmlout = htmlout.replace(/___\/aXXX___/g,"</a>");
   htmlout = htmlout.replace(/c_o_u_r_s_e/g,"Kurs:");
   return htmlout;
-};
+}
 
 function link2title(pArticle,pOptions) {
   if (pArticle) {
@@ -79,10 +79,10 @@ function link2title(pArticle,pOptions) {
     pArticle = pArticle.replace(/:/g,": ");
     pArticle = pArticle.replace(/_/g," ");
   } else {
-    pArticle = "Undefined Title"
+    pArticle = "Undefined Title";
   }
-  return pArticle
-};
+  return pArticle;
+}
 
 function external_links2href(pMarkdown,pOptions) {
   var RE_ext_link = /\[([^\s\]]+)[[\s]+?([^\]]+)\]/gm;
@@ -549,6 +549,13 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
   console.log("CALL: createTitleSlide()");
   var vWikiLink = pTitle;
   pTitle = link2title(pTitle);
+  var vSearch = link2title(pAuthor) + " - ";
+  if (pTitle.indexOf(vSearch) >= 0) {
+    pTitle = replaceString(pTitle,vSearch," ");
+    console.log("Prefix: '"+vSearch+"' removed!");
+  } else {
+    console.log("Prefix: '"+vSearch+"' not found!");
+  }
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + encodeURIComponent(vWikiLink) + "' target='_blank'>"+pTitle+"</a></h1>";
   slide0 += "\n  <h2 class=\"author\">"+pAuthor+"</h2>";

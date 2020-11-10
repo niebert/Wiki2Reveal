@@ -8,6 +8,7 @@
   <!-- Original Settings do not have the following CSS inserted directly -->
   <script src="js/linkparam.js"></script>
   <script src="js/string.js"></script>
+  <script src="js/showhide.js"></script>
   <!-- Printing and PDF exports -->
     <!--[if lt IE 9]>
   <script src="reveal/lib/js/html5shiv.js"></script>
@@ -24,6 +25,7 @@
   var vDomain = "wikiversity";
   var vDomainName = "Wikiversity";
   var vAudioSlide = "no";
+  var vDemo = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
@@ -71,9 +73,12 @@
 
 </head>
 <body style="background:#C0C0C0">
-  <H2 class="slides" id="divslides">
+  <H2 class="slides" id="headerfooter">
       Generator for Wiki Footer
-    </H2>
+  </H2>
+  <H2 class="slides" id="headerdemo" style="display:none">
+      Generator for Wiki2Reveal Demo Page
+  </H2>
     <hr>
     <input type="button" value=" Back to Wiki2Reveal " onclick="document.location='index.html'">
     <hr>
@@ -171,6 +176,14 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
       // e.g. index.html?author=Engelbert_Niehaus
       vAuthor = vLinkParam.getValue("author");
     };
+    //------ AUTHOR -------------------------
+    if (vLinkParam.exists("demo")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      console.log("Demo Slides added");
+      vDemo = vLinkParam.getValue("demo");
+      hide("headerfooter");
+      show("headerdemo");
+    };
     //------ LANGUAGE ----------------------
     if (vLinkParam.exists("language")) {
       // e.g. index.html?language=de
@@ -189,21 +202,27 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
     //--------------------------------------
     function createFooter() {
       var vTemplate = "";
+      console.log("Check vDemo='" + vDemo +"'");
+      if (vDemo == "yes") {
+        for (var i = 1; i < 4; i++) {
+          vTemplate += "== Header " + i + " ==\nText of Slide " + i + "\n\n"
+        }
+      }
       switch (vLanguage) {
         case "de":
-          vTemplate = el("wikisrc_de").value
+          vTemplate += el("wikisrc_de").value
         break;
         case "en":
-          vTemplate = el("wikisrc").value
+          vTemplate += el("wikisrc").value
         break;
         case "es":
-          vTemplate = el("wikisrc_es").value
+          vTemplate += el("wikisrc_es").value
         break;
         case "fr":
-          vTemplate = el("wikisrc_fr").value
+          vTemplate += el("wikisrc_fr").value
         break;
         default:
-          vTemplate = el("wikisrc").value
+          vTemplate += el("wikisrc").value
       };
       setDomainName();
       vTemplate = replaceString(vTemplate,"___AUDIO___",vAudioSlide);

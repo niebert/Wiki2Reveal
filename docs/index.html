@@ -70,6 +70,17 @@
         window.open(vURL);
       };
 
+      function callWikiDemoPage() {
+        var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        vURL += "&title="+encodeURI(el("tTitle").value);
+        vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&demo=yes";
+        vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
+
+
       function submit2presentation() {
         var vSlideType = el("sSlideType").value;
         if (vSlideType == "dzslides") {
@@ -202,6 +213,7 @@
         <td>
           <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
           <input type="button" id="bWikiFooter" value="Wiki Footer" onclick="callWikiFooter()">
+          <input type="button" id="bWikiDemoPage" value="Create Demo Page" onclick="callWikiDemoPage()">
           <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
           <input type="button" id="bWtfSource" value="WTF WikiSource" onclick="callWTFSource()">
           <!--
@@ -226,7 +238,7 @@
     <div id="footer" align="center" style="font-size: 80%">
 				<a href="https://en.wikiversity.org/wiki/PanDocElectron" target="_blank">Wikiversity:PanDocElectron</a><br>
 				<a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo</a> -
-				2018 - Engelbert Niehaus -
+				2018-20 - Engelbert Niehaus -
 				<a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download GitHub (2018)</a><br/>
 			</div>
     </p>

@@ -39,7 +39,7 @@
     "grunt-sass": "~1.1.0-beta",
     "grunt-zip": "~0.17.1",
     "mathjax": "^2.7.2",
-    "node-sass": "~3.3.3"
+    "node-sass": "~4.14.1"
   },
   "license": "MIT"
 }

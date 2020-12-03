@@ -615,6 +615,6 @@ function replaceString(pString,pSearch,pReplace) {
     }
      vReturnString += pString;
   }
-  console.log("replaceString() finalized for '"+pString+"'");
+  //console.log("replaceString() finalized for '"+pString+"'");
   return vReturnString;
 }

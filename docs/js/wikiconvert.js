@@ -1648,6 +1648,7 @@ this.process_normal = function(wikitext) {
 			var vLinkSplit = (tokens[0]).split("|");
 			vURL = this.getWikiMediaURL(vLinkSplit[0]);
 			var vFileType = this.getMediaFileType(vURL);
+			//----------- MEDIATYPE: AUDIO -----------------
 			if (vFileType == "audio") {
 				//-------------------------
 				//-----AUDIO---------------
@@ -1723,9 +1724,9 @@ this.process_normal = function(wikitext) {
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			} else if (vFileType == "video") {
-				//-------------------------
-				//-----VIDEO---------------
-				//-------------------------
+				//----------------------------------------------
+				//----------- MEDIATYPE: VIDEO -----------------
+				//----------------------------------------------
 				var vVideoTag = '<div class="videodiv">';
 				vVideoTag += '<video width="80%" controls>';
 				vVideoTag += '<source  src="'+vURL+'">';
@@ -1742,10 +1743,10 @@ this.process_normal = function(wikitext) {
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			//} else if ((vFileType == "svg") || (vFileType == "img")) {
-			} else {
-				//-------------------------
-				//-----IMAGE---------------
-				//-------------------------
+			} else if (vFileType == "img") {
+				//----------------------------------------------
+				//----------- MEDIATYPE: IMAGE-----------------
+				//----------------------------------------------
 				console.log("Image Found: "+vURL+" with Type: "+vFileType);
 				//var vSize = this.get_wiki_image_size(vLinkSplit);
 				var vSize = "width: 50%";
@@ -1794,6 +1795,8 @@ this.process_normal = function(wikitext) {
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length
+			} else {
+				console.error("Uncaught MediaType: '" + vURL + "'");
 			} // else vFileType
 		}; // While tokens
 	  return pWikiCode;

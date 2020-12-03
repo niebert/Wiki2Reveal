@@ -92,6 +92,10 @@
         }
       }
 
+      function setWikiLanguage(pLang) {
+        console.log("Set Wiki Language to '" + pLang + "'");
+      }
+
     </script>
     <hr>
       <center>
@@ -302,5 +306,55 @@
     };
     //--------------------------------------
 
+    //console.log(JSON.stringify(el("sWikiLanguage"),null,4));
+
+    function getOption4Select(pid) {
+        var sel = document.getElementById(pid);
+        var opt;
+        var vJSON = [];
+        if (sel) {
+          for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+              opt = sel.options[i];
+              vJSON.push({
+                "text": sel.options[i].text,
+                "value": sel.options[i].value
+              });
+          }
+        } else {
+          console.error("ERROR: ["+pid+"] does not exist.");
+        }
+        return vJSON;
+    }
+
+
+    function getSelectedOption(sel) {
+        var opt;
+        for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+            opt = sel.options[i];
+            if ( opt.selected === true ) {
+                break;
+            }
+        }
+        return opt;
+    }
+
+    /* assign onclick handlers to the buttons
+    document.getElementById('sWikiLanguage').onclick = function () {
+        el.value = sel.value;
+    }
+
+    document.getElementById('showTxt').onclick = function () {
+        // access text property of selected option
+        el.value = sel.options[sel.selectedIndex].text;
+    }
+
+    document.getElementById('doLoop').onclick = function () {
+        var opt = getSelectedOption(sel);
+        el.value = opt.value;
+    }
+    */
+
+    console.log(JSON.stringify(getOption4Select("sWikiLanguage"),null,4))
+// immediate function to preserve global namespace
   </script>
 </html>

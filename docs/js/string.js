@@ -1,4 +1,36 @@
 
+function getOption4Select(pid) {
+        var sel = document.getElementById(pid);
+        var opt;
+        var vJSON = [];
+        if (sel) {
+          for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+              opt = sel.options[i];
+              vJSON.push({
+                "text": sel.options[i].text,
+                "value": sel.options[i].value
+              });
+          }
+        } else {
+          console.error("ERROR: ["+pid+"] does not exist.");
+        }
+        return vJSON;
+}
+
+
+function getSelectedOption(sel) {
+        var opt;
+        for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+            opt = sel.options[i];
+            if ( opt.selected === true ) {
+                break;
+            }
+        }
+        return opt;
+}
+
+
+
 function getIndent(level) {
 		var result = '',
 				i = level * 4;

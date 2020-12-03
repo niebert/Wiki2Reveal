@@ -1743,7 +1743,7 @@ this.process_normal = function(wikitext) {
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 			//} else if ((vFileType == "svg") || (vFileType == "img")) {
-			} else if (vFileType == "img") {
+			} else if ((vFileType == "img") || (vFileType == "svg")) {
 				//----------------------------------------------
 				//----------- MEDIATYPE: IMAGE-----------------
 				//----------------------------------------------
@@ -1796,7 +1796,7 @@ this.process_normal = function(wikitext) {
 					}
 				}; // else if vLineSplit.length
 			} else {
-				console.error("Uncaught MediaType: '" + vURL + "'");
+				console.error("Uncaught MediaType (" + vFileType + "): '" + vURL + "'");
 			} // else vFileType
 		}; // While tokens
 	  return pWikiCode;

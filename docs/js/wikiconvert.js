@@ -481,7 +481,7 @@ function WikiConvert () {
 
 						// find start line and ending line
 						start = i;
-						while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null)  {
+						while (i < lines.length && lines[i].match(/^(\*+|\:\:+|\#\#+)\:? /)!=null)  {
 							// find end line of itemize
 							i++;
 						};
@@ -493,7 +493,7 @@ function WikiConvert () {
 
 						start = i;
 						// find start line and ending line
-						while (i < lines.length && lines[i].match(/^(\#+|\*\*+)\:? /)!=null) {
+						while (i < lines.length && lines[i].match(/^(\#+|\:\:+|\*\*+)\:? /)!=null) {
 							// find end line of enumeration
 							i++;
 						};
@@ -740,7 +740,7 @@ this.open_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<ol>";
+					return "<div><ol>";
 			break;
 			case "latex":
 					return "\\begin{enumeration}";
@@ -749,14 +749,14 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "<ol>";
+				return "<div><ol>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<ul>";
+					return "<div><ul>";
 			break;
 			case "latex":
 					return "\\begin{itemize}";
@@ -765,7 +765,7 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ul>";
+				return "<div><ul>";
 		}
 	}
 }
@@ -777,7 +777,7 @@ this.close_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ol>";
+					return "</ol></div>";
 			break;
 			case "latex":
 					return "\\end{enumeration}";
@@ -786,14 +786,14 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ol>";
+				return "</ol></div>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ul>";
+					return "</ul></div>";
 			break;
 			case "latex":
 					return "\\end{itemize}";
@@ -802,7 +802,7 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ul>";
+				return "</ul></div>";
 		}
 	}
 }

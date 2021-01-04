@@ -11,7 +11,8 @@
   "scripts": {
     "doc": "doctoc README.md",
     "watch": "watchify src/main.js -o dist/wiki2reveal.js -v",
-    "build": "browserify src/main.js -o dist/wiki2reveal.js -v",
+    "build": "doctoc README.md; node version4index.js",
+    "builddist": "browserify src/main.js -o dist/wiki2reveal.js -v",
     "buildmin": "browserify src/main.js  | uglifyjs -c warnings=false > dist/wiki2reveal.min.js",
     "build_request": "browserify src/request4browser.js -o dist/request4browser.js",
     "watch_request": "watchify   src/request4browser.js -o dist/request4browser.js",
@@ -48,6 +49,6 @@
     "nodemw": "^0.12.0"
   },
   "devDependencies": {
-    "build4code": "^0.3.13"
+    "build4code": "^0.3.31"
   }
 }

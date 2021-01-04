@@ -29,7 +29,8 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
   - [Start Watching the Files with Watchify](#start-watching-the-files-with-watchify)
 - [Main Library for Storing Configuration Data for Wiki2Reveal](#main-library-for-storing-configuration-data-for-wiki2reveal)
 - [Webbased Test Environments](#webbased-test-environments)
-- [Use Tools for the repository](#use-tools-for-the-repository)
+- [Tools for the repository](#tools-for-the-repository)
+- [Reveal - Scroll Down for large Slides](#reveal---scroll-down-for-large-slides)
 - [Acknowledgement](#acknowledgement)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

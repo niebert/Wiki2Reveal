@@ -13,8 +13,8 @@ if [ $# -eq 0 ]
     echo "(A) add new feature"
     echo "(B) bugfix of package"
     echo "(R) README and documentation updated"
-    read -e -p "Please Select Patch Type:"  PATCHTYPE
-    echo "Patch Type: ($PATCHTYPE)"
+    read -e -p "Please Select Patch Type: "  PATCHTYPE
+    echo "Patch Type: ($PATCHTYPE) "
     #### Added features
     if  [ $PATCHTYPE == "A" ]
       then
@@ -42,7 +42,7 @@ if [ $# -eq 0 ]
       then
         patchtype="$Rstring"
     fi
-    read -e -p "Please edit Commit Message:"  MESSAGE
+    read -e -p "Please edit Commit Message: "  MESSAGE
     msg="$patchtype - $MESSAGE"
   else
     #### Use commit message provided by parameter

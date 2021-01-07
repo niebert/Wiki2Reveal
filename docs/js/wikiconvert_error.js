@@ -715,7 +715,10 @@ function WikiConvert () {
 
 		var nested_end = i;
 		for (var j=i+1;j<=end;j++) {
-			var nested_count = lines[j].match(/^(\:+)/)[1].length;
+			var nested_count = 0;
+			if (lines[j]){
+				nested_count = lines[j].match(/^(\:+)/)[1].length;
+			}
 			if (nested_count <= this_count) break;
 			else nested_end = j;
 		}
@@ -1399,25 +1402,11 @@ this.process_normal = function(wikitext) {
 				return wikitext;
 			}
 
-			this.get_nested_count = function(lines,j) {
-				var nested_count = 0;
-				if (lines[j]) {
-					var vMatch = lines[j].match(/^([\*\#\:]+)\:? /);
-					if (vMatch[1]) {
-						nested_count = vMatch[1].length;
-					} else {
-						console.warn("WARNING: process_bullet_point() - vMatch in lines["+j+"] undefined");
-					}
-				} else {
-					console.warn("WARNING: process_bullet_point() - lines[j] undefined");
-				}
-				return nested_count;
-			}
 
-			this.process_bullet_point = function(lines,start,end) {
+			this.process_bullet_point = function(lines,start,end,pci) {
 				var vStack = [];
 				var i = start;
-				var ci = 0; //char index
+				var ci = pci || 0; //char index
 				var html = "";
 				var list_char = lines[start].charAt(ci);
 				switch (list_char) {
@@ -1432,22 +1421,32 @@ this.process_normal = function(wikitext) {
 					default:
 						console.warn("WARNING: lines["+start+"]='"+lines[start]+"' is not a itemize or enumeration!");
 				}
-				 html += '\n';
+
+			  html += '\n';
 
 				for(var i=start;i<=end;i++) {
 
 					html += "<li>";
 
-					var this_count = this.get_nested_count(lines,i);
-					//lines[i].match(/^(\*+|\#+) /)[1].length;
+					var this_count = 0;
+					if (lines[i]) {
+						this_count = lines[i].match(/^([\*\#\:]+) /)[1].length;
+					} else {
+						console.warn("process_bullet_point() - lines["+ i +"] was undefined!";
+					}
+					if (this_count >= ci) {
 
+					}
 					html += this.process_normal(lines[i].substring(this_count+1));
 
 					// continue previous with #:
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = 0;
+							if (lines[j]) {
+								nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							}
 							if (nested_count < this_count)
 								break;
 							else {
@@ -1468,7 +1467,11 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = 0;
+							lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							if (lines[j]) {
+								nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							}
 							if (nested_count <= this_count)
 								break;
 							else
@@ -1485,7 +1488,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
 
 							if (nested_count < this_count)
 								break;
@@ -1777,7 +1780,7 @@ this.process_normal = function(wikitext) {
 				}
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
-			//} else if ((vFileType == "svg") || (vFileType == "img")) {
+			//} else if ((vFileType == "svg") || (vFileType == "img")) {
 			} else if ((vFileType == "img") || (vFileType == "svg")) {
 				//----------------------------------------------
 				//----------- MEDIATYPE: IMAGE-----------------
@@ -1846,7 +1849,7 @@ this.process_normal = function(wikitext) {
 	//# Parameter:
 	//#    pCaption:String
 	//# Comment:
-	//#    Correct a caption removes ]] at end
+	//#    Correct a caption removes ]] at end
 	//# Return: String
 	//# created with JSCC  2017/03/05 18:13:28
 	//# last modifications 2018/01/21 17:17:18

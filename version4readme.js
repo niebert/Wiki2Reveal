@@ -2,6 +2,7 @@ const fs = require("fs");
 const pkg = require("./package.json");
 const b4c = require("build4code").codegen;
 
+var vFilename = "README.md";
 // replace <div id4marker="version">2.0.2</div> with current version
 console.log("Set version build.js for '" + pkg.name + "' version "+pkg.version);
 
@@ -30,27 +31,27 @@ function getDateTime() {
 
 
 function replace_date_modified(data) {
+
 	data = data.replace(/<div\s+id="datetime"\s+style[^<]+<\/div>/g,"<div id4marker=\"datetime\" style=\"display: inline-block\">"+getDateTime()+"</div>");
 	data = data.replace(/<div\s+id4marker="datetime"\s+style[^<]+<\/div>/g,"<div id4marker=\"datetime\" style=\"display: inline-block\">"+getDateTime()+"</div>");
-	data = data.replace(/<span\s+id="datetime"\s+style[^<]+<\/div>/g,"<span id4marker=\"datetime\">"+getDateTime()+"</span>");
-	return data;
+  return data;
 }
 
 function replace_version(data) {
   data = replace_date_modified(data);
+  data = data.replace(/<div\s+id="version"\s+style[^<]+<\/div>/g,"___PKG_");
   data = data.replace(/<div\s+id="version">[^<]+<\/div>/g,"<div id4marker=\"version\">"+pkg.version+"</div>");
   data = data.replace(/<div\s+id4marker="version"[^<]+<\/div>/g,"<div id4marker=\"version\" style=\"display: inline-block\">"+pkg.version+"</div>");
-	data = data.replace(/<span\s+id="version">[^<]+<\/span>/g,"<span id4marker=\"version\">"+pkg.version+"</span>");
   return data;
 }
 
 var outfile = "undefined content";
-  fs.readFile('docs/index.html', 'utf8', function readFileCallback(err, data){
+  fs.readFile(vFilename, 'utf8', function readFileCallback(err, data){
       if (err){
           console.log(err);
       } else {
-        outfile = b4c.replace_version(data,pkg);
+        outfile = b4c.replace_version(data);
       }
     });
 
-setTimeout(function () { b4c.save_file('docs/index.html', outfile); },1500);
+setTimeout(function () { b4c.save_file(vFilename, outfile); },1500);

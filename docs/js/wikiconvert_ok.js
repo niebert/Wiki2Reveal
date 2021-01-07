@@ -1301,25 +1301,18 @@ this.process_normal = function(wikitext) {
 					}
 					else if (line.match(/^(\*+) /)!=null)
 					{
-						// BULLET POINT LIST
 						// find start line and ending line
 						start = i;
-						// while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null) i++;
-						while (i < lines.length && lines[i] && lines[i].match(/^(\*|\*[\#\:\*]+|\:[\:\*\#]+) /)!=null) {
-							i++;
-						}
+						while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null) i++;
 						i--;
 
 						html += this.process_bullet_point(lines,start,i);
 					}
 					else if (line.match(/^(\#+) /)!=null)
 					{
-						// ENUMERATION LIST
 						// find start line and ending line
 						start = i;
-						while (i < lines.length && lines[i] && lines[i].match(/^(\#+|\*\*+)\:+? /)!=null) {
-							i++;
-						}
+						while (i < lines.length && lines[i].match(/^(\#+|\*\*+)\:? /)!=null) i++;
 						i--;
 
 						html += this.process_bullet_point(lines,start,i);
@@ -1399,47 +1392,18 @@ this.process_normal = function(wikitext) {
 				return wikitext;
 			}
 
-			this.get_nested_count = function(lines,j) {
-				var nested_count = 0;
-				if (lines[j]) {
-					var vMatch = lines[j].match(/^([\*\#\:]+)\:? /);
-					if (vMatch[1]) {
-						nested_count = vMatch[1].length;
-					} else {
-						console.warn("WARNING: process_bullet_point() - vMatch in lines["+j+"] undefined");
-					}
-				} else {
-					console.warn("WARNING: process_bullet_point() - lines[j] undefined");
-				}
-				return nested_count;
-			}
-
 			this.process_bullet_point = function(lines,start,end) {
-				var vStack = [];
-				var i = start;
-				var ci = 0; //char index
-				var html = "";
-				var list_char = lines[start].charAt(ci);
-				switch (list_char) {
-					case "*":
-						html += "<ul>";
-						vStack.push(list_char);
-					break;
-					case "#":
-						html += "<ol>";
-						vStack.push(list_char);
-					break;
-					default:
-						console.warn("WARNING: lines["+start+"]='"+lines[start]+"' is not a itemize or enumeration!");
-				}
-				 html += '\n';
+					var i = start;
+
+				var html = (lines[start].charAt(0)=='*')?"<ul>":"<ol>";
+
+			    html += '\n';
 
 				for(var i=start;i<=end;i++) {
 
 					html += "<li>";
 
-					var this_count = this.get_nested_count(lines,i);
-					//lines[i].match(/^(\*+|\#+) /)[1].length;
+					var this_count = lines[i].match(/^(\*+|\#+) /)[1].length;
 
 					html += this.process_normal(lines[i].substring(this_count+1));
 
@@ -1447,7 +1411,8 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+
 							if (nested_count < this_count)
 								break;
 							else {
@@ -1468,7 +1433,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
 							if (nested_count <= this_count)
 								break;
 							else
@@ -1485,7 +1450,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = this.get_nested_count(lines,j);
+							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
 
 							if (nested_count < this_count)
 								break;

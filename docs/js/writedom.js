@@ -13,6 +13,15 @@ function write2value(pID,pContent) {
     alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined")
   }
 }
+function write2attribute(pID,pAttID,pContent) {
+  var vNode =document.getElementById(pID)
+  if (vNode){
+    vNode.setAttribute(pAttID, pContent);
+  } else {
+    alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined")
+  }
+}
+
 function append2innerHTML(pID,pContent) {
   var vNode =document.getElementById(pID)
   if (vNode){
@@ -33,14 +42,15 @@ function replaceString(pString,pSearch,pReplace)
 // replaces in the string "pString" multiple substrings "pSearch" by "pReplace"
 {
 	//alert("cstring.js - replaceString() "+pString);
-	if (!pString) {
+	var vReturnString = '';
+  if (!pString) {
 		alert("replaceString()-Call - pString not defined!");
 	} else if (pString != '') {
     {
   	//alert("cstring.js - replaceString() "+pString);
   		var vHelpString = '';
       var vN = pString.indexOf(pSearch);
-  		var vReturnString = '';
+  		vReturnString = '';
   		while (vN >= 0)
   		{
   			if (vN > 0)
@@ -56,21 +66,22 @@ function replaceString(pString,pSearch,pReplace)
   	};
   	return vReturnString + pString;
   }
+}
 
-};
 function getValueDOM(pID) {
   var vNode = document.getElementById(pID);
   var vReturn = "";
   if (!vNode) {
     console.log("DOM Node ["+pID+"] does not exist!");
   } else {
-    vReturn = vNode.value;
+    vRetrn = vNode.value;
     if (!vReturn) {
       vReturn = getInnerHTML(pID);
     };
   }
   return vReturn;
-};
+}
+
 function getInnerHTML(pID) {
   var vNode = document.getElementById(pID);
   var vReturn = "";
@@ -83,18 +94,18 @@ function getInnerHTML(pID) {
       //alert("["+pID+"] Node is undefined");
     } else {
       //alert("["+pID+"] Node defined");
-    };
+    }
   }
   return vReturn;
-};
+}
 
 function isChecked(pID) {
   var vCheckBox = document.getElementById(pID);
   var vReturn = false;
   if (vCheckBox) {
-    vReturn = vCheckBox.checked
+    vReturn = vCheckBox.checked;
   } else {
       console.log("ERROR: Checkbox ["+pID+"] is undefined");
-  };
+  }
   return vReturn;
-};
+}

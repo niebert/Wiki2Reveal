@@ -28,6 +28,7 @@
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
         window.open(vURL);
       };
@@ -40,6 +41,7 @@
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
         window.open(vURL);
       };
@@ -48,6 +50,7 @@
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
         window.open(vURL);
       };
@@ -56,6 +59,7 @@
         var vURL = "wiki2reveal.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
         window.open(vURL);
@@ -65,6 +69,17 @@
         var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
+        vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
+
+      function callWikiLink() {
+        var vURL = "wiki2reveal_link.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+        vURL += "&title="+encodeURI(el("tTitle").value);
+        vURL += "&author="+encodeURI(el("tAuthor").value);
+        vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
         window.open(vURL);
@@ -75,6 +90,7 @@
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);
         vURL += "&demo=yes";
+        vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
         window.open(vURL);
@@ -99,7 +115,7 @@
     </script>
     <hr>
       <center>
-        <h2>Wiki2Reveal Starter</h2>
+        <h2>Wiki2Reveal Starter - Version: <span id4marker="version">2.1.11</span></h2>
         <h3><i>based on Library: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a></i></h3>
       </center>
     <hr>
@@ -212,14 +228,26 @@
       </tr>
       <tr>
         <td>
-          <b>Wiki Presentation:</b>
+          <b>Wiki Sources for Presentation:</b>
         </td>
         <td>
           <input type="button" id="bWikiDisplay" value="Display Wiki Source" onclick="callWikiDisplay()">
-          <input type="button" id="bWikiFooter" value="Wiki Footer" onclick="callWikiFooter()">
+          <input type="button" id="bWikiSource" value="Display Wiki2Reveal Source" onclick="callWikiSource()">
+          <input type="button" id="bWtfSource" value="WTF Wikipedia Output" onclick="callWTFSource()">
+          <!--
+          <input type="button" id="bWiki2Presentation" value="Display Presentation" onclick="submit2presentation()">
+          <input type="submit" id="bSubmit" onclick="submit2presentation()" value="Download Presentation">
+         -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Create Presentation:</b>
+        </td>
+        <td>
+          <input type="button" id="bWikiFooter" value="Wiki2Reveal Footer" onclick="callWikiFooter()">
           <input type="button" id="bWikiDemoPage" value="Create Demo Page" onclick="callWikiDemoPage()">
-          <input type="button" id="bWikiSource" value="Display Reveal Source" onclick="callWikiSource()">
-          <input type="button" id="bWtfSource" value="WTF WikiSource" onclick="callWTFSource()">
+          <input type="button" id="bWikiLink" value="Course Link" onclick="callWikiLink()">
           <!--
           <input type="button" id="bWiki2Presentation" value="Display Presentation" onclick="submit2presentation()">
           <input type="submit" id="bSubmit" onclick="submit2presentation()" value="Download Presentation">
@@ -241,8 +269,8 @@
     <p>
     <div id="footer" align="center" style="font-size: 80%">
 				<a href="https://en.wikiversity.org/wiki/PanDocElectron" target="_blank">Wikiversity:PanDocElectron</a><br>
-				<a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <div id4marker="version" style="display: inline-block">2.1.10</div> </a>
-         - Engelbert Niehaus - Date: <div id4marker="datetime" style="display: inline-block">2021/01/04 9:32:44</div> <br/>
+				<a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.11</span> </a>
+         - Engelbert Niehaus - Date: <span id4marker="datetime">2021/01/07 17:25:46</span> <br/>
 				<a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download Wiki2Reveal - GitHub (2020)</a><br/>
 			</div>
     </p>

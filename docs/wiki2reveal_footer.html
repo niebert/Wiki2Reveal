@@ -271,21 +271,27 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
     if (vLinkParam.exists("title")) {
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
+      el("tTitle").value = vLinkParam.getValue("title");
     };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
       vAuthor = vLinkParam.getValue("author");
+      el("tAuthor").value = vLinkParam.getValue("author");
     };
     //------ COURSE NAME ---------------------
     if (vLinkParam.exists("course")) {
       // e.g. index.html?author=Engelbert_Niehaus
       vAuthor = vLinkParam.getValue("course");
+      el("tAuthor").value = vLinkParam.getValue("course");
     };
+    //------CALC SHORT TiTLE --------------------------
+    vShortTitle = getShortTitle(vTitle);
     //------ SLIDETYPE -----------------------
     if (vLinkParam.exists("slidetype")) {
       // e.g. index.html?author=Engelbert_Niehaus
       vSlideType = vLinkParam.getValue("slidetype");
+      el("sSlideType").value = vLinkParam.getValue("slidetype");
     };
     //------ DEMO -------------------------
     if (vLinkParam.exists("demo")) {
@@ -299,17 +305,20 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
     if (vLinkParam.exists("language")) {
       // e.g. index.html?language=de
       vLanguage = vLinkParam.getValue("language");
+      el("sWikiLanguage").value = vLinkParam.getValue("language");
     };
     //------ DOMAIN ------------------------
     if (vLinkParam.exists("domain")) {
       // e.g. index.html?domain=wikipedia
       vDomain = vLinkParam.getValue("domain");
+      el("sWikiDomain").value  = vLinkParam.getValue("domain");
       vDomainName = firstUpperCase(vDomain);
   };
     //------ AUDIO SLIDE ------------------------
     if (vLinkParam.exists("audioslide")) {
       // e.g. index.html?domain=wikipedia
       vAudioSlide = vLinkParam.getValue("audioslide");
+      el("sAudioSlide").value = vLinkParam.getValue("audioslide");
     };
     //--------------------------------------
     function createFooter() {

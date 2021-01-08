@@ -45,6 +45,7 @@
         //document.location.href=vURL;
         window.open(vURL);
       };
+
       function callWiki2DZSlides() {
         var vURL = "wiki2dzslides.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
@@ -66,6 +67,7 @@
       };
 
       function callWikiFooter() {
+        console.log("Title='" + el("tTitle").value + "'");
         var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         vURL += "&author="+encodeURI(el("tAuthor").value);

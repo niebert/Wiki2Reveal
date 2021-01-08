@@ -1826,7 +1826,7 @@ this.process_normal = function(wikitext) {
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + "'>";
+						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + '">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length

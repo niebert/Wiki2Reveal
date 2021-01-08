@@ -44,13 +44,45 @@ function replace_version(data) {
   return data;
 }
 
-var outfile = "undefined content";
-  fs.readFile('docs/index.html', 'utf8', function readFileCallback(err, data){
+var outfile1 = "undefined content";
+var file1 = 'docs/index.html';
+fs.readFile(file1, 'utf8', function readFileCallback(err, data){
       if (err){
           console.log(err);
       } else {
-        outfile = b4c.replace_version(data,pkg);
+        outfile1 = b4c.replace_version(data,pkg);
       }
-    });
+});
+var outfile2 = "undefined content";
+var file2 = 'docs/wiki2reveal_footer.html';
+fs.readFile(file2, 'utf8', function readFileCallback(err, data){
+		   if (err){
+		       console.log(err);
+		   } else {
+		        outfile2 = b4c.replace_version(data,pkg);
+		   }
+});
+var outfile3 = "undefined content";
+var file3 = 'docs/wiki2reveal_link.html';
+fs.readFile(file2, 'utf8', function readFileCallback(err, data){
+		   if (err){
+		       console.log(err);
+		   } else {
+		        outfile3 = b4c.replace_version(data,pkg);
+		   }
+});
+var outfile4 = "undefined content";
+var file4 = 'README.md';
+fs.readFile(file2, 'utf8', function readFileCallback(err, data){
+		   if (err){
+		       console.log(err);
+		   } else {
+		        outfile3 = b4c.replace_version(data,pkg);
+		   }
+});
 
-setTimeout(function () { b4c.save_file('docs/index.html', outfile); },1500);
+setTimeout(function () {
+	b4c.save_file(file1, outfile1);
+	b4c.save_file(file2, outfile2);
+	b4c.save_file(file3, outfile3);
+},1500);

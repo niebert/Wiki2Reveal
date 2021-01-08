@@ -1,41 +1,41 @@
 function write2innerHTML(pID,pContent) {
-  var vNode =document.getElementById(pID)
+  var vNode =document.getElementById(pID);
   if (vNode){
     vNode.innerHTML=pContent;
   } else {
-    alert("Write DOM-Node 'innerHTML' with ID=["+pID+"] was undefined")
+    alert("Write DOM-Node 'innerHTML' with ID=["+pID+"] was undefined");
   }}
 function write2value(pID,pContent) {
-  var vNode =document.getElementById(pID)
+  var vNode =document.getElementById(pID);
   if (vNode){
     vNode.value=pContent;
   } else {
-    alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined")
+    alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined");
   }
 }
 function write2attribute(pID,pAttID,pContent) {
-  var vNode =document.getElementById(pID)
+  var vNode =document.getElementById(pID);
   if (vNode){
     vNode.setAttribute(pAttID, pContent);
   } else {
-    alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined")
+    alert("Write DOM-Node 'value' with ID=["+pID+"] was undefined");
   }
 }
 
 function append2innerHTML(pID,pContent) {
-  var vNode =document.getElementById(pID)
+  var vNode =document.getElementById(pID);
   if (vNode){
     vNode.innerHTML+=pContent;
   } else {
-    alert("Append DOM-Node 'innerHTML' with ID=["+pID+"] was undefined")
+    alert("Append DOM-Node 'innerHTML' with ID=["+pID+"] was undefined");
   }
 }
 function append2value(pID,pContent) {
-  var vNode =document.getElementById(pID)
+  var vNode =document.getElementById(pID);
   if (vNode){
     vNode.value+=pContent;
   } else {
-    alert("DOM-Node 'value' with ID=["+pID+"] was undefined")
+    alert("DOM-Node 'value' with ID=["+pID+"] was undefined");
   }
 }
 function replaceString(pString,pSearch,pReplace)
@@ -77,7 +77,7 @@ function getValueDOM(pID) {
     vRetrn = vNode.value;
     if (!vReturn) {
       vReturn = getInnerHTML(pID);
-    };
+    }
   }
   return vReturn;
 }

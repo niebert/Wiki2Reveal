@@ -1,0 +1,1331 @@
+
+<section  class="titleslide" id="slide0">
+    <h1 class="title">
+        <a href='https://de.wikiversity.org/wiki/Normen%2C%20Metriken%2C%20Topologie' target='_blank'>
+            Normen, Metriken, Topologie
+        </a>
+    </h1>
+    <h2 class="author">
+        Kurs:Funktionentheorie
+    </h2>
+    <center>
+        <a href="https://niebert.github.io/Wiki2Reveal/index.html?language=de&domain=wikiversity&article=Normen%2C%20Metriken%2C%20Topologie&author=Kurs:Funktionentheorie&audioslide=yes" target='_blank'>
+            Wiki2Reveal
+        </a>
+        -
+        <a href="https://de.wikiversity.org/wiki/Normen%2C%20Metriken%2C%20Topologie" target='_blank'>
+            Wiki Source
+        </a>
+    </center>
+</section>
+<section  class="level2" id="slide1">
+    <h2>
+        Audiokommentierte Folien - Wiki2Reveal
+    </h2>
+    <div class="textleft" style="text-align: left;">
+        Diese Wikiversityseite ist als
+        <a href="https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=wikiversity&title=Normen%2C+Metriken%2C+Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="blank">
+            Foliensatz
+        </a>
+        für
+        <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external">
+            Wiki2Reveal
+        </a>
+        erstellt worden. Dies Präsentation wird in den Kursen:
+        <ul>
+            <li>
+                <a href="https://de.wikiversity.org/wiki/Kurs:Funktionentheorie" target="_blank" class="external">
+                    Kurs:Funktionentheorie
+                </a>
+            </li>
+            <li>
+                <a href="https://de.wikiversity.org/wiki/Kurs:Funktionalanalysis" target="_blank" class="external">
+                    Kurs:Funktionalanalysis
+                </a>
+            </li>
+        </ul>
+        <audio id="audioslide1ogg">
+            <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio0_intro_normen_metrik_topologie.ogg" type="audio/ogg">
+            </audio>
+            &nbsp;
+            <table class="audioplayer">
+                <tr>
+                    <td>
+                        <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide1ogg');" value="&#9658">
+                        </td>
+                        <td>
+                            <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide1ogg');" value="&#10074;&#10074;">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+            <section  class="level2" id="slide2">
+                <h2>
+                    Topologischer Raum
+                </h2>
+                <div class="textleft" style="text-align: left;">
+                    Ein
+                    <b>
+                        Topologischer Raum
+                    </b>
+                    ist der grundlegende Gegenstand der Teildisziplin
+                    <a href="https://de.wikipedia.org/wiki/Topologie_(Mathematik)" target="blank">
+                        Topologie
+                    </a>
+                    der
+                    <a href="https://de.wikipedia.org/wiki/Mathematik" target="blank">
+                        Mathematik
+                    </a>
+                    . Durch die Einführung einer topologischen Struktur auf einer Menge lassen sich
+                    <ul>
+                        <li>
+                            intuitive Lagebeziehungen wie „Nähe“ und
+                        </li>
+                        <li>
+                            „Konvergenz gegen“ aus den reellen Zahlen
+                            <span id="math7inline" class="math inline">
+                                \({\mathbb R}\)
+                            </span>
+                            bzw. aus dem
+                            <span id="math8inline" class="math inline">
+                                \({\mathbb R}^{n}\)
+                            </span>
+                        </li>
+                    </ul>
+                    auf viele und sehr allgemeine Strukturen übertragen (wie z.B. die Topologie von Funktionenräumen).
+                    <audio id="audioslide2ogg">
+                        <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio1_topologie_abstraktion.ogg" type="audio/ogg">
+                        </audio>
+                        &nbsp;
+                        <table class="audioplayer">
+                            <tr>
+                                <td>
+                                    <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide2ogg');" value="&#9658">
+                                    </td>
+                                    <td>
+                                        <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide2ogg');" value="&#10074;&#10074;">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </section>
+                        <section  class="level2" id="slide3">
+                            <h2>
+                                Definition: Topologie
+                            </h2>
+                            <div class="textleft" style="text-align: left;">
+                                Eine
+                                <i>
+                                    Topologie
+                                </i>
+                                ist ein
+                                <a href="https://de.wikipedia.org/wiki/Mengensystem" target="blank">
+                                    Mengensystem
+                                </a>
+                                <span id="math9inline" class="math inline">
+                                    \(\cal T\)
+                                </span>
+                                bestehend aus Teilmengen (
+                                <i>
+                                    <a href="https://de.wikipedia.org/wiki/offene_Menge" target="blank">
+                                        offene Mengen
+                                    </a>
+                                </i>
+                                genannt) einer Grundmenge
+                                <span id="math10inline" class="math inline">
+                                    \(X\)
+                                </span>
+                                , für die die folgenden
+                                <a href="https://de.wikipedia.org/wiki/Axiom" target="blank">
+                                    Axiome
+                                </a>
+                                erfüllt sind
+                                <ul>
+                                    <li>
+                                        (T1)
+                                        <span id="math11inline" class="math inline">
+                                            \(\emptyset, X \in \cal T\)
+                                        </span>
+                                    </li>
+                                    <li>
+                                        (T2)
+                                        <span id="math12inline" class="math inline">
+                                            \(U \cap V \in \cal T\)
+                                        </span>
+                                        für alle
+                                        <span id="math13inline" class="math inline">
+                                            \(U,V \in \cal T\)
+                                        </span>
+                                        .
+                                    </li>
+                                    <li>
+                                        (T3) Für eine beliebige Indexmenge
+                                        <span id="math14inline" class="math inline">
+                                            \(I\)
+                                        </span>
+                                        und
+                                        <span id="math15inline" class="math inline">
+                                            \(U_i \in \cal T\)
+                                        </span>
+                                        für alle
+                                        <span id="math16inline" class="math inline">
+                                            \(i \in I\)
+                                        </span>
+                                        gilt:
+                                        <span id="math17inline" class="math inline">
+                                            \(\bigcup_{i \in I} U_i \in \cal T\)
+                                        </span>
+                                        .
+                                    </li>
+                                </ul>
+                                <audio id="audioslide3ogg">
+                                    <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio2_def_topologie.ogg" type="audio/ogg">
+                                    </audio>
+                                    &nbsp;
+                                    <table class="audioplayer">
+                                        <tr>
+                                            <td>
+                                                <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide3ogg');" value="&#9658">
+                                                </td>
+                                                <td>
+                                                    <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide3ogg');" value="&#10074;&#10074;">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </section>
+                                    <section  class="level2" id="slide4">
+                                        <h2>
+                                            Beispiel: Topologie auf Texten
+                                        </h2>
+                                        <div class="textleft" style="text-align: left;">
+                                            In der Regel geht man davon aus, dass Topologien auf mathematischen Objekten definiert werden (z.B. Zahlenräume, Funktionenräume, (topologische) Gruppen, Vektorräume, ...). Die Allgemeinheit der Definition macht es aber auch möglich, eine
+                                            <a href="https://de.wikiversity.org/wiki/Topologie_auf_Texten" target="_blank" class="external">
+                                                Topologie auf Texten
+                                            </a>
+                                            zu definieren. Dieses Beispiel wurde ergänzt, weil rein anschaulich z.B. Texte in der deutschen Sprache
+                                            <ul>
+                                                <li>
+                                                    eine ähnliche Aussage haben können und
+                                                </li>
+                                                <li>
+                                                    unterschiedliche Wörter verwenden.
+                                                </li>
+                                            </ul>
+                                            <audio id="audioslide4ogg">
+                                                <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio3_topologie_texte.ogg" type="audio/ogg">
+                                                </audio>
+                                                &nbsp;
+                                                <table class="audioplayer">
+                                                    <tr>
+                                                        <td>
+                                                            <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide4ogg');" value="&#9658">
+                                                            </td>
+                                                            <td>
+                                                                <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide4ogg');" value="&#10074;&#10074;">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </section>
+                                                <section  class="level2" id="slide5">
+                                                    <h4>
+                                                        Klassifikation topologischer Räume
+                                                    </h4>
+                                                    <div class="textleft" style="text-align: left;">
+                                                      <div>
+                                                        <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Beziehungen_zwischen_mathematischen_Räumen.svg" alt="Hierarchie Topologischer Räume"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;"  width="250">
+                                                      </div>
+                                                        <audio id="audioslide5ogg">
+                                                           <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio4_hierarchie.ogg" type="audio/ogg">
+                                                        </audio>
+                                                            &nbsp;
+                                                            <table class="audioplayer">
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide5ogg');" value="&#9658">
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide5ogg');" value="&#10074;&#10074;">
+                                                                    </td>
+                                                                </tr>
+                                                              </table>
+                                                                </div>
+                                                            </section>
+                                                            <section  class="level2" id="slide6">
+                                                                <h2>
+                                                                    Bedeutung: Notation Topologie
+                                                                </h2>
+                                                                <div class="textleft" style="text-align: left;">
+                                                                    <ul>
+                                                                        <li>
+                                                                            (T1)
+                                                                            <span id="math22inline" class="math inline">
+                                                                                \(\emptyset, X \in \mathcal{T}\)
+                                                                            </span>
+                                                                            <a href="https://de.wikipedia.org/wiki/leere_Menge" target="blank">
+                                                                                leere Menge
+                                                                            </a>
+                                                                            und die
+                                                                            <a href="https://de.wikipedia.org/wiki/Grundmenge" target="blank">
+                                                                                Grundmenge
+                                                                            </a>
+                                                                            <span id="math23inline" class="math inline">
+                                                                                \(X\)
+                                                                            </span>
+                                                                            sind offene Mengen
+                                                                        </li>
+                                                                        <li>
+                                                                            (T2)
+                                                                            <span id="math24inline" class="math inline">
+                                                                                \(U \cap V \in \mathcal{T}\)
+                                                                            </span>
+                                                                            für alle
+                                                                            <span id="math25inline" class="math inline">
+                                                                                \(U,V \in \mathcal{T}\)
+                                                                            </span>
+                                                                            : Der
+                                                                            <a href="https://de.wikipedia.org/wiki/Schnittmenge" target="blank">
+                                                                                Durchschnitt
+                                                                            </a>
+                                                                            endlich vieler offener Mengen ist eine offene Menge.
+                                                                        </li>
+                                                                        <li>
+                                                                            (T3) Die
+                                                                            <a href="https://de.wikipedia.org/wiki/Vereinigungsmenge" target="blank">
+                                                                                Vereinigung
+                                                                            </a>
+                                                                            beliebig vieler offener Mengen ist wieder eine offene Menge.
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </section>
+                                                            <section  class="level2" id="slide7">
+                                                                <h2>
+                                                                    Semantik: Metrik
+                                                                </h2>
+                                                                <div class="textleft" style="text-align: left;">
+                                                                    Eine Metrik
+                                                                    <span id="math26inline" class="math inline">
+                                                                        \(d\)
+                                                                    </span>
+                                                                    ordnet mit
+                                                                    <span id="math27inline" class="math inline">
+                                                                        \(d(x,y)\)
+                                                                    </span>
+                                                                    zwei Elementen
+                                                                    <span id="math28inline" class="math inline">
+                                                                        \(x,y \in X\)
+                                                                    </span>
+                                                                    aus einem Grundraum
+                                                                    <span id="math29inline" class="math inline">
+                                                                        \(X\)
+                                                                    </span>
+                                                                    den Abstand
+                                                                    <span id="math30inline" class="math inline">
+                                                                        \(d(x,y)\)
+                                                                    </span>
+                                                                    zwischen
+                                                                    <span id="math31inline" class="math inline">
+                                                                        \(x\)
+                                                                    </span>
+                                                                    und
+                                                                    <span id="math32inline" class="math inline">
+                                                                        \(y\)
+                                                                    </span>
+                                                                    zu.
+                                                                    <audio id="audioslide7ogg">
+                                                                        <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio6_metrik_abstand.ogg" type="audio/ogg">
+                                                                        </audio>
+                                                                        &nbsp;
+                                                                        <table class="audioplayer">
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide7ogg');" value="&#9658">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide7ogg');" value="&#10074;&#10074;">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+                                                                        </section>
+                                                                        <section  class="level2" id="slide8">
+                                                                            <h2>
+                                                                                Definition: Metrik
+                                                                            </h2>
+                                                                            <div class="textleft" style="text-align: left;">
+                                                                                Sei
+                                                                                <span id="math33inline" class="math inline">
+                                                                                    \(X\)
+                                                                                </span>
+                                                                                eine beliebige Menge. Eine
+                                                                                <a href="https://de.wikipedia.org/wiki/Funktion_(Mathematik)" target="blank">
+                                                                                    Abbildung
+                                                                                </a>
+                                                                                <span id="math34inline" class="math inline">
+                                                                                    \(d\colon X\times X\to \mathbb{R}\)
+                                                                                </span>
+                                                                                heißt Metrik auf
+                                                                                <span id="math35inline" class="math inline">
+                                                                                    \(X\)
+                                                                                </span>
+                                                                                , wenn für beliebige Elemente
+                                                                                <span id="math36inline" class="math inline">
+                                                                                    \(x\)
+                                                                                </span>
+                                                                                ,
+                                                                                <span id="math37inline" class="math inline">
+                                                                                    \(y\)
+                                                                                </span>
+                                                                                und
+                                                                                <span id="math38inline" class="math inline">
+                                                                                    \(z\)
+                                                                                </span>
+                                                                                von
+                                                                                <span id="math39inline" class="math inline">
+                                                                                    \(X\)
+                                                                                </span>
+                                                                                die folgenden
+                                                                                <a href="https://de.wikipedia.org/wiki/Axiom" target="blank">
+                                                                                    Axiome
+                                                                                </a>
+                                                                                erfüllt sind:
+                                                                                <ul>
+                                                                                    <li>
+                                                                                        (M1) Trennung:
+                                                                                        <span id="math40inline" class="math inline">
+                                                                                            \(d\left(x,y\right) = 0 \Leftrightarrow x = y\)
+                                                                                        </span>
+                                                                                        ,
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        (M2) Symmetrie:
+                                                                                        <span id="math41inline" class="math inline">
+                                                                                            \(d\left(x,y\right) = d(y,x)\)
+                                                                                        </span>
+                                                                                        ,
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        (M3)
+                                                                                        <a href="https://de.wikipedia.org/wiki/Dreiecksungleichung" target="blank">
+                                                                                            Dreiecksungleichung
+                                                                                        </a>
+                                                                                        :
+                                                                                        <span id="math42inline" class="math inline">
+                                                                                            \(d\left(x,y\right) \leq d(x,z) + d(z,y)\)
+                                                                                        </span>
+                                                                                        .
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </section>
+                                                                        <section  class="level2" id="slide9">
+                                                                            <h2>
+                                                                                Veranschaulichung: Metrik Dreiecksungleichung
+                                                                            </h2>
+                                                                            <div class="textleft" style="text-align: left;">
+                                                                                <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Metrik_triangle_inequality.svg" alt="Nach der Dreiecksungleichung ist der Abstand zwischen zwei Punkten X,Y höchstens so groß wie Summe der Abstände von X zu Z und von Z zu Y, also einem Umweg über den Punkt Z"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;"  width="300'>
+                                                                                <audio id="audioslide9ogg">
+                                                                                    <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio8_metrik_dreiecksungleichung.ogg" type="audio/ogg">
+                                                                                    </audio>
+                                                                                    &nbsp;
+                                                                                    <table class="audioplayer">
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide9ogg');" value="&#9658">
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide9ogg');" value="&#10074;&#10074;">
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </section>
+                                                                                    <section  class="level2" id="slide10">
+                                                                                        <h2>
+                                                                                            Nicht-Negativität
+                                                                                        </h2>
+                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                            Aus den drei Eigenschaften der Metrik folgt die Nicht-Negativität, d.h. für alle
+                                                                                            <span id="math43inline" class="math inline">
+                                                                                                \(x,y \in X\)
+                                                                                            </span>
+                                                                                            gilt.
+                                                                                            <span id="math44inline" class="math inline">
+                                                                                                \(d(x,y)\geq0\)
+                                                                                            </span>
+                                                                                            . Die Nicht-Negativität folgt aus den anderen Eigenschaften mit:
+                                                                                            <center>
+                                                                                                <span id="math1block" class="math inline">
+                                                                                                    \( \displaystyle 0 = \frac{1}{2} d(x, x) \leq \frac{1}{2}(d(x, y) + d(y, x)) = \)
+                                                                                                </span>
+                                                                                            </center>
+                                                                                            <span id="math45inline" class="math inline">
+                                                                                                \(= \frac{1}{2}(d(x, y) + d(y, x)) = \frac{1}{2}(d(x, y) + d(x, y)) = d(x, y).\)
+                                                                                            </span>
+                                                                                            <audio id="audioslide10ogg">
+                                                                                                <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio9_nicht_negativitaet.ogg" type="audio/ogg">
+                                                                                                </audio>
+                                                                                                &nbsp;
+                                                                                                <table class="audioplayer">
+                                                                                                    <tr>
+                                                                                                        <td>
+                                                                                                            <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide10ogg');" value="&#9658">
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide10ogg');" value="&#10074;&#10074;">
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </section>
+                                                                                                <section  class="level2" id="slide11">
+                                                                                                    <h2>
+                                                                                                        Offene Mengen in metrischen Räumen
+                                                                                                    </h2>
+                                                                                                    <div class="textleft" style="text-align: left;">
+                                                                                                        <ul>
+                                                                                                            <li>
+                                                                                                                In einem metrische Raum
+                                                                                                                <span id="math46inline" class="math inline">
+                                                                                                                    \((X,d)\)
+                                                                                                                </span>
+                                                                                                                definiert man eine Menge
+                                                                                                                <span id="math47inline" class="math inline">
+                                                                                                                    \(U \subset X\)
+                                                                                                                </span>
+                                                                                                                als offen (d.h.
+                                                                                                                <span id="math48inline" class="math inline">
+                                                                                                                    \(U \in \mathcal{T}_d\)
+                                                                                                                </span>
+                                                                                                                ), wenn es zu jedem
+                                                                                                                <span id="math49inline" class="math inline">
+                                                                                                                    \(u\in U\)
+                                                                                                                </span>
+                                                                                                                ein
+                                                                                                                span id="math50inline" class="math inline"
+                                                                                                            </span>
+                                                                                                            gibt, dass die
+                                                                                                            <span id="math51inline" class="math inline">
+                                                                                                                \(\epsilon\)
+                                                                                                            </span>
+                                                                                                            -Kugel
+                                                                                                            <span id="math52inline" class="math inline">
+                                                                                                                \(B_\epsilon^d(u):=\{\ x \in X | \ d(x,u)
+                                                                                                                 \epsilon \}\)
+                                                                                                            </span>
+                                                                                                            ganz in
+                                                                                                            <span id="math53inline" class="math inline">
+                                                                                                                \(U\)
+                                                                                                            </span>
+                                                                                                            liegt (d.h.
+                                                                                                            <span id="math54inline" class="math inline">
+                                                                                                                \(B_\epsilon^d(u) \subset U \)
+                                                                                                            </span>
+                                                                                                            )
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            Zeigen Sie, dass mit diesem definierten
+                                                                                                            <span id="math55inline" class="math inline">
+                                                                                                                \(\mathcal{T}_d\)
+                                                                                                            </span>
+                                                                                                            das Paar
+                                                                                                            <span id="math56inline" class="math inline">
+                                                                                                                \((X,\mathcal{T}_d)\)
+                                                                                                            </span>
+                                                                                                            ein topologischer Raum ist (d.h. (T1), (T2), (T3) erfüllt).
+                                                                                                        </li>
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                            </section>
+                                                                                            <section  class="level2" id="slide12">
+                                                                                                <h2>
+                                                                                                    Norm auf Vektorräumen
+                                                                                                </h2>
+                                                                                                <div class="textleft" style="text-align: left;">
+                                                                                                    Eine Norm ist eine
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Funktion_(Mathematik)" target="blank">
+                                                                                                        Abbildung
+                                                                                                    </a>
+                                                                                                    <span id="math57inline" class="math inline">
+                                                                                                        \(\|\cdot\|\)
+                                                                                                    </span>
+                                                                                                    von einem
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Vektorraum" target="blank">
+                                                                                                        Vektorraum
+                                                                                                    </a>
+                                                                                                    <span id="math58inline" class="math inline">
+                                                                                                        \(V\)
+                                                                                                    </span>
+                                                                                                    über dem
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Körper_(Algebra)" target="blank">
+                                                                                                        Körper
+                                                                                                    </a>
+                                                                                                    <span id="math59inline" class="math inline">
+                                                                                                        \(\mathbb K\)
+                                                                                                    </span>
+                                                                                                    der
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Reelle_Zahl" target="blank">
+                                                                                                        reellen
+                                                                                                    </a>
+                                                                                                    oder der
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Komplexe_Zahl" target="blank">
+                                                                                                        komplexen Zahlen
+                                                                                                    </a>
+                                                                                                    in die Menge der nichtnegativen
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Reelle_Zahl" target="blank">
+                                                                                                        reellen Zahlen
+                                                                                                    </a>
+                                                                                                    <span id="math60inline" class="math inline">
+                                                                                                        \({\mathbb R}_0^{+}\)
+                                                                                                    </span>
+                                                                                                    . Dabei ordnet die Norm jedem Vektor
+                                                                                                    <span id="math61inline" class="math inline">
+                                                                                                        \(x \in V\)
+                                                                                                    </span>
+                                                                                                    seine Länge
+                                                                                                    <span id="math62inline" class="math inline">
+                                                                                                        \(\| x \|\)
+                                                                                                    </span>
+                                                                                                    zu.
+                                                                                                </div>
+                                                                                            </section>
+                                                                                            <section  class="level2" id="slide13">
+                                                                                                <h2>
+                                                                                                    Definition: Norm
+                                                                                                </h2>
+                                                                                                <div class="textleft" style="text-align: left;">
+                                                                                                    Sei
+                                                                                                    <span id="math63inline" class="math inline">
+                                                                                                        \(V\)
+                                                                                                    </span>
+                                                                                                    ein
+                                                                                                    <span id="math64inline" class="math inline">
+                                                                                                        \(\mathbb{K}\)
+                                                                                                    </span>
+                                                                                                    -Vektorraum und
+                                                                                                    <span id="math65inline" class="math inline">
+                                                                                                        \(\|\cdot\|\colon V\to{\mathbb R}_0^{+}, \; x \mapsto \| x \|,\)
+                                                                                                    </span>
+                                                                                                    eine AbbildungErfüllt
+                                                                                                    <span id="math66inline" class="math inline">
+                                                                                                        \(\|\cdot\|\)
+                                                                                                    </span>
+                                                                                                    die folgenden Axiome
+                                                                                                    <a href="https://de.wikipedia.org/wiki/Axiom" target="blank">
+                                                                                                        Axiome
+                                                                                                    </a>
+                                                                                                    N1,N2, N3, so heißt
+                                                                                                    <span id="math67inline" class="math inline">
+                                                                                                        \(\|\cdot\|\)
+                                                                                                    </span>
+                                                                                                    Norm auf
+                                                                                                    <span id="math68inline" class="math inline">
+                                                                                                        \(V\)
+                                                                                                    </span>
+                                                                                                    .
+                                                                                                    <ul>
+                                                                                                        <li>
+                                                                                                            (N1)
+                                                                                                            <a href="https://de.wikipedia.org/wiki/Definitheit" target="blank">
+                                                                                                                Definitheit
+                                                                                                            </a>
+                                                                                                            :
+                                                                                                            <span id="math69inline" class="math inline">
+                                                                                                                \(\|x\| = 0 \;\Rightarrow\; x = \mathbb{0}\)
+                                                                                                            </span>
+                                                                                                            für alle
+                                                                                                            <span id="math70inline" class="math inline">
+                                                                                                                \(x \in V\)
+                                                                                                            </span>
+                                                                                                            ,
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            (N2)
+                                                                                                            <a href="https://de.wikipedia.org/wiki/Homogene_Funktion" target="blank">
+                                                                                                                absolute Homogenität
+                                                                                                            </a>
+                                                                                                            :
+                                                                                                            <span id="math71inline" class="math inline">
+                                                                                                                \(\|\lambda\cdot x\| = |\lambda|\cdot\|x\|\)
+                                                                                                            </span>
+                                                                                                            für alle
+                                                                                                            <span id="math72inline" class="math inline">
+                                                                                                                \(x\in V\)
+                                                                                                            </span>
+                                                                                                            und
+                                                                                                            <span id="math73inline" class="math inline">
+                                                                                                                \(\lambda\in \mathbb K\)
+                                                                                                            </span>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            (N3)
+                                                                                                            <a href="https://de.wikipedia.org/wiki/Dreiecksungleichung" target="blank">
+                                                                                                                Dreiecksungleichung
+                                                                                                            </a>
+                                                                                                            :
+                                                                                                            <span id="math74inline" class="math inline">
+                                                                                                                \(\|x + y\| \leq \|x\| + \|y\|\)
+                                                                                                            </span>
+                                                                                                            für alle
+                                                                                                            <span id="math75inline" class="math inline">
+                                                                                                                \(x, y\in V\)
+                                                                                                            </span>
+                                                                                                            .
+                                                                                                        </li>
+                                                                                                    </ul>
+                                                                                                    <audio id="audioslide12ogg">
+                                                                                                        <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio11_def_norm.ogg" type="audio/ogg">
+                                                                                                        </audio>
+                                                                                                        &nbsp;
+                                                                                                        <table class="audioplayer">
+                                                                                                            <tr>
+                                                                                                                <td>
+                                                                                                                    <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide12ogg');" value="&#9658">
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide12ogg');" value="&#10074;&#10074;">
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </table>
+                                                                                                            </div>
+                                                                                                        </section>
+                                                                                                        <section  class="level2" id="slide14">
+                                                                                                            <h2>
+                                                                                                                Bemerkung: N1 - Äquivalenz
+                                                                                                            </h2>
+                                                                                                            <div class="textleft" style="text-align: left;">
+                                                                                                                Das Eigenschaft (N1) ist eigentlich eine Äquivalenz und es gilt in jedem normierten Raum (
+                                                                                                                <span id="math76inline" class="math inline">
+                                                                                                                    \(\mathbf{0} \in V\)
+                                                                                                                </span>
+                                                                                                                ist der Nullvektor in
+                                                                                                                <span id="math77inline" class="math inline">
+                                                                                                                    \(V\)
+                                                                                                                </span>
+                                                                                                                und
+                                                                                                                <span id="math78inline" class="math inline">
+                                                                                                                    \(0 \in \mathbb{K}\)
+                                                                                                                </span>
+                                                                                                                ist die Null im Körper
+                                                                                                                <span id="math79inline" class="math inline">
+                                                                                                                    \(\mathbb{K}\)
+                                                                                                                </span>
+                                                                                                                , wenn
+                                                                                                                <span id="math80inline" class="math inline">
+                                                                                                                    \(V\)
+                                                                                                                </span>
+                                                                                                                ein
+                                                                                                                <span id="math81inline" class="math inline">
+                                                                                                                    \(\mathbb{K}\)
+                                                                                                                </span>
+                                                                                                                -Vektorraum ist).
+                                                                                                                <ul>
+                                                                                                                    <li>
+                                                                                                                        (N1)'
+                                                                                                                        <a href="https://de.wikipedia.org/wiki/Definitheit" target="blank">
+                                                                                                                            Definitheit
+                                                                                                                        </a>
+                                                                                                                        :
+                                                                                                                        <span id="math82inline" class="math inline">
+                                                                                                                            \(\|x\| = 0 \;\Leftrightarrow\; x = \mathbf{0}\)
+                                                                                                                        </span>
+                                                                                                                        für alle
+                                                                                                                        <span id="math83inline" class="math inline">
+                                                                                                                            \(x \in V\)
+                                                                                                                        </span>
+                                                                                                                        ,
+                                                                                                                    </li>
+                                                                                                                    <li>
+                                                                                                                        Da man für Definitionen ein Minimalitätsprinzip für die definierenden Eigenschaft verwendet, würde man keine stärkere Formulierung (N1)' in der Definition für (N1) verwenden, da die Äquivalenz aus den definierenden Eigenschaften der Norm den Eigenschaften des Vektorraumes bereits für jeden normierten Raum folgen.
+                                                                                                                    </li>
+                                                                                                                </ul>
+                                                                                                            </div>
+                                                                                                        </section>
+                                                                                                        <section  class="level2" id="slide15">
+                                                                                                            <h2>
+                                                                                                                Normierter Raum / Metrischer Raum
+                                                                                                            </h2>
+                                                                                                            <div class="textleft" style="text-align: left;">
+                                                                                                                Ein normierter Raum
+                                                                                                                <span id="math84inline" class="math inline">
+                                                                                                                    \((V,\|\cdot\| )\)
+                                                                                                                </span>
+                                                                                                                ist zugleich auch ein metrischer Raum.
+                                                                                                                <ul>
+                                                                                                                    <li>
+                                                                                                                        Ein Norm
+                                                                                                                        <span id="math85inline" class="math inline">
+                                                                                                                            \(\|\cdot\| \)
+                                                                                                                        </span>
+                                                                                                                        ordnet einem Vektor
+                                                                                                                        <span id="math86inline" class="math inline">
+                                                                                                                            \(v\in V \)
+                                                                                                                        </span>
+                                                                                                                        seine Vektorlänge
+                                                                                                                        <span id="math87inline" class="math inline">
+                                                                                                                            \(\|v\| \)
+                                                                                                                        </span>
+                                                                                                                        zu.
+                                                                                                                    </li>
+                                                                                                                    <li>
+                                                                                                                        Mit der Norm
+                                                                                                                        <span id="math88inline" class="math inline">
+                                                                                                                            \(\|\cdot\| \)
+                                                                                                                        </span>
+                                                                                                                        kann man über
+                                                                                                                        <span id="math89inline" class="math inline">
+                                                                                                                            \(d(x,y):=\| x-y \| \)
+                                                                                                                        </span>
+                                                                                                                        eine Metrik definieren.
+                                                                                                                    </li>
+                                                                                                                    <li>
+                                                                                                                        Zeigen Sie, dass die so definierte Abbildung
+                                                                                                                        <span id="math90inline" class="math inline">
+                                                                                                                            \(d:V\times V \rightarrow \mathbb{R}\)
+                                                                                                                        </span>
+                                                                                                                        die Eigenschaften einer Metrik erfüllt.
+                                                                                                                    </li>
+                                                                                                                </ul>
+                                                                                                            </div>
+                                                                                                        </section>
+                                                                                                        <section  class="level2" id="slide16">
+                                                                                                            <h2>
+                                                                                                                Notation: Norm
+                                                                                                            </h2>
+                                                                                                            <div class="textleft" style="text-align: left;">
+                                                                                                                <ul>
+                                                                                                                    <li>
+                                                                                                                        In dem Axiom (N2)
+                                                                                                                        <span id="math91inline" class="math inline">
+                                                                                                                            \( \| \lambda \cdot x \| = | \lambda | \cdot \|x\| \)
+                                                                                                                        </span>
+                                                                                                                        bezeichnet
+                                                                                                                        <span id="math92inline" class="math inline">
+                                                                                                                            \(| \cdot |\)
+                                                                                                                        </span>
+                                                                                                                        den
+                                                                                                                        <a href="https://de.wikipedia.org/wiki/Betragsfunktion" target="blank">
+                                                                                                                            Betrag
+                                                                                                                        </a>
+                                                                                                                        des
+                                                                                                                        <a href="https://de.wikipedia.org/wiki/Skalar" target="blank">
+                                                                                                                            Skalars
+                                                                                                                        </a>
+                                                                                                                        .
+                                                                                                                        <b>
+                                                                                                                            "
+                                                                                                                            <span id="math93inline" class="math inline">
+                                                                                                                                \(\cdot\)
+                                                                                                                            </span>
+                                                                                                                            "
+                                                                                                                        </b>
+                                                                                                                        -Zeichen: Äußere Verknüpfung im Vektorraum bzw. Multiplikation
+                                                                                                                        <span id="math94inline" class="math inline">
+                                                                                                                            \((\mathbb{R},\cdot)\)
+                                                                                                                        </span>
+                                                                                                                        .
+                                                                                                                    </li>
+                                                                                                                    <li>
+                                                                                                                        <span id="math95inline" class="math inline">
+                                                                                                                            \(\|x\|\)
+                                                                                                                        </span>
+                                                                                                                        gibt die Länge des Vektors
+                                                                                                                        <span id="math96inline" class="math inline">
+                                                                                                                            \(x\in V\)
+                                                                                                                        </span>
+                                                                                                                        an.
+                                                                                                                    </li>
+                                                                                                                    <li>
+                                                                                                                        In (N3)
+                                                                                                                        <span id="math97inline" class="math inline">
+                                                                                                                            \(\|x + y\| \leq \|x\| + \|y\|\)
+                                                                                                                        </span>
+                                                                                                                        für alle
+                                                                                                                        <span id="math98inline" class="math inline">
+                                                                                                                            \(x, y\in V\)
+                                                                                                                        </span>
+                                                                                                                        .
+                                                                                                                        <b>
+                                                                                                                            "
+                                                                                                                            <span id="math99inline" class="math inline">
+                                                                                                                                \(+\)
+                                                                                                                            </span>
+                                                                                                                            "
+                                                                                                                        </b>
+                                                                                                                        -Zeichen bezeichnet zwei unterschiedliche Verknüpfungen (d.h. Addition in
+                                                                                                                        <span id="math100inline" class="math inline">
+                                                                                                                            \((V,+)\)
+                                                                                                                        </span>
+                                                                                                                        bzw.
+                                                                                                                        <span id="math101inline" class="math inline">
+                                                                                                                            \((\mathbb{R},+)\)
+                                                                                                                        </span>
+                                                                                                                    </li>
+                                                                                                                </ul>
+                                                                                                            </div>
+                                                                                                        </section>
+                                                                                                        <section  class="level2" id="slide17">
+                                                                                                            <h2>
+                                                                                                                Veranschaulichung: Norm Dreiecksungleichung
+                                                                                                            </h2>
+                                                                                                            <div class="textleft" style="text-align: left;">
+                                                                                                                <img src="https://de.wikiversity.org/wiki/Special:Redirect/file/Vector-triangle-inequality.svg" alt="Nach der Dreiecksungleichung ist die Länge der Summe zweier Vektoren höchstens so groß wie die Summe der Längen der einzelnen Vektoren"  style="display: block; margin-left: auto;margin-right: auto;border-width: 0px;"  width="300'>
+                                                                                                                <audio id="audioslide15ogg">
+                                                                                                                    <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio14_norm_dreiecksungleichung.ogg" type="audio/ogg">
+                                                                                                                    </audio>
+                                                                                                                    &nbsp;
+                                                                                                                    <table class="audioplayer">
+                                                                                                                        <tr>
+                                                                                                                            <td>
+                                                                                                                                <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide15ogg');" value="&#9658">
+                                                                                                                                </td>
+                                                                                                                                <td>
+                                                                                                                                    <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide15ogg');" value="&#10074;&#10074;">
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+                                                                                                                            </table>
+                                                                                                                        </div>
+                                                                                                                    </section>
+                                                                                                                    <section  class="level2" id="slide18">
+                                                                                                                        <h2>
+                                                                                                                            Def: Konvergenz im normierten Raum
+                                                                                                                        </h2>
+                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                            Sei
+                                                                                                                            <span id="math102inline" class="math inline">
+                                                                                                                                \((V,\|\cdot\|)\)
+                                                                                                                            </span>
+                                                                                                                            ein normierter Raum und
+                                                                                                                            <span id="math103inline" class="math inline">
+                                                                                                                                \((v_n)_{n\in\mathbb{N}} \in V^{\mathbb{N}}\)
+                                                                                                                            </span>
+                                                                                                                            eine Folge in
+                                                                                                                            <span id="math104inline" class="math inline">
+                                                                                                                                \(V\)
+                                                                                                                            </span>
+                                                                                                                            und
+                                                                                                                            <span id="math105inline" class="math inline">
+                                                                                                                                \(v_o \in V\)
+                                                                                                                            </span>
+                                                                                                                            :
+                                                                                                                            <center>
+                                                                                                                                span id="math3block" class="math inline"
+                                                                                                                                 \epsilon \)
+                                                                                                                            </span>
+                                                                                                                        </center>
+                                                                                                                        <audio id="audioslide16ogg">
+                                                                                                                            <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio15_def_konvergenz_norm.ogg" type="audio/ogg">
+                                                                                                                            </audio>
+                                                                                                                            &nbsp;
+                                                                                                                            <table class="audioplayer">
+                                                                                                                                <tr>
+                                                                                                                                    <td>
+                                                                                                                                        <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide16ogg');" value="&#9658">
+                                                                                                                                        </td>
+                                                                                                                                        <td>
+                                                                                                                                            <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide16ogg');" value="&#10074;&#10074;">
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </div>
+                                                                                                                            </section>
+                                                                                                                            <section  class="level2" id="slide19">
+                                                                                                                                <h2>
+                                                                                                                                    Def: Konvergenz im metrischen Raum
+                                                                                                                                </h2>
+                                                                                                                                <div class="textleft" style="text-align: left;">
+                                                                                                                                    Sei
+                                                                                                                                    <span id="math106inline" class="math inline">
+                                                                                                                                        \((X,d)\)
+                                                                                                                                    </span>
+                                                                                                                                    ein metrischer Raum und
+                                                                                                                                    <span id="math107inline" class="math inline">
+                                                                                                                                        \((x_n)_{n\in\mathbb{N}} \in X^{\mathbb{N}}\)
+                                                                                                                                    </span>
+                                                                                                                                    eine Folge in
+                                                                                                                                    <span id="math108inline" class="math inline">
+                                                                                                                                        \(X\)
+                                                                                                                                    </span>
+                                                                                                                                    und
+                                                                                                                                    <span id="math109inline" class="math inline">
+                                                                                                                                        \(x_o \in X\)
+                                                                                                                                    </span>
+                                                                                                                                    :
+                                                                                                                                    <center>
+                                                                                                                                        span id="math4block" class="math inline"
+                                                                                                                                         \epsilon \)
+                                                                                                                                    </span>
+                                                                                                                                </center>
+                                                                                                                                <audio id="audioslide17ogg">
+                                                                                                                                    <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio16_def_konvergenz_metrik.ogg" type="audio/ogg">
+                                                                                                                                    </audio>
+                                                                                                                                    &nbsp;
+                                                                                                                                    <table class="audioplayer">
+                                                                                                                                        <tr>
+                                                                                                                                            <td>
+                                                                                                                                                <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide17ogg');" value="&#9658">
+                                                                                                                                                </td>
+                                                                                                                                                <td>
+                                                                                                                                                    <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide17ogg');" value="&#10074;&#10074;">
+                                                                                                                                                    </td>
+                                                                                                                                                </tr>
+                                                                                                                                            </table>
+                                                                                                                                        </div>
+                                                                                                                                    </section>
+                                                                                                                                    <section  class="level2" id="slide20">
+                                                                                                                                        <h2>
+                                                                                                                                            Äquivalenz: Normen
+                                                                                                                                        </h2>
+                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                            Seien zwei Normen
+                                                                                                                                            <span id="math110inline" class="math inline">
+                                                                                                                                                \(\|\cdot\|_1 \)
+                                                                                                                                            </span>
+                                                                                                                                            und
+                                                                                                                                            <span id="math111inline" class="math inline">
+                                                                                                                                                \(\|\cdot\|_2\)
+                                                                                                                                            </span>
+                                                                                                                                            auf dem
+                                                                                                                                            <span id="math112inline" class="math inline">
+                                                                                                                                                \(\mathbb K\)
+                                                                                                                                            </span>
+                                                                                                                                            -Vektorraum
+                                                                                                                                            <span id="math113inline" class="math inline">
+                                                                                                                                                \(V\)
+                                                                                                                                            </span>
+                                                                                                                                            gegeben. Die beiden Normen sind äquivalent, wenn gilt:
+                                                                                                                                            <center>
+                                                                                                                                                span id="math5block" class="math inline"
+                                                                                                                                            </span>
+                                                                                                                                        </center>
+                                                                                                                                        Zeigen Sie, dass eine Folge genau dann in
+                                                                                                                                        <span id="math114inline" class="math inline">
+                                                                                                                                            \(\|\cdot\|_1 \)
+                                                                                                                                        </span>
+                                                                                                                                        konvergiert, wenn es auch bzgl.
+                                                                                                                                        <span id="math115inline" class="math inline">
+                                                                                                                                            \(\|\cdot\|_2\)
+                                                                                                                                        </span>
+                                                                                                                                        konvergiert.
+                                                                                                                                        <audio id="audioslide18ogg">
+                                                                                                                                            <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio17_aequivalenz_normen.ogg" type="audio/ogg">
+                                                                                                                                            </audio>
+                                                                                                                                            &nbsp;
+                                                                                                                                            <table class="audioplayer">
+                                                                                                                                                <tr>
+                                                                                                                                                    <td>
+                                                                                                                                                        <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide18ogg');" value="&#9658">
+                                                                                                                                                        </td>
+                                                                                                                                                        <td>
+                                                                                                                                                            <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide18ogg');" value="&#10074;&#10074;">
+                                                                                                                                                            </td>
+                                                                                                                                                        </tr>
+                                                                                                                                                    </table>
+                                                                                                                                                </div>
+                                                                                                                                            </section>
+                                                                                                                                            <section  class="level2" id="slide21">
+                                                                                                                                                <h2>
+                                                                                                                                                    Betrag in komplexen Zahlen
+                                                                                                                                                </h2>
+                                                                                                                                                <div class="textleft" style="text-align: left;">
+                                                                                                                                                    Sei
+                                                                                                                                                    <span id="math116inline" class="math inline">
+                                                                                                                                                        \(z=z_1 + i\cdot z_2\in \mathbb{C}\)
+                                                                                                                                                    </span>
+                                                                                                                                                    eine komplexe Zahl mit
+                                                                                                                                                    <span id="math117inline" class="math inline">
+                                                                                                                                                        \(z_1, z_2\in \mathbb{R}\)
+                                                                                                                                                    </span>
+                                                                                                                                                    . Zeigen Sie, dass
+                                                                                                                                                    <span id="math118inline" class="math inline">
+                                                                                                                                                        \(|z|:=\sqrt{z\cdot \overline{z}} \)
+                                                                                                                                                    </span>
+                                                                                                                                                    eine Norm auf dem
+                                                                                                                                                    <span id="math119inline" class="math inline">
+                                                                                                                                                        \(\mathbb{R}\)
+                                                                                                                                                    </span>
+                                                                                                                                                    -Vektorraum
+                                                                                                                                                    <span id="math120inline" class="math inline">
+                                                                                                                                                        \(\mathbb{C}\)
+                                                                                                                                                    </span>
+                                                                                                                                                    ist!
+                                                                                                                                                    <audio id="audioslide19ogg">
+                                                                                                                                                        <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio18_norm_komplexe_zahlen.ogg" type="audio/ogg">
+                                                                                                                                                        </audio>
+                                                                                                                                                        &nbsp;
+                                                                                                                                                        <table class="audioplayer">
+                                                                                                                                                            <tr>
+                                                                                                                                                                <td>
+                                                                                                                                                                    <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide19ogg');" value="&#9658">
+                                                                                                                                                                    </td>
+                                                                                                                                                                    <td>
+                                                                                                                                                                        <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide19ogg');" value="&#10074;&#10074;">
+                                                                                                                                                                        </td>
+                                                                                                                                                                    </tr>
+                                                                                                                                                                </table>
+                                                                                                                                                            </div>
+                                                                                                                                                        </section>
+                                                                                                                                                        <section  class="level2" id="slide22">
+                                                                                                                                                            <h2>
+                                                                                                                                                                Historische Anmerkung: Norm
+                                                                                                                                                            </h2>
+                                                                                                                                                            <div class="textleft" style="text-align: left;">
+                                                                                                                                                                Diese axiomatische Definition der Norm wurde von
+                                                                                                                                                                <a href="https://de.wikipedia.org/wiki/Stefan_Banach" target="blank">
+                                                                                                                                                                    Stefan Banach
+                                                                                                                                                                </a>
+                                                                                                                                                                1922 in seiner Dissertation aufgestellt Das heute übliche Normsymbol wurde erstmals von
+                                                                                                                                                                <a href="https://de.wikipedia.org/wiki/Erhard_Schmidt" target="blank">
+                                                                                                                                                                    Erhard Schmidt
+                                                                                                                                                                </a>
+                                                                                                                                                                1908 als Abstand
+                                                                                                                                                                <span id="math121inline" class="math inline">
+                                                                                                                                                                    \(\|x-y\|\)
+                                                                                                                                                                </span>
+                                                                                                                                                                zwischen Vektoren
+                                                                                                                                                                <span id="math122inline" class="math inline">
+                                                                                                                                                                    \(x\)
+                                                                                                                                                                </span>
+                                                                                                                                                                und
+                                                                                                                                                                <span id="math123inline" class="math inline">
+                                                                                                                                                                    \(y\)
+                                                                                                                                                                </span>
+                                                                                                                                                                verwendet.
+                                                                                                                                                                <audio id="audioslide20ogg">
+                                                                                                                                                                    <source src="https://de.wikiversity.org/wiki/Special:Redirect/file/Audio19_norm_historische_anmerkung.ogg" type="audio/ogg">
+                                                                                                                                                                    </audio>
+                                                                                                                                                                    &nbsp;
+                                                                                                                                                                    <table class="audioplayer">
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td>
+                                                                                                                                                                                <input class="buttonaudioplayer" type="button" onclick="play_audio('audioslide20ogg');" value="&#9658">
+                                                                                                                                                                                </td>
+                                                                                                                                                                                <td>
+                                                                                                                                                                                    <input class="buttonaudioplayer" type="button" onclick="pause_audio('audioslide20ogg');" value="&#10074;&#10074;">
+                                                                                                                                                                                    </td>
+                                                                                                                                                                                </tr>
+                                                                                                                                                                            </table>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </section>
+                                                                                                                                                                    <section  class="level2" id="slide23">
+                                                                                                                                                                        <h2>
+                                                                                                                                                                            Aufgaben
+                                                                                                                                                                        </h2>
+                                                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                                                            Zeigen Sie, dass die folgende Abbildung
+                                                                                                                                                                            <span id="math124inline" class="math inline">
+                                                                                                                                                                                \(d\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            auf
+                                                                                                                                                                            <span id="math125inline" class="math inline">
+                                                                                                                                                                                \(V:=\mathcal{C}([a,b],\mathbb{R})\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            mit
+                                                                                                                                                                            <span id="math126inline" class="math inline">
+                                                                                                                                                                                \(a,b\in \mathbb{R}\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            als Menge der stetigen Abbildungen von dem Intervall
+                                                                                                                                                                            <span id="math127inline" class="math inline">
+                                                                                                                                                                                \([a,b]\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            nach
+                                                                                                                                                                            <span id="math128inline" class="math inline">
+                                                                                                                                                                                \(\mathbb{R}\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            eine Metrik ist.
+                                                                                                                                                                            <center>
+                                                                                                                                                                                <span id="math6block" class="math inline">
+                                                                                                                                                                                    \( \displaystyle d: V \times V \to \mathbb{R}\)
+                                                                                                                                                                                </span>
+                                                                                                                                                                            </center>
+                                                                                                                                                                            mit
+                                                                                                                                                                            <span id="math129inline" class="math inline">
+                                                                                                                                                                                \((f,g) \mapsto d(f,g):= \int_a^b |f(x) - g(x)| \, dx \ .\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            Zeigen Sie also, dass
+                                                                                                                                                                            <span id="math130inline" class="math inline">
+                                                                                                                                                                                \(d\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            die Eigenschaften der Metrik besitzt. Berechnen Sie dann den Abstand zwischen den beiden Funktionen
+                                                                                                                                                                            <span id="math131inline" class="math inline">
+                                                                                                                                                                                \(f(x):=x^2\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            und
+                                                                                                                                                                            <span id="math132inline" class="math inline">
+                                                                                                                                                                                \(g(x):=x^3-2x+2\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            mit
+                                                                                                                                                                            <span id="math133inline" class="math inline">
+                                                                                                                                                                                \(a=-1\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            und mit
+                                                                                                                                                                            <span id="math134inline" class="math inline">
+                                                                                                                                                                                \(b=3\)
+                                                                                                                                                                            </span>
+                                                                                                                                                                            !
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </section>
+                                                                                                                                                                    <section  class="level2" id="slide24">
+                                                                                                                                                                        <h2>
+                                                                                                                                                                            Siehe auch
+                                                                                                                                                                        </h2>
+                                                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                                                            <ul>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/Kurs:Räumliche_Modellbildung" target="_blank" class="external">
+                                                                                                                                                                                        Epidemiologische Distanzen
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/Normenäquivalenzsatz" target="_blank" class="external">
+                                                                                                                                                                                        Normenäquivalenzsatz
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/COVID-19/Mathematische_Modellbildung" target="_blank" class="external">
+                                                                                                                                                                                        COVID-19Mathematische Modellbildung
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    - für epidemiologische Distanzen im Unterschied zu euklidischen Distanzen in einem Vektorraum.
+                                                                                                                                                                                </li>
+                                                                                                                                                                            </ul>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </section>
+                                                                                                                                                                    <section  class="level2" id="slide25">
+                                                                                                                                                                        <h2>
+                                                                                                                                                                            Seiteninformation
+                                                                                                                                                                        </h2>
+                                                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                                                            Diese Lernresource wurde als
+                                                                                                                                                                            <b>
+                                                                                                                                                                                <a href="https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=wikiversity&title=Normen,%20Metriken,%20Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="blank">
+                                                                                                                                                                                    Wiki2Reveal Foliensatz
+                                                                                                                                                                                </a>
+                                                                                                                                                                            </b>
+                                                                                                                                                                            erstellt.
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </section>
+                                                                                                                                                                    <section  class="level2" id="slide26">
+                                                                                                                                                                        <h3>
+                                                                                                                                                                            Wiki2Reveal
+                                                                                                                                                                        </h3>
+                                                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                                                            Dieser
+                                                                                                                                                                            <b>
+                                                                                                                                                                                <a href="https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=wikiversity&title=Normen,%20Metriken,%20Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="blank">
+                                                                                                                                                                                    Wiki2Reveal Foliensatz
+                                                                                                                                                                                </a>
+                                                                                                                                                                            </b>
+                                                                                                                                                                            wurde für den Lerneinheit
+                                                                                                                                                                            <b>
+                                                                                                                                                                                <a href="https://de.wikiversity.org/wiki/Kurs:Funktionalanalysis" target="_blank" class="external">
+                                                                                                                                                                                    Kurs:Funktionalanalysis
+                                                                                                                                                                                </a>
+                                                                                                                                                                            </b>
+                                                                                                                                                                            ' erstellt der Link für die
+                                                                                                                                                                            <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external">
+                                                                                                                                                                                Wiki2Reveal-Folien
+                                                                                                                                                                            </a>
+                                                                                                                                                                            wurde mit dem
+                                                                                                                                                                            <a href="https://niebert.github.io/Wiki2Reveal/" target="blank">
+                                                                                                                                                                                Wiki2Reveal-Linkgenerator
+                                                                                                                                                                            </a>
+                                                                                                                                                                            erstellt.
+                                                                                                                                                                            !--
+                                                                                                                                                                            <ul>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Die Inhalte der Seite basieren auf den folgenden Inhalten:
+                                                                                                                                                                                    <ul>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <a href="https://de.wikipedia.org/wiki/Normen,%20Metriken,%20Topologie" target="blank">
+                                                                                                                                                                                                https://de.wikiversity.org/wiki/Normen,%20Metriken,%20Topologie
+                                                                                                                                                                                            </a>
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                    </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                            </ul>
+                                                                                                                                                                            <ul>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/Normen,%20Metriken,%20Topologie" target="blank">
+                                                                                                                                                                                        Die Seite
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    wurde als Dokumententyp
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/PanDocElectron-Presentation" target="blank">
+                                                                                                                                                                                        PanDocElectron-SLIDE
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    erstellt.
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Link zur Quelle in Wikiversity: https://de.wikiversity.org/wiki/Normen,%20Metriken,%20Topologie
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    siehe auch weitere Informationen zu
+                                                                                                                                                                                    <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external">
+                                                                                                                                                                                        Wiki2Reveal
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    und unter
+                                                                                                                                                                                    <a href="https://niebert.github.io/Wiki2Reveal/index.html?domain=wikiversity&title=Normen,%20Metriken,%20Topologie&author=Funktionalanalysis&language=de&audioslide=yes" target="blank">
+                                                                                                                                                                                        Wiki2Reveal-Linkgenerator
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    .
+                                                                                                                                                                                </li>
+                                                                                                                                                                            </ul>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </section>
+                                                                                                                                                                    <section  class="level2" id="slide27">
+                                                                                                                                                                        <h3>
+                                                                                                                                                                            Nächste Inhalte
+                                                                                                                                                                        </h3>
+                                                                                                                                                                        <div class="textleft" style="text-align: left;">
+                                                                                                                                                                            <ul>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Inhalte der Seite basieren auf:
+                                                                                                                                                                                    <ul>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <a href="https://de.wikipedia.org/wiki/Topologie_(Mathematik)" target="blank">
+                                                                                                                                                                                                https://de.wikipedia.org/wiki/Topologie_(Mathematik)
+                                                                                                                                                                                            </a>
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <a href="https://de.wikipedia.org/wiki/Metrischer_Raum" target="blank">
+                                                                                                                                                                                                https://de.wikipedia.org/wiki/Metrischer_Raum
+                                                                                                                                                                                            </a>
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <a href="https://de.wikipedia.org/wiki/Normierter_Raum" target="blank">
+                                                                                                                                                                                                https://de.wikipedia.org/wiki/Normierter_Raum
+                                                                                                                                                                                            </a>
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                    </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Diese Seite ist ein
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/PanDocElectron-Presentation" target="blank">
+                                                                                                                                                                                        PanDocElectron-SLIDE
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    Dokumententyp
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Quelle: Wikiversity DE https://de.wikiversity.org/wiki/Normen,_Metriken,_Topologie
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    siehe
+                                                                                                                                                                                    <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank" class="external">
+                                                                                                                                                                                        Wiki2Reveal
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    zur Funktionsweise von
+                                                                                                                                                                                    <a href="https://niebert.github.io/Wiki2Reveal/" target="blank">
+                                                                                                                                                                                        Wiki2Reveal
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                    .
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    Nächste Inhalte des Kurses sind
+                                                                                                                                                                                    <a href="https://de.wikiversity.org/wiki/Netze_(Mathematik)" target="_blank" class="external">
+                                                                                                                                                                                        Netze
+                                                                                                                                                                                    </a>
+                                                                                                                                                                                </li>
+                                                                                                                                                                            </ul>
+                                                                                                                                                                        </section>

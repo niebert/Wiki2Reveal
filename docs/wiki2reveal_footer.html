@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc EN">
-  <title>wiki2reveal</title>
+  <title>Wiki2Reveal Footer</title>
   <link rel="stylesheet" href="css/main.css">
   <!-- Original Settings do not have the following CSS inserted directly -->
   <script src="js/linkparam.js"></script>
   <script src="js/string.js"></script>
   <script src="js/showhide.js"></script>
+  <script src="js/writedom.js"></script>
   <!-- Printing and PDF exports -->
     <!--[if lt IE 9]>
   <script src="reveal/lib/js/html5shiv.js"></script>
@@ -20,11 +21,13 @@
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Normen, Metriken, Topologie";
+  var vShortTitle ="undefined";
   var vAuthor = "Kurs:Funktionentheorie";
   var vLanguage = "de";
   var vDomain = "wikiversity";
   var vDomainName = "Wikiversity";
   var vAudioSlide = "no";
+  var vSlideType = "reveal";
   var vDemo = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
@@ -45,43 +48,136 @@
     el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
   };
 
-  function getWikiDisplayURL() {
-    var vURL = "https://"+el("sWikiLanguage").value + "." + el("sWikiDomain").value+".org/wiki/";
-    vURL += encodeURI(el("wikiarticle").value);
-    return vURL;
-  };
-
-
-  function callWikiDisplay() {
-    var vURL = getWikiDisplayURL();
-    document.location.href=vURL;
-  };
-
-  function setDomainName() {
-    switch (vDomain) {
-      case "wikipedia":
-        vDomainName = "Wikipedia"
-      break;
-      case "wikiversity":
-        vDomainName = "Wikiversity"
-      break;
-      default:
-        vDomainName = vDomain
-    }
-  }
-</script>
+  </script>
+<script src="js/links4wiki2reveal.js"></script>
 
 </head>
-<body style="background:#C0C0C0">
+<body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
   <H2 class="slides" id="headerfooter">
-      Generator for Wiki Footer
+      Generator for Wiki Footer - Version: <span id4marker="version">2.1.13</span>
   </H2>
   <H2 class="slides" id="headerdemo" style="display:none">
       Generator for Wiki2Reveal Demo Page
   </H2>
-    <hr>
-    <input type="button" value=" Back to Wiki2Reveal " onclick="document.location='index.html'">
-    <hr>
+  <hr>
+  <input type="button" value=" Back to Wiki2Reveal " onclick="back2startpage()">
+  <hr>
+  <table border="1">
+    <tr>
+      <td>
+        <b>Wiki Domain</b>
+      </td>
+      <td>
+        <select name="domain" id="sWikiDomain" onchange="update_links()">
+             <option value="wikiversity" selected>Wikiversity</option>
+             <option value="wikipedia">Wikipedia</option>
+             <option value="wikibook">WikiBook</option>
+             <option value="wiktionary">Wikionary</option>
+             <option value="wikiquote">WikiQuote</option>
+             <option value="wikisource">WikiSource</option>
+          </select>
+        </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Article</b>
+      </td>
+      <td>
+        <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie"  onchange="update_links()">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Course/Author</b>
+      </td>
+      <td>
+        <input type="text" size="80" name="author" id="tAuthor" value="Kurs:Funktionalanalysis"  onchange="update_links()">
+      </td>
+    </tr>
+    <tr>
+        <td>
+          <b>Audio Slides</b>
+        </td>
+        <td>
+          <select name="slidetype" id="sSlideType"  onchange="update_links()">
+               <option value="reveal" selected>Reveal JS</option>
+               <option value="dzslides">DZ Slides</option>
+          </select>
+          <select name="audioslide" id="sAudioSlide"  onchange="update_links()">
+            <option value="yes">Use Player for Audio Slides</option>
+            <option value="no">NO Audio Slides</option>
+          </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <b>Language</b>
+        </td>
+        <td>
+          <select name="language" id="sWikiLanguage"  onchange="update_links()">
+               <option value="en">English</option>
+               <option value="es">Spanish</option>
+               <option value="de"  selected="selected">German</option>
+               <option value="fr">French</option>
+               <option value="it">Italian</option>
+               <option value="nl">Dutch</option>
+               <option value="ja">Japanese</option>
+               <option value="pl">Polish</option>
+               <option value="ru">Russian</option>
+               <option value="sv">Swedish</option>
+               <option value="vi">Vietnamese</option>
+               <option value="ar">Arabic</option>
+               <option value="id">Indonesian</option>
+               <option value="ms">Malay</option>
+               <option value="ca">Catalan</option>
+               <option value="cs">Czech</option>
+               <option value="eu">Basque</option>
+               <option value="fa">Persian</option>
+               <option value="ko">Korean</option>
+               <option value="hu">Hungarian</option>
+               <option value="no">Norwegian</option>
+               <option value="pt">Portuguese</option>
+               <option value="ro">Romanian</option>
+               <option value="sr">Serbian</option>
+               <option value="sh">Serbo-Croatian</option>
+               <option value="fi">Finnish</option>
+               <option value="tr">Turkish</option>
+               <option value="uk">Ukrainian</option>
+               <option value="zh">Chinese</option>
+               <option value="bs">Bosnian</option>
+               <option value="bg">Bulgarian</option>
+               <option value="da">Danish</option>
+               <option value="et">Estonian</option>
+               <option value="el">Greek</option>
+               <option value="eo">Esperanto</option>
+               <option value="gl">Galician</option>
+               <option value="he">Hebrew</option>
+               <option value="hr">Croatian</option>
+               <option value="lv">Latvian</option>
+               <option value="lt">Lithuanian</option>
+               <option value="nn">Norwegian Nynorsk</option>
+               <option value="sk">Slovak</option>
+               <option value="sl">Slovenian</option>
+               <option value="th">Thai</option>
+             </select>
+        </td>
+    </tr>
+  </table>
+  <h3>Footer Creator for Wiki2Reveal Presentation:</h3>
+  Copy the link in the textbox below into your course page:
+  <ul>
+    <li>
+      <b>Course Page:</b> Use the <a href="#" onclick="back2startpage()">Course Page Link Creator</a> for the Wiki Course Page <a id="courseurl" href="undefined" target="_blank">Undefined Course Page</a>.
+    </li>
+    <li>
+      <b>Wikiversity Page:</b> The Wiki source article for Wiki2Reveal will be defined on <a id="wikiurl" href="undefined" target="_blank">Undefined Wiki Page</a>
+    </li>
+    <li>
+      <b>Wiki2Reveal Page:</b> The Wiki2Reveal presentation will be defined on <a id="wiki2revealurl" href="undefined" target="_blank">Undefined Wiki2URL Page</a>
+    </li>
+  </ul>
+  <hr>
+
   <textarea id="footerout" rows="35" cols="90"></textarea>
 <div style="display:none">
   <b>Footer Wiki Source EN:</b></br>
@@ -165,12 +261,6 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
 </div>
 </body>
 
-  <!--
-  <script src="reveal/lib/js/head.min.js"></script>
-  <script src="reveal/js/reveal.js"></script>
--->
-    </body>
-
     <script>
     //---------------------------------------
     //------READ LINKPARAMETER---------------
@@ -247,19 +337,12 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
           vTemplate += el("wikisrc").value
       };
       setDomainName();
-      vTemplate = replaceString(vTemplate,"___AUDIO___",vAudioSlide);
-      vTemplate = replaceString(vTemplate,"___COURSE___",vAuthor);
-      vTemplate = replaceString(vTemplate,"___COURSE_ENCODED___",encodeURI(vAuthor));
-      vTemplate = replaceString(vTemplate,"___DOMAIN___",vDomain);
-      vTemplate = replaceString(vTemplate,"___DOMAINNAME___",vDomainName);
-      vTemplate = replaceString(vTemplate,"___LANGUAGE___",vLanguage);
-      vTemplate = replaceString(vTemplate,"___TITLE___",vTitle);
-      vTemplate = replaceString(vTemplate,"___TITLE_ENCODED___",encodeURI(vTitle));
+      vTemplate = replace_marker(vTemplate);
       el("footerout").value = vTemplate
     };
 
 
-    createFooter();
+    update_links();
     </script>
 
 </html>

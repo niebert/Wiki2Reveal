@@ -28,6 +28,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   var data = {
     "mathexpr": []
   };
+  // does not tokenize all <math> tags - see Kurs:Funktionalanalysis/Hahn-Banach - reeller Fall
   pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   // replace the Math-Tags for Reveal output
@@ -276,8 +277,39 @@ function replaceToken2Math(pMarkdown,data,pOptions) {
   return pMarkdown;
 }
 
+function tokenizeMath(wiki, data, pOptions) {
+  var vNow = new Date();
+  data.timeid = data.timeid || vNow.getTime();
+  var timeid = data.timeid;
+  var vCount = 0;
+  console.log("tokenizeMathBlock() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/\n[:]+<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+    vCount++;
+    vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
+    data.mathexpr.push({
+      "type":"block",
+      "attrs": attrs,
+      "label":vLabel,
+      "math": inside
+    });
+    return "\n" + vLabel;
+  });
+  console.log("tokenizeMathInline() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+    vCount++;
+    vLabel = "___MATH_INLINE_"+data.timeid+"_ID_"+vCount+"___";
+    data.mathexpr.push({
+      "type":"inline",
+      "attrs": attrs,
+      "label":vLabel,
+      "math": inside
+    });
+    return vLabel;
+  });
+  return wiki;
+}
 
-function tokenizeMath (wikicode, data, pOptions) {
+function XtokenizeMath (wikicode, data, pOptions) {
   var vNow = new Date();
   data.timeid = data.timeid || vNow.getTime();
   var timeid = data.timeid;

@@ -77,7 +77,7 @@ fs.readFile(file2, 'utf8', function readFileCallback(err, data){
 		   if (err){
 		       console.log(err);
 		   } else {
-		        outfile3 = b4c.replace_version(data,pkg);
+		        outfile4 = b4c.replace_version(data,pkg);
 		   }
 });
 
@@ -85,4 +85,5 @@ setTimeout(function () {
 	b4c.save_file(file1, outfile1);
 	b4c.save_file(file2, outfile2);
 	b4c.save_file(file3, outfile3);
+	b4c.save_file(file4, outfile4);
 },1500);

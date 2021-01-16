@@ -3138,7 +3138,7 @@ var tokenizeMathBlock = function tokenizeMathBlock(wikicode, data, options) {
   if (wikicode) {
     // create the mathexpr array if
     //var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
-    var vSearch = /\n[:]+[\s]*?<math[^>]*?>(.*?)<\/math>/gi; //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
+    var vSearch = /\n([:]+[\s]*?<math[^>]*?>)(.*?)(<\/math>)/gi; //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
     // \n            # newline
     // [:]+          # one or more colons
     // [\s]*?        # (optional) tabs and white space
@@ -3157,7 +3157,7 @@ var tokenizeMathBlock = function tokenizeMathBlock(wikicode, data, options) {
       vCount++;
       console.log("Math Expression " + vCount + ": '" + vResult[1] + "' found");
       vLabel = "___MATH_BLOCK_" + data.timeid + "_ID_" + vCount + "___";
-      var vFound = replaceMathNewLines(vResult[1]);
+      var vFound = replaceMathNewLines(vResult[0]);
       data.mathexpr.push({
         "type": "block",
         "label": vLabel,

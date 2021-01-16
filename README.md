@@ -1,5 +1,5 @@
-# Wiki2Reveal <span id4marker="version">1.2.3</span>
-**Version Date: <span id4marker="datetime">123213</span>**
+# Wiki2Reveal <span id4marker="version">2.1.15</span>
+**Version Date: <span id4marker="datetime">2021/01/16 17:07:30</span>**
 Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentation. The main challenges is the cross-origine call to retrieve the wiki source text of an article in the MediaWiki. Transcoding of the wiki syntax to other formats like [PanDoc](https://pandoc.org/try)
 
 ## [Wiki2Reveal Online-Demo](http://niebert.github.io/Wiki2Reveal/)
@@ -30,7 +30,7 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
   - [Start Watching the Files with Watchify](#start-watching-the-files-with-watchify)
 - [Main Library for Storing Configuration Data for Wiki2Reveal](#main-library-for-storing-configuration-data-for-wiki2reveal)
 - [Webbased Test Environments](#webbased-test-environments)
-- [Use Tools for the repository](#use-tools-for-the-repository)
+- [Tools for the repository](#tools-for-the-repository)
 - [Acknowledgement](#acknowledgement)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

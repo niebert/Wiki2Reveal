@@ -32,7 +32,7 @@ function getDateTime() {
 function replace_date_modified(data) {
 	data = data.replace(/<div\s+id="datetime"\s+style[^<]+<\/div>/g,"<div id4marker=\"datetime\" style=\"display: inline-block\">"+getDateTime()+"</div>");
 	data = data.replace(/<div\s+id4marker="datetime"\s+style[^<]+<\/div>/g,"<div id4marker=\"datetime\" style=\"display: inline-block\">"+getDateTime()+"</div>");
-	data = data.replace(/<span\s+id="datetime"\s+style[^<]+<\/div>/g,"<span id4marker=\"datetime\">"+getDateTime()+"</span>");
+	data = data.replace(/<span\s+id="datetime"\s+style[^<]+<\/span>/g,"<span id4marker=\"datetime\">"+getDateTime()+"</span>");
 	return data;
 }
 
@@ -64,7 +64,7 @@ fs.readFile(file2, 'utf8', function readFileCallback(err, data){
 });
 var outfile3 = "undefined content";
 var file3 = 'docs/wiki2reveal_link.html';
-fs.readFile(file2, 'utf8', function readFileCallback(err, data){
+fs.readFile(file3, 'utf8', function readFileCallback(err, data){
 		   if (err){
 		       console.log(err);
 		   } else {
@@ -73,7 +73,7 @@ fs.readFile(file2, 'utf8', function readFileCallback(err, data){
 });
 var outfile4 = "undefined content";
 var file4 = 'README.md';
-fs.readFile(file2, 'utf8', function readFileCallback(err, data){
+fs.readFile(file4, 'utf8', function readFileCallback(err, data){
 		   if (err){
 		       console.log(err);
 		   } else {

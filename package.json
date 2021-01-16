@@ -1,7 +1,7 @@
 {
   "name": "wiki2reveal",
   "exportvar": "Wiki2Reveal",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "description": "Converts Wiki Source Text to RevealJS Presentation including Download the online source",
   "main": "main.js",
   "directories": {

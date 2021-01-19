@@ -1,11 +1,11 @@
 /* ---------------------------------------
  Exported Module Variable: Wiki2Reveal
  Package:  wiki2reveal
- Version:  2.1.10  Date: 2021/01/06 8:43:46
+ Version:  2.1.16  Date: 2021/01/19 12:57:27
  Homepage: https://github.com/niebert/Wiki2Reveal#readme
  Author:   Engelbert Niehaus
  License:  MIT
- Date:     2021/01/06 8:43:46
+ Date:     2021/01/19 12:57:27
  Require Module with:
     const Wiki2Reveal = require('wiki2reveal');
  JSHint: installation with 'npm install jshint -g'

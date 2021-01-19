@@ -10,8 +10,8 @@ const getLibs4Build = function (pLibPath) {
     //pLibPath+'handlebars.js',
     //pLibPath+'handlebars_helpers.js',
     //'./src/npm_inherit.js',
-    //pLibPath+'exportmod.js'
-    './dist/print.js'
+    pLibPath+'exportmod.js'
+    //'./dist/print.js'
   ];
   return vLibs4Build;
 }

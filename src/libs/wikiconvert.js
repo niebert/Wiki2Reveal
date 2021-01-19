@@ -1,11 +1,11 @@
 /* ---------------------------------------
  Exported Module Variable: Wiki2Reveal
  Package:  wiki2reveal
- Version:  2.1.10  Date: 2021/01/06 8:43:46
+ Version:  2.1.16  Date: 2021/01/19 12:57:27
  Homepage: https://github.com/niebert/Wiki2Reveal#readme
  Author:   Engelbert Niehaus
  License:  MIT
- Date:     2021/01/06 8:43:46
+ Date:     2021/01/19 12:57:27
  Require Module with:
     const Wiki2Reveal = require('wiki2reveal');
  JSHint: installation with 'npm install jshint -g'
@@ -756,7 +756,7 @@ this.open_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<div><ol>";
+					return "<ol style='display: block'>";
 			break;
 			case "latex":
 					return "\\begin{enumeration}";
@@ -765,14 +765,15 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "<div><ol>";
+				console.warn("Output format not defined in open_bullet_point()");
+				return "<ol style='display: block'>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<div><ul>";
+					return "<ul style='display: block'>";
 			break;
 			case "latex":
 					return "\\begin{itemize}";
@@ -781,7 +782,8 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "<div><ul>";
+				console.warn("Output format not defined in open_bullet_point()");
+				return "<ul style='display: block'>";
 		}
 	}
 }
@@ -793,7 +795,7 @@ this.close_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ol></div>";
+					return "</ol>";
 			break;
 			case "latex":
 					return "\\end{enumeration}";
@@ -802,14 +804,15 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ol></div>";
+			console.warn("Output format not defined in close_bullet_point()");
+			return "</ol>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ul></div>";
+					return "</ul>";
 			break;
 			case "latex":
 					return "\\end{itemize}";
@@ -818,7 +821,8 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ul></div>";
+				console.warn("Output format not defined in close_bullet_point()");
+				return "</ul>";
 		}
 	}
 }
@@ -1259,6 +1263,11 @@ this.process_normal = function(wikitext) {
 
 	};
 	//----End of Method clean_source Definition
+	var wikiconfig = {
+			options: {
+					'link-image': true //Preserve backward compat
+			}
+	}
 
 
 			//#################################################################
@@ -1274,11 +1283,6 @@ this.process_normal = function(wikitext) {
 			//# created with JSCC  2017/03/05 18:13:28
 			//# last modifications 2018/01/21 17:17:18
 			//#################################################################
-			var wikiconfig = {
-					options: {
-							'link-image': true //Preserve backward compat
-					}
-			}
 
 			this.replaceEnumeration = function(pWikiCode) {
 				return this.processWiki(pWikiCode,wikiconfig)
@@ -1317,18 +1321,25 @@ this.process_normal = function(wikitext) {
 					}
 					else if (line.match(/^(\*+) /)!=null)
 					{
+						// BULLET POINT LIST
 						// find start line and ending line
 						start = i;
-						while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null) i++;
+						// while (i < lines.length && lines[i].match(/^(\*+|\#\#+)\:? /)!=null) i++;
+						while (i < lines.length && lines[i] && lines[i].match(/^(\*|\*[\#\:\*]+|\:[\:\*\#]+) /)!=null) {
+							i++;
+						}
 						i--;
 
 						html += this.process_bullet_point(lines,start,i);
 					}
 					else if (line.match(/^(\#+) /)!=null)
 					{
+						// ENUMERATION LIST
 						// find start line and ending line
 						start = i;
-						while (i < lines.length && lines[i].match(/^(\#+|\*\*+)\:? /)!=null) i++;
+						while (i < lines.length && lines[i] && lines[i].match(/^(\#+|\*\*+)\:+? /)!=null) {
+							i++;
+						}
 						i--;
 
 						html += this.process_bullet_point(lines,start,i);
@@ -1408,18 +1419,48 @@ this.process_normal = function(wikitext) {
 				return wikitext;
 			}
 
+			this.get_nested_count = function(lines,j) {
+				var nested_count = 0;
+				if (lines[j]) {
+					var vMatch = lines[j].match(/^([\*\#\:]+)\:? /);
+					if (vMatch[1]) {
+						nested_count = vMatch[1].length;
+					} else {
+						console.warn("WARNING: process_bullet_point() - vMatch in lines["+j+"] undefined");
+					}
+				} else {
+					console.warn("WARNING: process_bullet_point() - lines[j] undefined");
+				}
+				return nested_count;
+			}
+
 			this.process_bullet_point = function(lines,start,end) {
-					var i = start;
-
-				var html = (lines[start].charAt(0)=='*')?"<ul>":"<ol>";
-
-			    html += '\n';
+				console.log("CALL: process_bullet_point() - enumeration");
+				var vStack = [];
+				var i = start;
+				var ci = 0; //char index
+				var html = "";
+				var list_char = lines[start].charAt(ci);
+				switch (list_char) {
+					case "*":
+						html += "<ul style='display: block'>";
+						vStack.push(list_char);
+					break;
+					case "#":
+						html += "<ol style='display: block'>";
+						vStack.push(list_char);
+					break;
+					default:
+						console.warn("WARNING: lines["+start+"]='"+lines[start]+"' is not a itemize or enumeration!");
+				}
+				 html += '\n';
 
 				for(var i=start;i<=end;i++) {
 
 					html += "<li>";
 
-					var this_count = lines[i].match(/^(\*+|\#+) /)[1].length;
+					var this_count = this.get_nested_count(lines,i);
+					//lines[i].match(/^(\*+|\#+) /)[1].length;
 
 					html += this.process_normal(lines[i].substring(this_count+1));
 
@@ -1427,8 +1468,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
-
+							var nested_count = this.get_nested_count(lines,j);
 							if (nested_count < this_count)
 								break;
 							else {
@@ -1449,7 +1489,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							var nested_count = this.get_nested_count(lines,j);
 							if (nested_count <= this_count)
 								break;
 							else
@@ -1466,7 +1506,7 @@ this.process_normal = function(wikitext) {
 					{
 						var nested_end = i;
 						for (var j = i + 1; j <= end; j++) {
-							var nested_count = lines[j].match(/^(\*+|\#+)\:? /)[1].length;
+							var nested_count = this.get_nested_count(lines,j);
 
 							if (nested_count < this_count)
 								break;
@@ -1486,9 +1526,15 @@ this.process_normal = function(wikitext) {
 
 					html += "</li>\n";
 				}
-
+				/*
+				if (lines[start].charAt(0)=='*') {
+					html += "</ul></div>"
+				} else if (lines[start].charAt(0)=='#') {
+					html += "</ol></div>"
+				}
+				*/
 				html += (lines[start].charAt(0)=='*')?"</ul>":"</ol>";
-			    html += '\n';
+			  html += '\n';
 				return html;
 			}
 
@@ -1758,7 +1804,7 @@ this.process_normal = function(wikitext) {
 				}
 				//replace_str = '<video src="'+vURL+'"></video>'
 				pWikiCode = pWikiCode.replace(tokens[0], replace_str);
-			//} else if ((vFileType == "svg") || (vFileType == "img")) {
+			//} else if ((vFileType == "svg") || (vFileType == "img")) {
 			} else if ((vFileType == "img") || (vFileType == "svg")) {
 				//----------------------------------------------
 				//----------- MEDIATYPE: IMAGE-----------------
@@ -1807,7 +1853,7 @@ this.process_normal = function(wikitext) {
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + "'>";
+						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + '">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length
@@ -1827,7 +1873,7 @@ this.process_normal = function(wikitext) {
 	//# Parameter:
 	//#    pCaption:String
 	//# Comment:
-	//#    Correct a caption removes ]] at end
+	//#    Correct a caption removes ]] at end
 	//# Return: String
 	//# created with JSCC  2017/03/05 18:13:28
 	//# last modifications 2018/01/21 17:17:18

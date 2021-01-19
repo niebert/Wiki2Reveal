@@ -47,7 +47,8 @@
   },
   "homepage": "https://github.com/niebert/Wiki2Reveal#readme",
   "dependencies": {
-    "nodemw": "^0.12.0"
+    "nodemw": "^0.12.0",
+    "wtf_fetch": "^2.0.1"
   },
   "devDependencies": {
     "build4code": "^0.3.33"

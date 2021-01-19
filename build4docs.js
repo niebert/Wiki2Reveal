@@ -12,19 +12,30 @@ var lib_header = b4c.get_header(pkg);
 var outmain = lib_header;
 
 
-var vFileNameArray = ["audioplayer.js","audioslide.js","wiki2html.js","wikiconvert.js","wiki2reveal_generator.js"];
+var vFileNameArray = ["wtf_wikipedia.js","audioplayer.js","audioslide.js","wiki2html.js","wikiconvert.js","wtf_fetch.js","wiki2reveal_generator.js","EXPORTMOD"];
 
 function docs2src(pFileName,pi) {
   var vFileName = pFileName || (pkg.name + ".js");
+  var vSourceFileName = "";
+  var vSaveFileName = "";
+
   if (vFileName) {
-    fs.readFile('./docs/js/'+vFileName, 'utf8', function readFileCallback(err, data){
+    if (vFileName == "EXPORTMOD") {
+      vFileName = "src/exportmod.js";
+      vSourceFileName = './src/exportmod.js';
+      vSaveFileName = 'src/libs/exportmod.js';
+    } else {
+      vSourceFileName = './docs/js/'+vFileName;
+      vSaveFileName = 'src/libs/'+vFileName;
+    }
+    fs.readFile(vSourceFileName, 'utf8', function readFileCallback(err, data){
         if (err){
             console.log(err);
         } else {
           var outfile = lib_header;
           outfile += "\n" + data + "\n";
-          b4c.save_file('src/libs/' + vFileName, outfile);
-          vFileArray[pi] = "\n// Library: js/" + vFileName + " \n\n" + data + "\n";
+          b4c.save_file(vSaveFileName, outfile);
+          vFileArray[pi] = "\n// Library: " + vFileName + " \n\n" + data + "\n";
         }
     });
   }

@@ -9,6 +9,21 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   } else {
     pOptions.slidetype = "reveal";
   }
+  return get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions);
+}
+
+function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions) {
+  if (pOptions) {
+    if (pOptions.slidetype) {
+      console.log("Set slidetype to '" + pOptions.slidetype + "'");
+    } else {
+      pOptions.slidetype = "reveal";
+    }
+  }  else {
+    pOptions = {
+      "slidetype": "reveal"
+    };
+  }
   var vWikiID = pLanguage+pDomain;
   var page_identifier = pTitle.replace(/ /g,"_");
   var vDocJSON = {}; // vDocJSON stores parsed content

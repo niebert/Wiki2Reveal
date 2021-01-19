@@ -1,11 +1,11 @@
 /* ---------------------------------------
  Exported Module Variable: Wiki2Reveal
  Package:  wiki2reveal
- Version:  2.1.10  Date: 2021/01/06 8:43:46
+ Version:  2.1.16  Date: 2021/01/19 12:57:27
  Homepage: https://github.com/niebert/Wiki2Reveal#readme
  Author:   Engelbert Niehaus
  License:  MIT
- Date:     2021/01/06 8:43:46
+ Date:     2021/01/19 12:57:27
  Require Module with:
     const Wiki2Reveal = require('wiki2reveal');
  JSHint: installation with 'npm install jshint -g'
@@ -24,6 +24,21 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
     console.log("Set slidetype to 'dzslides'");
   } else {
     pOptions.slidetype = "reveal";
+  }
+  return get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions);
+}
+
+function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions) {
+  if (pOptions) {
+    if (pOptions.slidetype) {
+      console.log("Set slidetype to '" + pOptions.slidetype + "'");
+    } else {
+      pOptions.slidetype = "reveal";
+    }
+  }  else {
+    pOptions = {
+      "slidetype": "reveal"
+    };
   }
   var vWikiID = pLanguage+pDomain;
   var page_identifier = pTitle.replace(/ /g,"_");
@@ -44,6 +59,7 @@ function getWiki2Reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions)
   var data = {
     "mathexpr": []
   };
+  // does not tokenize all <math> tags - see Kurs:Funktionalanalysis/Hahn-Banach - reeller Fall
   pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   // replace the Math-Tags for Reveal output
@@ -292,8 +308,39 @@ function replaceToken2Math(pMarkdown,data,pOptions) {
   return pMarkdown;
 }
 
+function tokenizeMath(wiki, data, pOptions) {
+  var vNow = new Date();
+  data.timeid = data.timeid || vNow.getTime();
+  var timeid = data.timeid;
+  var vCount = 0;
+  console.log("tokenizeMathBlock() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/\n[:]+<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+    vCount++;
+    vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
+    data.mathexpr.push({
+      "type":"block",
+      "attrs": attrs,
+      "label":vLabel,
+      "math": inside
+    });
+    return "\n" + vLabel;
+  });
+  console.log("tokenizeMathInline() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+    vCount++;
+    vLabel = "___MATH_INLINE_"+data.timeid+"_ID_"+vCount+"___";
+    data.mathexpr.push({
+      "type":"inline",
+      "attrs": attrs,
+      "label":vLabel,
+      "math": inside
+    });
+    return vLabel;
+  });
+  return wiki;
+}
 
-function tokenizeMath (wikicode, data, pOptions) {
+function XtokenizeMath (wikicode, data, pOptions) {
   var vNow = new Date();
   data.timeid = data.timeid || vNow.getTime();
   var timeid = data.timeid;
@@ -383,20 +430,20 @@ function tokenizeCitation (wiki, data, options) {
     console.log("tokenize citations was not performed - options.parse.citations=false");
     //wiki = tokenizeRefs(wiki, data, options);
     // (1) References without a citation label
-    wiki = wiki.replace(/<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
+    wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
       // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
       var vLabel = getCiteLabel(data,references.length);
       return vLabel;
     });
     // (2) Cite a reference by a label WITHOUT reference
     // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
-    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
+    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
       var vLabel = getCiteLabel(data,references.length);
       return vLabel;
     });
     // (3) Reference with citation label that is used multiple time in a document by (2)
     //wiki = wiki.replace(/<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
-    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
+    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
         //let vLabel = getCiteLabel(data,name2label(tmpl));
       var vLabel = name2label(name);
       if (vLabel) {
@@ -420,7 +467,7 @@ function tokenizeCitation (wiki, data, options) {
 function tokenizeRefs (wiki, data, options, preferences) {
   var references = [];
   // (1) References without a citaion label
-  wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
+  wiki = wiki.replace(/c<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
     // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
     var vLabel = getCiteLabel(data,references.length);
     wiki = storeReference(wiki,data,references,tmpl,vLabel);

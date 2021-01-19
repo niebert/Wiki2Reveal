@@ -399,20 +399,20 @@ function tokenizeCitation (wiki, data, options) {
     console.log("tokenize citations was not performed - options.parse.citations=false");
     //wiki = tokenizeRefs(wiki, data, options);
     // (1) References without a citation label
-    wiki = wiki.replace(/<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
+    wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
       // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
       var vLabel = getCiteLabel(data,references.length);
       return vLabel;
     });
     // (2) Cite a reference by a label WITHOUT reference
     // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
-    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
+    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
       var vLabel = getCiteLabel(data,references.length);
       return vLabel;
     });
     // (3) Reference with citation label that is used multiple time in a document by (2)
     //wiki = wiki.replace(/<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
-    wiki = wiki.replace(/<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
+    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
         //let vLabel = getCiteLabel(data,name2label(tmpl));
       var vLabel = name2label(name);
       if (vLabel) {
@@ -436,7 +436,7 @@ function tokenizeCitation (wiki, data, options) {
 function tokenizeRefs (wiki, data, options, preferences) {
   var references = [];
   // (1) References without a citaion label
-  wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
+  wiki = wiki.replace(/c<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
     // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
     var vLabel = getCiteLabel(data,references.length);
     wiki = storeReference(wiki,data,references,tmpl,vLabel);

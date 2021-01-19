@@ -740,7 +740,7 @@ this.open_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<div><ol>";
+					return "<ol style='display: block'>";
 			break;
 			case "latex":
 					return "\\begin{enumeration}";
@@ -749,14 +749,15 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "<div><ol>";
+				console.warn("Output format not defined in open_bullet_point()");
+				return "<ol style='display: block'>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "<div><ul>";
+					return "<ul style='display: block'>";
 			break;
 			case "latex":
 					return "\\begin{itemize}";
@@ -765,7 +766,8 @@ this.open_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "<div><ul>";
+				console.warn("Output format not defined in open_bullet_point()");
+				return "<ul style='display: block'>";
 		}
 	}
 }
@@ -777,7 +779,7 @@ this.close_bullet_point = function (pChar) {
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ol></div>";
+					return "</ol>";
 			break;
 			case "latex":
 					return "\\end{enumeration}";
@@ -786,14 +788,15 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ol></div>";
+			console.warn("Output format not defined in close_bullet_point()");
+			return "</ol>";
 		}
 	} else {
 		// itemize pChar == "*"
 		switch (this.aOutFormat) {
 			case "reveal":
 			case "html":
-					return "</ul></div>";
+					return "</ul>";
 			break;
 			case "latex":
 					return "\\end{itemize}";
@@ -802,7 +805,8 @@ this.close_bullet_point = function (pChar) {
 					return "\n";
 			break;
 			default:
-				return "</ul></div>";
+				console.warn("Output format not defined in close_bullet_point()");
+				return "</ul>";
 		}
 	}
 }
@@ -1243,6 +1247,11 @@ this.process_normal = function(wikitext) {
 
 	};
 	//----End of Method clean_source Definition
+	var wikiconfig = {
+			options: {
+					'link-image': true //Preserve backward compat
+			}
+	}
 
 
 			//#################################################################
@@ -1258,11 +1267,6 @@ this.process_normal = function(wikitext) {
 			//# created with JSCC  2017/03/05 18:13:28
 			//# last modifications 2018/01/21 17:17:18
 			//#################################################################
-			var wikiconfig = {
-					options: {
-							'link-image': true //Preserve backward compat
-					}
-			}
 
 			this.replaceEnumeration = function(pWikiCode) {
 				return this.processWiki(pWikiCode,wikiconfig)
@@ -1415,6 +1419,7 @@ this.process_normal = function(wikitext) {
 			}
 
 			this.process_bullet_point = function(lines,start,end) {
+				console.log("CALL: process_bullet_point() - enumeration");
 				var vStack = [];
 				var i = start;
 				var ci = 0; //char index
@@ -1422,11 +1427,11 @@ this.process_normal = function(wikitext) {
 				var list_char = lines[start].charAt(ci);
 				switch (list_char) {
 					case "*":
-						html += "<ul>";
+						html += "<ul style='display: block'>";
 						vStack.push(list_char);
 					break;
 					case "#":
-						html += "<ol>";
+						html += "<ol style='display: block'>";
 						vStack.push(list_char);
 					break;
 					default:
@@ -1505,9 +1510,15 @@ this.process_normal = function(wikitext) {
 
 					html += "</li>\n";
 				}
-
+				/*
+				if (lines[start].charAt(0)=='*') {
+					html += "</ul></div>"
+				} else if (lines[start].charAt(0)=='#') {
+					html += "</ol></div>"
+				}
+				*/
 				html += (lines[start].charAt(0)=='*')?"</ul>":"</ol>";
-			    html += '\n';
+			  html += '\n';
 				return html;
 			}
 

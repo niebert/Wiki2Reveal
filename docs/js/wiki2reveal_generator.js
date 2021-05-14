@@ -444,7 +444,7 @@ function tokenizeCitation (wiki, data, options) {
     console.log("tokenize citations performed");
     wiki = tokenizeRefs(wiki, data, options,references);
   }
-  return wiki
+  return wiki;
 }
 
 

@@ -1634,11 +1634,13 @@ this.process_normal = function(wikitext) {
 
 	this.check_firefox = function () {
 		var vBool = false;
-		var browser = navigator.userAgent.toLowerCase();
-		if (browser.indexOf('firefox') > -1) {
-    	console.log('Browser is Firefox');
-			vBool = true;
-		};
+		if (navigator) {
+			var browser = navigator.userAgent.toLowerCase();
+			if (browser.indexOf('firefox') > -1) {
+	    	console.log('Browser is Firefox');
+				vBool = true;
+			};
+		}
 		return vBool;
 	}
 
@@ -1798,7 +1800,7 @@ this.process_normal = function(wikitext) {
 				var vSize = "width: 50%";
 				var vWidth = this.aDefaultImageWidth;
 
-				for (var i = 1; i < (vLinkSplit.length-1); i++) {
+				for (var i = 1; i < (vLinkSplit.length); i++) {
 							// vMediaParam += "|"+vLinkSplit[i];
 							/*
 							if (vSizeRE.test(vLinkSplit[i])) {
@@ -1837,7 +1839,7 @@ this.process_normal = function(wikitext) {
 						var vSize = "";
 						vCaption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
 						//replace_str = '___IMG_OPEN___File:' + vURL + vMediaParam + '|' + vCaption + '___IMG_CLOSE___';
-						replace_str = '<img src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + '">';
+						replace_str = '<img  class="replaceimg3" src="' + vURL + '" alt="'+vCaption+'"  style="'+vImgCenter+vSize+'"  width="' + vWidth + '">';
 						pWikiCode = pWikiCode.replace(tokens[0], replace_str);
 					}
 				}; // else if vLineSplit.length

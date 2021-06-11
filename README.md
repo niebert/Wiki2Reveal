@@ -141,7 +141,7 @@ $.ajax({
 ### Wiki2HTML converter
 The first milestone downloaded the MediaWiki source text. Now the source must be converted to HTML, so that the slides in RevealJS can be generated from the sections of the MediaWiki source text.
 
-With [JavaScriptClassCreator JSCC](https://niebert.github.io/JavaScriptClassCreator) a JavaScript class will be generated that performs the following tasks.
+With [JavaScriptClassCreator JSCC](https://niebert.github.io/JavascriptClassCreator) a JavaScript class will be generated that performs the following tasks.
 * Handle the Math expressions and convert them into displayed MathJax expressions in RevealJS.
 * Convert local links and references into remote links in the RevealJS presentation, so that a click on link in the slide will display the corresponding link in the MediaWiki (e.g. Wikipedia or Wikiversity).
 * Convert references to images, video and audio in the slide to the correponding links in WikiMedia Commons.

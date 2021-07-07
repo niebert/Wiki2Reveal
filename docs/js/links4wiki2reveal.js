@@ -1,6 +1,7 @@
 
   function replace_marker(pTemplate) {
     var vTemplate = pTemplate || "undefined replace_marker template";
+    vTemplate = replaceString(vTemplate,"___SLIDETYPE___",vSlideType);
     vTemplate = replaceString(vTemplate,"___AUDIO___",vAudioSlide);
     vTemplate = replaceString(vTemplate,"___COURSE___",vAuthor);
     vTemplate = replaceString(vTemplate,"___COURSE_ENCODED___",encodeURI(vAuthor));
@@ -91,6 +92,7 @@
               vLanguage = el("sWikiLanguage").value;
               vCourse = el("tAuthor").value;
               vDomain = el("sWikiDomain").value;
+              vSlideType = el("sSlideType").value;
               vDomainName = firstUpperCase(vDomain);
               vTitle = el("tTitle").value;
               vShortTitle = getShortTitle(vTitle);

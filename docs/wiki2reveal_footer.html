@@ -117,7 +117,7 @@
           <select name="language" id="sWikiLanguage"  onchange="update_links()">
                <option value="en">English</option>
                <option value="es">Spanish</option>
-               <option value="de"  selected="selected">German</option>
+               <option value="de" selected="selected">German</option>
                <option value="fr">French</option>
                <option value="it">Italian</option>
                <option value="nl">Dutch</option>
@@ -179,7 +179,28 @@
   <hr>
 
   <textarea id="footerout" rows="35" cols="90"></textarea>
-<div style="display:none">
+
+  <div style="display:none">
+  <b>Header Wiki Source EN:</b></br>
+<textarea id="wikiheader" rows="12" cols="120">
+== Introduction ==
+This page can be displayed as '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+Single sections are regarded as slides and modifications on the slides will immediately affect the content of the slides.
+
+== Objective ==
+This learning resource in Wikiversity has the objective to ...
+
+== Target Group ==
+The target group of the learning resource is
+
+== Learning Tasks / Activities ==
+
+=== See also ===
+* [[Wiki2Reveal]]
+
+  </textarea>
+
+
   <b>Footer Wiki Source EN:</b></br>
     <textarea id="wikisrc" rows="12" cols="120">
 == Page Information ==
@@ -199,8 +220,29 @@ The '''[https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&tit
 [[Category:Wiki2Reveal]]
 
   </textarea>
+
+  <b>Header Wiki Source DE:</b></br>
+<textarea id="wikiheader_de" rows="12" cols="120">
+== Einleitung ==
+Diese Seite kann als '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal Folien]''' angezeigt werden.
+Einzelne Abschnitte werden als Folien betrachtet und Änderungen an den Folien wirken sich sofort auf den Inhalt der Folien aus.
+
+== Zielsetzung ==
+Diese Lernressource in der Wikiversity hat das Ziel, ...
+
+== Zielgruppe ==
+Die Zielgruppe der Lernressource ist
+
+== Aufgaben für Lernende / Studierende ==
+
+=== Siehe auch ===
+* [[Wiki2Reveal]]
+
+  </textarea>
+
   <b>Footer Wiki Source DE:</b></br>
     <textarea id="wikisrc_de" rows="12" cols="120">
+
 == Seiteninformation ==
 Diese Lernresource können Sie als '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal-Foliensatz]''' darstellen.
 
@@ -220,8 +262,29 @@ Dieser '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMA
 
   </textarea>
 
+  <b>Header Wiki Source FR:</b></br>
+<textarea id="wikiheader_fr" rows="12" cols="120">
+
+== Introduction ==
+Cette page peut être affichée comme '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+Les sections individuelles sont considérées comme des diapositives et les modifications sur les diapositives affecteront immédiatement le contenu des diapositives.
+
+== Objectif ==
+Cette ressource pédagogique de Wikiversity a pour objectif de ...
+
+== Groupe cible ==
+Le groupe cible de cette ressource pédagogique est
+
+== Tâches pour les apprenants / étudiants
+
+=== Voir aussi ===
+* [[Wiki2Reveal]]
+
+  </textarea>
+
   <b>Footer Wiki Source FR:</b></br>
     <textarea id="wikisrc_fr" rows="12" cols="120">
+
 == Informations de Page ==
 
 === Wiki2Reveal ===
@@ -238,6 +301,27 @@ Ce jeu de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___D
 [[Category:Wiki2Reveal]]
 
   </textarea>
+
+
+  <b>Header Wiki Source ES:</b></br>
+<textarea id="wikiheader_es" rows="12" cols="120">
+
+== Introducción ==
+Esta página puede mostrarse como '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+Las secciones individuales se consideran diapositivas y las modificaciones en las diapositivas afectarán inmediatamente al contenido de las mismas.
+
+== Objetivo ==
+Este recurso de aprendizaje en la Wikiversidad tiene como objetivo...
+
+== Grupo destinatario ==
+El grupo objetivo del recurso de aprendizaje es
+
+== Tareas para los alumnos / estudiantes ==
+
+=== Ver también ===
+* [[Wiki2Reveal]]
+
+</textarea>
 
 
   <b>Footer Wiki Source ES:</b></br>
@@ -325,8 +409,24 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?doma
       var vTemplate = "";
       console.log("Check vDemo='" + vDemo +"'");
       if (vDemo == "yes") {
+        switch (vLanguage) {
+          case "de":
+            vTemplate += el("wikiheader_de").value
+          break;
+          case "en":
+            vTemplate += el("wikiheader").value
+          break;
+          case "es":
+            vTemplate += el("wikiheader_es").value
+          break;
+          case "fr":
+            vTemplate += el("wikiheader_fr").value
+          break;
+          default:
+            vTemplate += el("wikiheader").value
+        };
         for (var i = 1; i < 4; i++) {
-          vTemplate += "== Header " + i + " ==\nText of Slide " + i + "\n\n"
+          //vTemplate += "== Header " + i + " ==\nText of Slide " + i + "\n\n"
         }
       }
       switch (vLanguage) {

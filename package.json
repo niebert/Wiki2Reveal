@@ -1,7 +1,7 @@
 {
   "name": "wiki2reveal",
   "exportvar": "Wiki2Reveal",
-  "version": "2.1.17",
+  "version": "2.1.18",
   "description": "Converts Wiki Source Text to RevealJS Presentation including Download the online source",
   "main": "main.js",
   "directories": {
@@ -46,8 +46,7 @@
     "url": "https://github.com/niebert/Wiki2Reveal/issues"
   },
   "homepage": "https://github.com/niebert/Wiki2Reveal#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "build4code": "^0.3.33"
   }

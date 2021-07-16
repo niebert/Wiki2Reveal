@@ -94,16 +94,8 @@ var indent = (function (root) {
       $consumeEndMatch: true
     },
     {
-      $languages: "html",
-      $name: "audio",
-      $startPatterns: [/<audio/i],
-      $endPatterns: [/<\/audio>/i],
-      $ignoreRules: true,
-      $consumeEndMatch: false
-    },
-    {
       $languages: "js html",
-      $name: "void-tags", //  |source| removed vom Tag list EN
+      $name: "void-tags",
       $startPatterns: [
         /\<(area|base|br|col|command|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)/i],
       $endPatterns: [/>/],
@@ -258,15 +250,6 @@ var indent = (function (root) {
     },
     {
       $languages: "js html",
-      $name: "quotes",
-      $excludeIf: HTML_TAG_RULES,
-      $startPatterns: [/"/],
-      $endPatterns: [/"/, NEW_LINE_REGEX],
-      $ignoreRules: true,
-      $consumeEndMatch: true
-    },
-    {
-      $languages: "html",
       $name: "quotes",
       $excludeIf: HTML_TAG_RULES,
       $startPatterns: [/"/],

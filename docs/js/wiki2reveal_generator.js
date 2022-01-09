@@ -276,9 +276,9 @@ function replaceToken2Math(pMarkdown,pData,pOptions) {
   console.log("replace tokens back to mathematical expression for RevealJS");
   for (var i = 0; i < pData.mathexpr.length; i++) {
     vCount++;
-    vSearch = data.mathexpr[i].label;
-    vType = data.mathexpr[i].type || "inline";
-    vMath = data.mathexpr[i].math || " ";
+    vSearch = pData.mathexpr[i].label;
+    vType = pData.mathexpr[i].type || "inline";
+    vMath = pData.mathexpr[i].math || " ";
     switch (vType) {
       case "inline":
         vReplace = getMathInlineTag4Reveal(vCount,vMath);

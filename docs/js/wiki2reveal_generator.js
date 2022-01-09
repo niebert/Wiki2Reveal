@@ -34,17 +34,19 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   pMarkdown = wtf.wikiconvert.clean_source(pMarkdown,pOptions);
   pMarkdown = wtf.wikiconvert.content_before_section(pMarkdown,pOptions);
   // console.log("Remove Categories");
-  pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions)
   pMarkdown = wtf.wikiconvert.remove_categories(pMarkdown,pOptions);
   // console.log("Remove math newlines");
   //pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown,pOptions);
   // replace local image urls (e.g. [[File:my_image.png]])
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   var data = {
-    "mathexpr": []
+    "mathexpr": [],
+    "references": []
   };
   // does not tokenize all <math> tags - see Kurs:Funktionalanalysis/Hahn-Banach - reeller Fall
   pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
+  //pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions);
+  pMarkdown = tokenizeCitation(pMarkdown, data, pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   // replace the Math-Tags for Reveal output
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
@@ -69,6 +71,7 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown,pOptions);
   // create a Title slide and place the slide before output
   pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
+  pMarkdown = replaceToken2Ref(pMarkdown,data,pOptions);
   console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   pMarkdown = createTitleSlide(pTitle,pAuthor,pOptions) + "\n" + pMarkdown;
   // generate Reveal html output
@@ -265,13 +268,13 @@ function getMathInlineTag4Reveal(pCount,pMath) {
 }
 
 
-function replaceToken2Math(pMarkdown,data,pOptions) {
+function replaceToken2Math(pMarkdown,pData,pOptions) {
   var vSearch = "";
   var vReplace = "";
   var vType = "inline";
   var vCount = 0;
   console.log("replace tokens back to mathematical expression for RevealJS");
-  for (var i = 0; i < data.mathexpr.length; i++) {
+  for (var i = 0; i < pData.mathexpr.length; i++) {
     vCount++;
     vSearch = data.mathexpr[i].label;
     vType = data.mathexpr[i].type || "inline";
@@ -408,7 +411,7 @@ function XtokenizeMath (wikicode, data, pOptions) {
   return wikicode;
 }
 
-function tokenizeCitation (wiki, data, options) {
+function X_tokenizeCitation (wiki, data, options) {
   var references = [];
   if (options && options.parse && options.parse.citations && options.parse.citations == false) {
     console.log("tokenize citations was not performed - options.parse.citations=false");
@@ -416,18 +419,18 @@ function tokenizeCitation (wiki, data, options) {
     // (1) References without a citation label
     wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
       // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
-      var vLabel = getCiteLabel(data,references.length);
+      var vLabel = getCiteLabel(data,data.references.length);
       return vLabel;
     });
     // (2) Cite a reference by a label WITHOUT reference
     // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
     wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
-      var vLabel = getCiteLabel(data,references.length);
+      var vLabel = getCiteLabel(data,data.references.length);
       return vLabel;
     });
     // (3) Reference with citation label that is used multiple time in a document by (2)
     //wiki = wiki.replace(/<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
-    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([^<]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
+    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
         //let vLabel = getCiteLabel(data,name2label(tmpl));
       var vLabel = name2label(name);
       if (vLabel) {
@@ -435,7 +438,7 @@ function tokenizeCitation (wiki, data, options) {
         vLabel = getCiteLabel(data,vLabel);
       } else {
         // convert a standard label with the reference length of the array as unique ID generator
-        vLabel = getCiteLabel(data,references.length);
+        vLabel = getCiteLabel(data,data.references.length);
       }
       return vLabel;
     });
@@ -447,24 +450,178 @@ function tokenizeCitation (wiki, data, options) {
   return wiki;
 }
 
+function getReference4Label(pLabel,pInnerRef,pType) {
+  console.log("getReference4Label('"+pLabel+"','"+pInnerRef+"','"+pType+"')");
+  return {
+    template: 'citation',
+    type: pType,
+    label: pLabel,
+    data: {},
+    inline: pInnerRef
+  };
+}
 
-function tokenizeRefs (wiki, data, options, preferences) {
-  var references = [];
+function getLastChar4String(pString) {
+    var vChar = "";
+    if (pString) {
+      vChar = pString.charAt(pString.length-1);
+    };
+    return vChar;
+}
+
+
+//function tokenizeRefs (wiki, data, options, pReferences) {
+//function tokenizeRefs (wiki, data, options) {
+function tokenizeCitation (wiki, data, options) {
+  console.log("CALL: tokenizeNameRefs() wiki.length="+wiki.length);
+  //var references = pReferences || [];
+  /*
+  if (data) {
+    alert("tokenizeCitation() - data EXISTS "+JSON.stringify(data,null,4));
+    if (data && data.references) {
+      alert("tokenizeCitation() - data.references EXISTS");
+    } else {
+      alert("tokenizeCitation() - data.references does NOT exist");
+    }
+  } else {
+    alert("data does NOT exist");
+  }
+  */
+  var vRefList = getCiteLabel(data,"REFERENCES");
+  wiki = replaceString(wiki,"<references/>",vRefList);
+  data.references.push(getReference4Label(vRefList,"<references/>",'reflist'));
+
+  var refsplit = wiki.split("<ref");
+  if (refsplit.length > 1) {
+    for (var i = 1; i < refsplit.length; i++) {
+      var vMatch = "<ref"
+      var vPart = refsplit[i];
+      var vEndTag = "</ref>";
+      var vPosEnd = vPart.indexOf(vEndTag);
+      if (vPosEnd >=0) {
+          // part contains an end-tag </ref>
+          if (vPart.charAt(0) == ">") {
+            // TYPE: "<ref>...</ref>"
+            vMatch += ">";
+            // extract everything between <ref> and </ref> and store in tmpl
+            var vInnerRef = vPart.substring(1,(vPosEnd));
+            console.log("vInnerRef='"+vInnerRef+"'");
+            var vLabel = getCiteLabel(data,data.references.length);
+            data.references.push(getReference4Label(vLabel,vInnerRef,'inline'));
+            //refsplit[i] = vLabel + vPart.substring(vPosEnd+vEndTag.length);
+            refsplit[i] = vLabel + vPart.substring(vPosEnd+vEndTag.length);
+            vMatch = "<ref>" + vInnerRef + "</ref>";
+            wiki = replaceString(wiki,vMatch,vLabel);
+          } else {
+            // TYPE: "<ref name="....">...</ref>"
+            console.log("CALL: tokenizeRefs() with name='label' reference='<ref"+vPart.substring(0,100)+"...'");
+            var found = vPart.match(/^[\s]+name=["']/);
+            if (found.length > 0) {
+              vMatch += found[0];
+              // vMatch: <ref name=" or <ref name='
+              var vChar = getLastChar4String(vMatch);
+              //var vChar = vMatch.charAt(vMatch.length-1);
+              // vChar is now string terminator
+              if ((vChar == "'") || (vChar == '"')) {
+                var vBeginLabelPos = vPart.indexOf(vChar);
+                if (vBeginLabelPos >= 0) {
+                  //vMatch += vPart.slice(0,vBeginLabelPos + 1);
+                  vPart = vPart.substring(vBeginLabelPos + 1);
+                  console.log("vPart='"+vPart+"'");
+                  var vLabelEndPos = vPart.indexOf(vChar);
+                  if (vLabelEndPos > 0) {
+                    var vLabel = vPart.substring(0,vLabelEndPos);
+                    console.log("vLabel='"+vLabel+"' of wrapped with vChar=["+vChar+"] ");
+                    vLabel = getCiteLabel(data,name2label(vLabel));
+                    var vEndTagPos = vPart.indexOf(">");
+                    if (vEndTagPos >= 0) {
+                      vMatch = "<ref"+refsplit[i].substring(0,vPosEnd+vEndTag.length);
+                      //console.log("vMatch="+vMatch+"");
+                      //alert(vMatch);
+                      wiki = replaceString(wiki,vMatch,vLabel);
+                      //wiki = wiki.replace(vMatch,vLabel);
+                      var vInnerRef = vPart.substring(vEndTagPos+1,vPart.indexOf(vEndTag));
+                      data.references.push(getReference4Label(vLabel,vInnerRef,'inline'));
+                    }
+                  } else {
+                    console.warn("Label of reference not termminated in  '"+vPart.substring(0,100)+"...'");
+                  }
+                }
+              } else {
+                console.warn("No name='label' properly defined");
+              }
+            }
+
+          }
+      } else {
+        // part does not contain an end-tag </ref>
+        // could be <ref name="mylabel" />
+        var vNameEnd = "/>";
+        var vPosNameEnd = vPart.indexOf(vNameEnd);
+        if ((vPosNameEnd > 0) && (vPosNameEnd < 100)) {
+          var vMatch = "<ref"+vPart.slice(0,vPosNameEnd + vNameEnd.length);
+          console.log("vNameEnd vMatch='"+vMatch+"'");
+          var found = vPart.match(/^[\s]+name=["']/);
+          if (found && found.length > 0) {
+            var vPrefix = found[0];
+            //var vChar = vPrefix.charAt(vPrefix.length-1);
+            var vChar = getLastChar4String(vPrefix);
+            // vChar is now string terminator
+            if ((vChar == "'") || (vChar == '"')) {
+              var vBeginLabelPos = vPart.indexOf(vChar);
+              if (vBeginLabelPos >= 0) {
+                //vMatch += vPart.slice(0,vBeginLabelPos + 1);
+                vPart = vPart.substring(vBeginLabelPos + 1);
+                console.log("vPart='"+vPart+"'");
+                var vLabelEndPos = vPart.indexOf(vChar);
+                if (vLabelEndPos > 0) {
+                  var vLabel = vPart.substring(0,vLabelEndPos);
+                  console.log("vLabel='"+vLabel+"' of wrapped with vChar=["+vChar+"] ");
+                  vLabel = getCiteLabel(data,name2label(vLabel));
+                  wiki = replaceString(wiki,vMatch,vLabel);
+                } else {
+                  console.warn("Label of reference not termminated in  '"+vPart.substring(0,100)+"...'");
+                }
+              }
+            } else {
+              console.warn("No name='label' properly defined");
+            }
+          }
+        }
+      }
+
+    }
+  }
+  //data.references = references.map(r => new Reference(r));
+  //now that we're done with xml, do a generic
+  return wiki;
+}
+
+function X_tokenizeRefs (wiki, data, options, pReferences) {
+  console.log("CALL: tokenizeRefs() wiki.length="+wiki.length);
+  var references = pReferences || [];
+  wiki = tokenizeNameRefs(wiki, data, options, references)
   // (1) References without a citaion label
-  wiki = wiki.replace(/c<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
+  console.log("CALL-1: tokenizeRefs(1.1) - (ref)-citation-(/ref)");
+  wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, tmpl){
     // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
-    var vLabel = getCiteLabel(data,references.length);
+    var vLabel = getCiteLabel(data,data.references.length);
+    console.log("CALL-1: tokenizeRefs(1-2) Citation ["+vLabel+"]");
     wiki = storeReference(wiki,data,references,tmpl,vLabel);
     return vLabel;
   });
   // (2) Cite a reference by a label WITHOUT reference
+  console.log("CALL-2: tokenizeRefs(2.1) - (ref name='label'/)");
   // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
   wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"'])["'][^>]{0,200}?\/> ?/gi,function(a, tmpl) {
     let vLabel = getCiteLabel(data,name2label(tmpl));
+    console.log("CALL-2: tokenizeRefs(2.2) Citation ["+vLabel+"]");
     return vLabel;
   });
   // (3) Reference with citation label that is used multiple time in a document by (2)
+  console.log("CALL-3: tokenizeRefs(3.1) - (ref name='label')-citation-(/ref)");
   wiki = wiki.replace(/ ?<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,1000}?)<\/ref> ?/gi, function(a, name, tmpl) {
+    console.log("CALL-3: tokenizeRefs(3.2) created cite a='"+a+"' from name='"+name+"' and template='"+tmpl+"'");
     /* difference between name, label and cite label
        (3a) name='my book name#2012'
        (3b) label='my_book_name_2012'
@@ -475,19 +632,97 @@ function tokenizeRefs (wiki, data, options, preferences) {
     // Convert e.g. name='my book name#2012' to 'my_book_name_2012'
     var vLabel = name2label(name);
     if (vLabel) {
-      console.log("tokenizeRefs() created cite label='"+vLabel+"' from name='"+name+"'");
+      console.log("CALL-3: tokenizeRefs(3.3) created cite label='"+vLabel+"' from name='"+name+"'");
       vLabel = getCiteLabel(data,vLabel);
+      console.log("CALL-3: tokenizeRefs(3.4) Citation ["+vLabel+"]");
     } else {
       // convert a standard label with the reference length of the array as unique ID generator
-      vLabel = getCiteLabel(data,references.length);
+      vLabel = getCiteLabel(data,data.references.length);
+      console.log("CALL-4: tokenizeRefs(4.1) Citation ["+vLabel+"]");
     };
     wiki = storeReference(wiki,data,references,tmpl,vLabel);
     return vLabel;
   });
-  data.refs4token = references;
   //data.references = references.map(r => new Reference(r));
   //now that we're done with xml, do a generic
   return wiki;
+}
+
+function getReferenceList(pReferences) {
+  var vHTML = "<ul>";
+  var vCount = 0;
+  for (var i = 0; i < pReferences.length; i++) {
+    var vRec = pReferences[i];
+    if (vRec.type == "inline") {
+        vCount++;
+        vHTML += "<li>";
+        vHTML += "["+vCount+"] ";
+        vHTML += vRec.inline;
+        vHTML += "</li>";
+    }
+  }
+  vHTML += "</ul>";
+  return vHTML;
+}
+function replaceToken2Ref(pMarkdown,pData,pOptions) {
+  //alert("replaceToken2Ref(pMarkdown,pData,pOptions)");
+  var vSearch = "";
+  var vReplace = "";
+  var vType = "inline";
+  var vCount = 0;
+  console.log("replace tokens back to citations and references for RevealJS");
+  if (pData && pData.references) {
+    //alert("pData.references exists pData.references.length="+pData.references.length);
+    for (var i = 0; i < pData.references.length; i++) {
+      var vRec = pData.references[i];
+      vSearch = vRec.label;
+      vType = vRec.type || "inline";
+      switch (vType) {
+        case "inline":
+          vCount++;
+          //vReplace = "<img src=\"img/icons-svg/fa-book-black.svg\"><sup>["+vCount+"]</sup>";
+          vReplace = "<sup style='font-size:20px'>["+vCount+"]</sup>";
+        break;
+        case "reflist":
+          vReplace = getReferenceList(pData.references);
+        break;
+        default:
+          vReplace = "-XXX-";
+      }
+      //alert("vSearch='"+vSearch+"' vReplace='"+vReplace+"'");
+      pMarkdown = replaceString(pMarkdown,vSearch,vReplace);
+    }
+  } else {
+    console.error("replaceToken2Ref(pMarkdown,pData,pOptions) - pData.references undefined.")
+    //alert("replaceToken2Ref(pMarkdown,pData,pOptions) - pData.references undefined.")
+  }
+  return pMarkdown;
+}
+
+function X_replaceToken2Ref(pMarkdown,data,pOptions) {
+  var vSearch = "";
+  var vReplace = "";
+  var vType = "inline";
+  var vCount = 0;
+  console.log("replace tokens back to mathematical expression for RevealJS");
+  for (var i = 0; i < data.references.length; i++) {
+    vCount++;
+    var vRec = data.references[i];
+    vSearch = vRec.label;
+    vType = vRec.type || "inline";
+    switch (vType) {
+      case "inline":
+        vReplace = "<img src=\"img/icons-svg/fa-book-black.svg\"><sup>["+i+"]</sup>";
+      break;
+      case "reflist":
+        vReplace = getReferenceList(data.references);
+      break;
+      default:
+        vReplace = "-XXX-";
+    }
+    pMarkdown = replaceString(pMarkdown,vSearch,vReplace);
+  }
+  return pMarkdown;
 }
 
 function hasCitation(str) {
@@ -495,8 +730,11 @@ function hasCitation(str) {
 };
 function getCiteLabel (data,pid) {
   //replace blank and non characters or digits by underscore "_"
-  //return "___CITE_"+data.timeid+"_"+pid+"___";
-  return "<sup>("+pid+")</sup>";
+  if (!data.timeid) {
+    data.timeid = Date.now();
+  };
+  return "___CITE_"+data.timeid+"_"+pid+"___";
+  //return "<sup>("+pid+")</sup>";
 }
 
 function parseInline (str) {
@@ -546,9 +784,9 @@ function parseSentence(str) {
   };
 };
 
-function name2label(pname) {
+function name2label(pName) {
   //replace blank and non characters or digits by underscore "_"
-  var vLabel = str.replace(/[^A-Za-z0-9]/g,"_");
+  var vLabel = pName.replace(/[^A-Za-z0-9]/g,"_");
   vLabel = vLabel.replace(/[_]+/g,"_");
   vLabel = vLabel.replace(/^_/g,"");
   vLabel = vLabel.replace(/_$/g,"");

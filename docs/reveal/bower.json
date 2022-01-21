@@ -11,9 +11,6 @@
   "authors": [
     "Hakim El Hattab <hakim.elhattab@gmail.com>"
   ],
-  "dependencies": {
-    "headjs": "~1.0.3"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/hakimel/reveal.js.git"

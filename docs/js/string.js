@@ -352,7 +352,7 @@ function replaceString (pString,pSearch,pReplace) {
 
 	function getDirname4URL(pFilePath) {
 	  console.log("getDirname4URL('"+pFilePath+"')");
-	   vDirname = pFilePath.substr(0, pFilePath.lastIndexOf("/") - 1);
+	   vDirname = pFilePath.substring(0, pFilePath.lastIndexOf("/") - 1);
 	   if (vDirname.indexOf("//")>0) {
 	     vDirname = (vDirname.split("//"))[1];
 	   };

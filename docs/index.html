@@ -6,10 +6,26 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/wtf_wikipedia.js"></script>
     <script src="js/linkparam.js"></script>
-  </head>
+    <script src="js/showhide.js"></script>
+    <script src="js/wiki2links.js"></script>
+    </head>
   <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
     <script>
-      var vDataJSON = {
+    //---------------------------------------
+    //------DEFAULT VALUES-------------------
+    //---------------------------------------
+    var vTitle = "Normen, Metriken, Topologie";
+    var vShortTitle = "";
+    var vCourse = "Wikiversity DE";
+    var vCourseTitle = "";
+    var vLanguage = "de";
+    var vDomain = "wikiversity";
+    var vDomainName = "Wikiversity";
+    var vAudioSlide = "no";
+    var vSlideType = "reveal";
+    var vDemo = "no";
+    //---------------------------------------
+    var vDataJSON = {
         "w2r":{
           "header":"W2R Header",
           "tail":"W2R Tail"
@@ -33,7 +49,17 @@
         vURL += "language="+el("sWikiLanguage").value;
         vURL += "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
@@ -46,7 +72,17 @@
         vURL += "language="+el("sWikiLanguage").value;
         vURL += "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
@@ -56,7 +92,17 @@
       function callWiki2DZSlides() {
         var vURL = "wiki2dzslides.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         vURL += "&slidetype=" + el("sSlideType").value;
         //document.location.href=vURL;
@@ -66,7 +112,17 @@
       function callWiki2Reveal() {
         var vURL = "wiki2reveal.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
@@ -77,7 +133,17 @@
         console.log("Title='" + el("tTitle").value + "'");
         var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
@@ -87,7 +153,17 @@
       function callWikiLink() {
         var vURL = "wiki2reveal_link.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
         //document.location.href=vURL;
@@ -97,7 +173,17 @@
       function callWikiDemoPage() {
         var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
-        vURL += "&author="+encodeURI(el("tAuthor").value);
+        if (el("tShortTitle")) {
+          if (el("tShortTitle").value) {
+            vURL += "&shorttitle="+encodeURI(el("tShortTitle").value);
+          }
+        }
+        vURL += "&course="+encodeURI(el("tCourse").value);
+        if (el("tCourseTitle")) {
+          if (el("tCourseTitle").value) {
+            vURL += "&coursetitle="+encodeURI(el("tCourseTitle").value);
+          }
+        }
         vURL += "&demo=yes";
         vURL += "&slidetype=" + el("sSlideType").value;
         vURL += "&audioslide="+encodeURI(el("sAudioSlide").value);
@@ -126,7 +212,7 @@
       <center>
         <h2>
           <img height="30px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
-          Wiki2Reveal Starter - Version: <span id4marker="version">2.1.19</span></h2>
+          Wiki2Reveal Starter - Version: <span id4marker="version">2.1.20</span></h2>
         <h3><i>based on Library: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a></i></h3>
       </center>
     <hr>
@@ -156,18 +242,46 @@
       <tr>
         <td>
           <b>Article</b>
+          <button onclick="toggle('trShortTitle');return false">
+            <img height="14px" src="img/icons-svg/edit-black.svg">
+            <img height="14px" src="img/icons-svg/fa-globe-black.svg">
+          </button>
         </td>
         <td>
-          <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie">
+          <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie" onchange="update_short_title()">
+        </td>
+      </tr>
+      <tr id="trShortTitle" style="display:none">
+        <td>
+          <b>Short Title</b>
+        </td>
+        <td>
+          <input type="text" size="60" name="shorttitle" id="tShortTitle" value="" onchange="onchange_short_title()">
+          <br>
+          Short title can be used if default title exceeds space on RevealJS title slide
         </td>
       </tr>
       <tr>
         <td>
-          <b>Course/Author</b>
+          <b>Course Wiki-Link</b>
+          <button onclick="toggle('trCourseTitle');return false"  style="display:none">
+            <img height="14px" src="img/icons-svg/edit-black.svg">
+            <img height="14px" src="img/icons-svg/home-black.svg">
+          </button>
         </td>
         <td>
-          <input type="text" size="80" name="author" id="tAuthor" value="Kurs:Funktionalanalysis">
+          <input type="text" size="80" name="author" id="tCourse" value="Kurs:Funktionalanalysis"  onchange="update_course_title()">
         </td>
+      </tr>
+      <tr id="trCourseTitle" style="display:none">
+        <td>
+          <b>Course Title</b>
+        </td>
+        <td>
+          <input type="text" size="80" name="coursetitle" id="tCourseTitle" value="">
+          <br>
+          Use the course title to replace the course title by an alternative course name for the title slide
+        </tr>
       </tr>
       <tr>
           <td>
@@ -283,8 +397,8 @@
         <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank">
           <img height="20px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
           Wikiversity: Wiki2Reveal</a><br>
-        <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.19</span> </a>
-         - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/09 1:06:20</span> <br/>
+        <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.20</span> </a>
+         - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/17 22:26:03</span> <br/>
 				<a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download Wiki2Reveal - GitHub (<span id4marker="year">2021</span>)</a><br/>
 			</div>
     </p>
@@ -320,10 +434,34 @@
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       el("tTitle").value = vLinkParam.getValue("article");
     };
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      //vAuthor = vLinkParam.getValue("course");
+      el("tCourse").value = vLinkParam.getValue("course");
+    };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      //vShortTitle = vLinkParam.getValue("shorttitle");
+      el("tShortTitle").value = vLinkParam.getValue("shorttitle");
+    } else {
+       //vShortTitle = getShortTitle(el("tTitle").value);
+       el("tShortTitle").value = getShortTitle(el("tTitle").value);
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      el("tAuthor").value = vLinkParam.getValue("author");
+      el("tCourse").value = vLinkParam.getValue("author");
+    };
+    //------ COURSE -------------------------
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?author=Functional_Analysis
+      el("tCourse").value = vLinkParam.getValue("course");
+    };
+    //------ COURSETITLE -------------------------
+    if (vLinkParam.exists("coursetitle")) {
+      // e.g. index.html?author=My_Special_Functional_Analysis
+      //vCourseTitle = vLinkParam.getValue("coursetitle");
+      el("tCourseTitle").value = vLinkParam.getValue("coursetitle");
     };
     //------ LANGUAGE ----------------------
     if (vLinkParam.exists("language")) {

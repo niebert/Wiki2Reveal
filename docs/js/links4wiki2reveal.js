@@ -3,8 +3,8 @@
     var vTemplate = pTemplate || "undefined replace_marker template";
     vTemplate = replaceString(vTemplate,"___SLIDETYPE___",vSlideType);
     vTemplate = replaceString(vTemplate,"___AUDIO___",vAudioSlide);
-    vTemplate = replaceString(vTemplate,"___COURSE___",vAuthor);
-    vTemplate = replaceString(vTemplate,"___COURSE_ENCODED___",encodeURI(vAuthor));
+    vTemplate = replaceString(vTemplate,"___COURSE___",vCourse);
+    vTemplate = replaceString(vTemplate,"___COURSE_ENCODED___",encodeURI(vCourse));
     vTemplate = replaceString(vTemplate,"___DOMAIN___",vDomain);
     vTemplate = replaceString(vTemplate,"___DOMAINNAME___",vDomainName);
     vTemplate = replaceString(vTemplate,"___LANGUAGE___",vLanguage);
@@ -19,7 +19,7 @@
       var vShort = pTitle;
       if (pTitle) {
         vShort = pTitle.replace(/_/g," ");
-        var vSearch = vAuthor+"/";
+        var vSearch = vCourse+"/";
         if (vTitle.indexOf(vSearch) >= 0) {
           vShort = replaceString(pTitle,vSearch,"");
           console.log("Prefix: '"+vSearch+"' removed!");
@@ -34,7 +34,7 @@
 
     function back2startpage() {
       update_dom2vars();
-      document.location=replace_marker("index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___");
+      document.location=replace_marker("index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&course=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___");
     }
 
 
@@ -44,7 +44,7 @@
     }
 
     function getWiki2RevealURL() {
-        return replace_marker("https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___");
+        return replace_marker("https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&course=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___");
     }
 
     function getWikiCourseURL() {
@@ -72,7 +72,7 @@
 
             function update_dom_links() {
               var vID = "courseurl"; // wikiurl, wiki2revealurl
-              var vCourse = vAuthor;
+              var vCourse = vCourse;
 
               //----- set the Wiki URLs in DOM ------
               write2innerHTML(vID,vCourse);
@@ -90,7 +90,7 @@
 
             function update_dom2vars() {
               vLanguage = el("sWikiLanguage").value;
-              vCourse = el("tAuthor").value;
+              vCourse = el("tCourse").value;
               vDomain = el("sWikiDomain").value;
               vSlideType = el("sSlideType").value;
               vDomainName = firstUpperCase(vDomain);

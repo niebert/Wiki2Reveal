@@ -5,33 +5,44 @@
   <meta name="generator" content="pandoc EN">
   <title>wiki2reveal</title>
   <!-- Original Settings do not have the following CSS inserted directly -->
+  <script src="js/wtf_fetch.js"></script>
   <script src="js/wtf_wikipedia.min.js"></script>
   <script src="js/wiki2reveal_generator.js"></script>
   <script src="js/wikiconvert.js"></script>
   <script src="js/linkparam.js"></script>
   <script src="js/indent.js"></script>
+  <script src="js/string.js"></script>
+  <script src="js/showhide.js"></script>
   <script src="js/audioplayer.js"></script>
-  <!-- Printing and PDF exports -->
-    <!--[if lt IE 9]>
-  <script src="reveal/lib/js/html5shiv.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-  <![endif]-->
+  <script src="js/wiki2links.js"></script>
+
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/main.css">
 
   <script>
   //---------------------------------------
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Normen, Metriken, Topologie";
-  var vAuthor = "Wikiversity DE";
+  var vShortTitle = "";
+  var vCourse = "Wikiversity DE";
+  var vCourseTitle = "";
   var vLanguage = "de";
   var vDomain = "wikiversity";
-  var vAudioSlide = "yes";
+  var vDomainName = "Wikiversity";
+  var vAudioSlide = "no";
+  var vSlideType = "reveal";
+  var vDemo = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
   // vDataJSON.wikipage will be populated by db/wikipage_db.js
   var vDataJSON = {
-    "wikipage": "== My Title ==\nMy content of Wikipage"
+    "wikipage": "== My Title ==\nMy content of Wikipage",
+    "w2r": {
+      "header":"Wiki2Reveal Header",
+      "tail" : "Wiki2Reveal Tail"
+    }
   };
   //---------------------------------------
   // Options for getWiki2Reveal() Call
@@ -39,7 +50,8 @@
     "domain": "wikiversity",
     "language": "en",
     "audioslide":"no",
-    "slidetype":"reveal"
+    "slidetype":"dzslides",
+    "shorttitle":""
   };
 //---------------------------------------
 
@@ -62,6 +74,11 @@
     document.location.href=vURL;
   };
 
+  function backwarfdClick() {
+    //alert(vLinkParam.getParam4URL());
+    document.location='index.html'+vLinkParam.getParam4URL()
+  }
+
 </script>
 <!--
    LOAD DATA with JS Librar
@@ -69,20 +86,26 @@
    (i.e. vOffline = true)
 -->
 <script src="db/wikipage_db.js"></script>
+<script src="db/w2r_header_db.js"></script>
+<script src="db/w2r_tail_db.js"></script>
 
 </head>
-<body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
+<body  style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
   <div class="reveal">
-    <H2 class="slides" id="divslides">
+    <H2 class="slides" id="hWaiting">
       Waiting for Wiki-Download ...
     </H2>
-    <br>
-    <br>
-    <br>
-    <br>
-      <textarea id="revealout" rows="140" cols="120">
-    output
-    </textarea>
+    <H2 class="slides" id="hHeader" style="display:none">
+      Wiki2Reveal Output
+    </H2>
+    <center>
+      <hr>
+      <input type="button" value=" Back to Wiki2Reveal " onclick="back2startpage();return false">
+      <hr>
+      <textarea id="revealout" rows="40" cols="120">
+    Waiting for Output ...
+      </textarea>
+    </center>
   </div>
 <!--
 <div style="display:none">
@@ -93,13 +116,11 @@ Converter used in Offline mode without internet connectivity!
   </textarea>
 </div>
 -->
-</body>
 
   <!--
   <script src="reveal/lib/js/head.min.js"></script>
   <script src="reveal/js/reveal.js"></script>
 -->
-    </body>
 
     <script>
     //---------------------------------------
@@ -112,10 +133,18 @@ Converter used in Offline mode without internet connectivity!
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle = vLinkParam.getValue("shorttitle");
+      vOptions.shorttitle = vLinkParam.getValue("shorttitle");
+    } else {
+      vShortTitle = getShortTitle(vTitle);
+      vOptions.shorttitle = vLinkParam.getValue("shorttitle");
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("author");
+      vCourse = vLinkParam.getValue("author");
     };
     //------ LANGUAGE ----------------------
     if (vLinkParam.exists("language")) {
@@ -145,7 +174,7 @@ Converter used in Offline mode without internet connectivity!
 
 
     function callWikiDownload() {
-        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
+        downloadWikiDoc(vTitle,vCourse,vLanguage,vDomain);
     };
 
       function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
@@ -168,52 +197,66 @@ Converter used in Offline mode without internet connectivity!
       };
 
       function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
-        var vWikiID = pLanguage+pDomain;
         var vVersion = "?.?.?";
         var vFetchExists = false;
-        if (wtf) {
-          console.log("wtf exists!");
-          for (var variable in wtf) {
-            if (wtf.hasOwnProperty(variable)) {
-              console.log("wtf."+variable+" Type: "+typeof(wtf[variable])+" exists!");
+        if (wtf_fetch) {
+          console.log("wtf_fetch exists!");
+          for (var variable in wtf_fetch) {
+            if (wtf_fetch.hasOwnProperty(variable)) {
+              console.log("wtf_fetch."+variable+" Type: "+typeof(wtf[variable])+" exists!");
               switch (variable) {
                 case "version":
-                  vVersion = wtf.version;
+                  vVersion = wtf_fetch.version;
                 break;
-                case "fetch":
+                case "getPage":
                   vFetchExists = true;
                 break;
                 default:
 
               }
             } else {
-              console.log("wtf."+variable+" exists, but does not have ownProperty()!");
+              console.log("wtf_fetch."+variable+" exists, but does not have ownProperty()!");
             }
           };
-          console.log("VERSION (wtf_wikipedia) "+vVersion);
-          if (vFetchExists == true) {
-            wtf.fetch(pArticle, vWikiID, function(err, doc) {
+        };
+        console.log("VERSION (wtf_fetch) "+vVersion);
+        if (vFetchExists == true) {
+            //document.location.href=vURL;
+            //window.open(vURL);
+            wtf_fetch.getPage(pArticle,pLanguage,pDomain, function(err, doc) {
+              // doc contains the download
+              //alert(JSON.stringify(doc.wiki))
               var markup = doc.wiki;
               processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+              //console.log(doc);
             });
-          }
         } else {
-          console.log("'wtf' is not defined!");
-        };
+            console.error("wtf_fetch does not exi");
+        }
       }
 
-      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
+      function indent_html(pWikiCode) {
+        replaceString()
+        return pWikiCode;
+      }
+
+      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pWikiCode) {
         // el("divslides").innerHTML = wtf.reveal(markup);
-        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
+        var htmlout = getWiki2Reveal(pWikiCode,vTitle, vCourse, vLanguage, vDomain, vOptions);
         // store JSON parse result in textarea
         //el("divslides").innerHTML = htmlout; //el("revealsource").value;
         var indented = indent.html(htmlout, {tabString: '\n   '});
         console.log("Call indent.js");
-        el("revealout").value = htmlout; //indented; //el("revealsource").value;
+        //el("revealout").value = htmlout; //indented; //el("revealsource").value;
+        el("revealout").value = style_html(htmlout); //indented; //el("revealsource").value;
+        //el("revealout").value = wtf(pWikiCode).html();
         //setTimeout("callRevealInit()",3000)
+        hide("hWaiting");
+        show("hHeader");
+
       }
       callWikiDownload();
       //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");
     </script>
-
+  </body>
 </html>

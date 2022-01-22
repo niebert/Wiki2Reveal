@@ -19,6 +19,8 @@
   <script src="js/wikiconvert.js"></script>
   <script src="js/linkparam.js"></script>
   <script src="js/audioplayer.js"></script>
+  <script src="js/references.js"></script>
+  <script src="js/wiki2links.js"></script>
   <!--
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -31,10 +33,15 @@
 //------DEFAULT VALUES-------------------
 //---------------------------------------
 var vTitle = "Normen, Metriken, Topologie";
-var vAuthor = "Wikiversity DE";
+var vShortTitle ="";
+var vCourse = "Wikiversity DE";
+var vCourseTitle = "";
 var vLanguage = "de";
 var vDomain = "wikiversity";
+var vDomainName = "Wikiversity";
 var vAudioSlide = "no";
+var vSlideType = "reveal";
+var vDemo = "no";
 //---------------------------------------
 var vOffline = false; // set to true for Debugging in offline mode
 //vOffline = true;
@@ -52,7 +59,9 @@ var vOptions = {
   "domain": "wikiversity",
   "language": "de",
   "audioslide":"no",
-  "slidetype":"reveal"
+  "slidetype":"reveal",
+  "shorttitle": "",
+  "coursetitle": ""
 };
 //---------------------------------------
 //var vWikiConvert = new WikiConvert();
@@ -598,10 +607,29 @@ Converter used in Offline mode without internet connectivity!
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle = vLinkParam.getValue("shorttitle");
+      vOptions.shorttitle = vLinkParam.getValue("shorttitle");
+    } else {
+      vShortTitle = getShortTitle(vTitle);
+      vOptions.shorttitle = vShortTitle;
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("author");
+      vCourse = vLinkParam.getValue("author");
+    };
+    //------ COURSE -------------------------
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?course=Funtional_Analysis
+      vCourse = vLinkParam.getValue("course");
+    };
+    //------ COURSETITLE -------------------------
+    if (vLinkParam.exists("coursetitle")) {
+      // e.g. index.html?course=Funtional_Analysis
+      vCourseTitle = vLinkParam.getValue("coursetitle");
+      vOptions.coursetitle = vLinkParam.getValue("coursetitle");
     };
     //------ LANGUAGE ----------------------
     if (vLinkParam.exists("language")) {
@@ -636,7 +664,7 @@ Converter used in Offline mode without internet connectivity!
 
     //--------------------------------------
     function callWikiDownload() {
-        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
+        downloadWikiDoc(vTitle,vCourse,vLanguage,vDomain);
     };
 
       function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
@@ -734,13 +762,13 @@ Converter used in Offline mode without internet connectivity!
 
       function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
         // el("divslides").innerHTML = wtf.reveal(markup);
-        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
+        var htmlout = getWiki2Reveal(pMarkup,vTitle, vCourse, vLanguage, vDomain, vOptions);
         // store JSON parse result in textarea
         el("divslides").innerHTML = htmlout + vDataJSON.tpl.dzslidescore; //el("revealsource").value;
         //el("divslides").innerHTML = el("revealsource").value;
         //var vWikiJSON = wtf.parse(markup);
         //setTimeout("callRevealInit()",3000)
-        setTimeout(callDZSlildesInit,30)
+        setTimeout(callDZSlildesInit,150)
       }
       callWikiDownload();
       //onlineWikiDoc("Normen, Metriken, Topologie","dewikiversity");

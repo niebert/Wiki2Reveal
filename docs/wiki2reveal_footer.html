@@ -10,6 +10,7 @@
   <script src="js/string.js"></script>
   <script src="js/showhide.js"></script>
   <script src="js/writedom.js"></script>
+  <script src="js/wiki2links.js"></script>
   <!-- Printing and PDF exports -->
     <!--[if lt IE 9]>
   <script src="reveal/lib/js/html5shiv.js"></script>
@@ -21,8 +22,9 @@
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Normen, Metriken, Topologie";
-  var vShortTitle ="undefined";
-  var vAuthor = "Kurs:Funktionentheorie";
+  var vShortTitle ="";
+  var vCourse = "Kurs:Funktionentheorie";
+  var vCourseTitle ="";
   var vLanguage = "de";
   var vDomain = "wikiversity";
   var vDomainName = "Wikiversity";
@@ -49,13 +51,13 @@
   };
 
   </script>
-<script src="js/links4wiki2reveal.js"></script>
+<!-- script src="js/links4wiki2reveal.js"></script -->
 
 </head>
 <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
   <H2 class="slides" id="headerfooter">
     <img height="30px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
-    Generator for Wiki Footer - Version: <span id4marker="version">2.1.19</span>
+    Generator for Wiki Footer - Version: <span id4marker="version">2.1.20</span>
   </H2>
   <H2 class="slides" id="headerdemo" style="display:none">
       Generator for Wiki2Reveal Demo Page
@@ -82,18 +84,46 @@
     <tr>
       <td>
         <b>Article</b>
+        <button onclick="toggle('trShortTitle');return false">
+          <img height="14px" src="img/icons-svg/edit-black.svg">
+          <img height="14px" src="img/icons-svg/fa-globe-black.svg">
+        </button>
       </td>
       <td>
-        <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie"  onchange="update_links()">
+        <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie" onchange="update_short_title();update_dom_links()">
+      </td>
+    </tr>
+    <tr id="trShortTitle" style="display:none">
+      <td>
+        <b>Short Title</b>
+      </td>
+      <td>
+        <input type="text" size="60" name="shorttitle" id="tShortTitle" value="" onchange="onchange_short_title(); update_dom_links()">
+        <br>
+        Short title can be used if default title exceeds space on RevealJS title slide
       </td>
     </tr>
     <tr>
       <td>
-        <b>Course/Author</b>
+        <b>Course Wiki-Link</b>
+        <button onclick="toggle('trCourseTitle');return false"  style="display:none">
+          <img height="14px" src="img/icons-svg/edit-black.svg">
+          <img height="14px" src="img/icons-svg/home-black.svg">
+        </button>
       </td>
       <td>
-        <input type="text" size="80" name="author" id="tAuthor" value="Kurs:Funktionalanalysis"  onchange="update_links()">
+        <input type="text" size="80" name="author" id="tCourse" value="Kurs:Funktionalanalysis"  onchange="update_course_title();update_dom_links()">
       </td>
+    </tr>
+    <tr id="trCourseTitle" style="display:none">
+      <td>
+        <b>Course Title</b>
+      </td>
+      <td>
+        <input type="text" size="80" name="coursetitle" id="tCourseTitle" value="">
+        <br>
+        Use the course title to replace the course title by an alternative course name for the title slide
+      </tr>
     </tr>
     <tr>
         <td>
@@ -174,7 +204,7 @@
       <b>Wikiversity Page:</b> The Wiki source article for Wiki2Reveal will be defined on <a id="wikiurl" href="undefined" target="_blank">Undefined Wiki Page</a>
     </li>
     <li>
-      <b>Wiki2Reveal Page:</b> The Wiki2Reveal presentation will be defined on <a id="wiki2revealurl" href="undefined" target="_blank">Undefined Wiki2URL Page</a>
+      <b>Wiki2Reveal Page:</b> The Wiki2Reveal presentation can tested the following Link: <a id="wiki2revealurl" href="undefined" target="_blank">Undefined Wiki2URL Page</a>
     </li>
   </ul>
   <hr>
@@ -185,7 +215,7 @@
   <b>Header Wiki Source EN:</b></br>
 <textarea id="wikiheader" rows="12" cols="120">
 == Introduction ==
-This page can be displayed as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+This page can be displayed as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''.
 Single sections are regarded as slides and modifications on the slides will immediately affect the content of the slides.
 
 == Objective ==
@@ -208,17 +238,17 @@ The target group of the learning resource is
   <b>Footer Wiki Source EN:</b></br>
     <textarea id="wikisrc" rows="12" cols="120">
 == Page Information ==
-You can display this page as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''
+You can display this page as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''
 
 === Wiki2Reveal ===
-The '''[https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]''' were created for the '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___COURSE___]'''' and the Link for the [[v:en:Wiki2Reveal|Wiki2Reveal Slides]] was created with the [https://niebert.github.io/Wiki2Reveal/ link generator].
+The '''[https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]''' were created for the '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___COURSE___]'''' and the Link for the [[v:en:Wiki2Reveal|Wiki2Reveal Slides]] was created with the [https://niebert.github.io/Wiki2Reveal/ link generator].
 <!--
 * Contents of the page are based on:
 ** [https://___LANGUAGE___.wikipedia.org/wiki/___TITLE_ENCODED___ https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___]
 -->
 * [https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___ This page] is designed as a [https://en.wikiversity.org/wiki/PanDocElectron-Presentation PanDocElectron-SLIDE] document type.
 * Source: ___DOMAINNAME___  https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___
-* see [[v:en:Wiki2Reveal|Wiki2Reveal]] for the functionality of [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal].
+* see [[v:en:Wiki2Reveal|Wiki2Reveal]] for the functionality of [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal].
 &lt;!-- * Next contents of the course are [[]] --&gt;
 
 [[Category:Wiki2Reveal]]
@@ -228,7 +258,7 @@ The '''[https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&tit
   <b>Header Wiki Source DE:</b></br>
 <textarea id="wikiheader_de" rows="12" cols="120">
 == Einleitung ==
-Diese Seite kann als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal Folien]''' angezeigt werden.
+Diese Seite kann als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal Folien]''' angezeigt werden.
 Einzelne Abschnitte werden als Folien betrachtet und Änderungen an den Folien wirken sich sofort auf den Inhalt der Folien aus.
 
 == Zielsetzung ==
@@ -252,18 +282,18 @@ Die Zielgruppe der Lernressource ist
     <textarea id="wikisrc_de" rows="12" cols="120">
 
 == Seiteninformation ==
-Diese Lernresource können Sie als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal-Foliensatz]''' darstellen.
+Diese Lernresource können Sie als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal-Foliensatz]''' darstellen.
 
 === Wiki2Reveal ===
 
-Dieser '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal Foliensatz]''' wurde für den Lerneinheit '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___COURSE___]'''' erstellt der Link für die [[v:en:Wiki2Reveal|Wiki2Reveal-Folien]] wurde mit dem  [https://niebert.github.io/Wiki2Reveal/ Wiki2Reveal-Linkgenerator] erstellt.
+Dieser '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal Foliensatz]''' wurde für den Lerneinheit '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___COURSE___]'''' erstellt der Link für die [[v:en:Wiki2Reveal|Wiki2Reveal-Folien]] wurde mit dem  [https://niebert.github.io/Wiki2Reveal/ Wiki2Reveal-Linkgenerator] erstellt.
 <!--
 * Die Inhalte der Seite basieren auf den folgenden Inhalten:
 ** [https://___LANGUAGE___.wikipedia.org/wiki/___TITLE_ENCODED___ https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___]
 -->
 * [https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___ Die Seite] wurde als Dokumententyp [https://___LANGUAGE___.wikiversity.org/wiki/PanDocElectron-Presentation PanDocElectron-SLIDE] erstellt.
 * Link zur Quelle in  ___DOMAINNAME___:  https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___
-* siehe auch weitere Informationen zu [[v:en:Wiki2Reveal|Wiki2Reveal]] und unter [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal-Linkgenerator].
+* siehe auch weitere Informationen zu [[v:en:Wiki2Reveal|Wiki2Reveal]] und unter [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal-Linkgenerator].
 &lt;!-- * Nächster Inhalt des Kurses ist [[]] --&gt;
 
 [[Category:Wiki2Reveal]]
@@ -274,7 +304,7 @@ Dieser '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domai
 <textarea id="wikiheader_fr" rows="12" cols="120">
 
 == Introduction ==
-Cette page peut être affichée comme '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+Cette page peut être affichée comme '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''.
 Les sections individuelles sont considérées comme des diapositives et les modifications sur les diapositives affecteront immédiatement le contenu des diapositives.
 
 == Objectif ==
@@ -306,7 +336,7 @@ Ce jeu de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?do
 -->
 * [https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___ Le site] a été créé comme un type de document [https://en.wikiversity.org/wiki/PanDocElectron-Presentation PanDocElectron-SLIDE].
 * Lien vers la source  ___DOMAINNAME___: https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___
-* Voir les détails sur [[v:fr:Wiki2Reveal|Wiki2Reveal]] et [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ générateur Wiki2Reveal-Link].
+* Voir les détails sur [[v:fr:Wiki2Reveal|Wiki2Reveal]] et [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ générateur Wiki2Reveal-Link].
 &lt;!-- * Le contenu suivant du cours est [[]] --&gt;
 
 [[Category:Wiki2Reveal]]
@@ -318,7 +348,7 @@ Ce jeu de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?do
 <textarea id="wikiheader_es" rows="12" cols="120">
 
 == Introducción ==
-Esta página puede mostrarse como '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]'''.
+Esta página puede mostrarse como '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''.
 Las secciones individuales se consideran diapositivas y las modificaciones en las diapositivas afectarán inmediatamente al contenido de las mismas.
 
 == Objetivo ==
@@ -343,14 +373,14 @@ El grupo objetivo del recurso de aprendizaje es
 == Información de la Página ==
 
 === Wiki2Reveal ===
-Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ diapositivas de Wiki2Reveal]''' se creó para la sesión '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___CURSO___]''', y el enlace para las diapositivas de Wiki2Reveal se creó con el [https://niebert.github.io/Wiki2Reveal/ generador de enlaces de Wiki2Reveal].
+Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ diapositivas de Wiki2Reveal]''' se creó para la sesión '''[https://de.wikiversity.org/wiki/____COURSE_ENCODED___ ___CURSO___]''', y el enlace para las diapositivas de Wiki2Reveal se creó con el [https://niebert.github.io/Wiki2Reveal/ generador de enlaces de Wiki2Reveal].
 <!--
 * El contenido de la página se basa en el siguiente contenido:
 ** [https://___LANGUAGE___.wikipedia.org/wiki/___TITLE_ENCODED___ https://___LANGUAGE___.wikipedia.org/wiki/___TITLE_ENCODED___]
 -->
 * [https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___ La página] se creó como tipo de documento [https://en.wikiversity.org/wiki/PanDocElectron-Presentation PanDocElectron-SLIDE].
 * Enlace a la fuente en  ___DOMAINNAME___: https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___
-* Consulte también más información sobre [[v:en:Wiki2Reveal|Wiki2Reveal]] y [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal link generator].
+* Consulte también más información sobre [[v:en:Wiki2Reveal|Wiki2Reveal]] y [https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal link generator].
 &lt;!-- * El siguiente contenido del curso es [[]] --&gt;
 
 [[Categoría: Wiki2Reveal]]
@@ -363,8 +393,8 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.
     <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank">
       <img height="20px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
       Wikiversity: Wiki2Reveal</a><br>
-    <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.19</span> </a>
-     - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/09 1:06:20</span> <br/>
+    <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.20</span> </a>
+     - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/17 22:26:03</span> <br/>
     <a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download Wiki2Reveal - GitHub (<span id4marker="year">2021</span>)</a><br/>
   </div>
 </p>
@@ -383,20 +413,40 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.
       vTitle= vLinkParam.getValue("title");
       el("tTitle").value = vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle = vLinkParam.getValue("shorttitle");
+      el("tShortTitle").value = vLinkParam.getValue("shorttitle");
+    } else {
+      vShortTitle = getShortTitle(vTitle);
+      el("tShortTitle").value = vShortTitle;
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("author");
-      el("tAuthor").value = vLinkParam.getValue("author");
+      vCourse = vLinkParam.getValue("author");
+      el("tCourse").value = vLinkParam.getValue("author");
     };
-    //------ COURSE NAME ---------------------
+    //------ COURSE -------------------------
     if (vLinkParam.exists("course")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("course");
-      el("tAuthor").value = vLinkParam.getValue("course");
+      vCourse = vLinkParam.getValue("course");
+      el("tCourse").value = vLinkParam.getValue("course");
+    };
+    //------ COURSE ---------------------
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?course=Functional_Analysis
+      vCourse = vLinkParam.getValue("course");
+      el("tCourse").value = vLinkParam.getValue("course");
+    };
+    //------ COURSETITLE -------------------------
+    if (vLinkParam.exists("coursetitle")) {
+      // e.g. index.html?coursetitle=My special Funtional_Analysis
+      vCourseTitle = vLinkParam.getValue("coursetitle");
+      el("tCourseTitle").value = vLinkParam.getValue("coursetitle");
     };
     //------CALC SHORT TiTLE --------------------------
-    vShortTitle = getShortTitle(vTitle);
+    //vShortTitle = getShortTitle(vTitle);
     //------ SLIDETYPE -----------------------
     if (vLinkParam.exists("slidetype")) {
       // e.g. index.html?author=Engelbert_Niehaus

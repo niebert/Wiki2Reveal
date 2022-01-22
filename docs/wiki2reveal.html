@@ -19,6 +19,8 @@
   <script src="js/wikiconvert.js"></script>
   <script src="js/linkparam.js"></script>
   <script src="js/audioplayer.js"></script>
+  <script src="js/references.js"></script>
+  <script src="js/wiki2links.js"></script>
   <!-- Printing and PDF exports -->
   <script>
     var link = document.createElement( 'link' );
@@ -38,10 +40,15 @@
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Normen, Metriken, Topologie";
-  var vAuthor = "Wikiversity DE";
+  var vShortTitle = "";
+  var vCourse = "Wikiversity DE";
+  var vCourseTitle = "";
   var vLanguage = "de";
   var vDomain = "wikiversity";
+  var vDomainName = "Wikiversity";
   var vAudioSlide = "no";
+  var vSlideType = "reveal";
+  var vDemo = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
   //---------------------------------------
@@ -55,7 +62,9 @@
     "domain": "wikiversity",
     "language": "en",
     "audioslide":"no",
-    "slidetype":"reveal"
+    "slidetype":"reveal",
+    "shorttitle":"",
+    "coursetitle": ""
   };
 //---------------------------------------
 
@@ -118,10 +127,29 @@
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle = vLinkParam.getValue("shorttitle");
+      vOptions.shorttitle = vLinkParam.getValue("shorttitle");
+    } else {
+      vShortTitle = getShortTitle(vTitle);
+      vOptions.shorttitle = vShortTitle;
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("author");
+      vCourse = vLinkParam.getValue("author");
+    };
+    //------ COURSE -------------------------
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?course=Funtional_Analysis
+      vCourse = vLinkParam.getValue("course");
+    };
+    //------ COURSETITLE -------------------------
+    if (vLinkParam.exists("coursetitle")) {
+      // e.g. index.html?author=My_Special_Functional_Analysis
+      vCourseTitle = vLinkParam.getValue("coursetitle");
+      vOptions.coursetitle = vLinkParam.getValue("coursetitle");
     };
     //------ LANGUAGE ----------------------
     if (vLinkParam.exists("language")) {
@@ -152,29 +180,29 @@
     };
     //--------------------------------------
     function callWikiDownload() {
-        downloadWikiDoc(vTitle,vAuthor,vLanguage,vDomain);
+        downloadWikiDoc(vTitle,vCourse,vLanguage,vDomain);
     };
 
-      function downloadWikiDoc(pTitle,pAuthor,pLanguage,pDomain) {
+      function downloadWikiDoc(pTitle,pCourse,pLanguage,pDomain) {
         //alert("Emulate MediaWiki Download");
         console.log("CALL:downloadWikiDoc()\nWiki Title: '"+pTitle+"'\n URL: 'https://"+pLanguage+"."+pDomain+".org'");
         if (vOffline == true) {
-          offlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+          offlineWikiDoc(pTitle,pCourse,pLanguage,pDomain);
         } else {
-          onlineWikiDoc(pTitle,pAuthor,pLanguage,pDomain);
+          onlineWikiDoc(pTitle,pCourse,pLanguage,pDomain);
         }
       };
 
-      function offlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+      function offlineWikiDoc(pArticle,pCourse,pLanguage,pDomain) {
         //alert("Emulate MediaWiki Download");
         //var markup = document.getElementById("wikisrc").value;
         var markup = vDataJSON.wikipage;
         console.log("EMULATED (Download): \n"+markup.substr(0,100)+"...");
         // store markup result in textarea
-        processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+        processWikiDoc(pArticle,pCourse,pLanguage,pDomain,markup);
       };
 
-      function onlineWikiDoc(pArticle,pAuthor,pLanguage,pDomain) {
+      function onlineWikiDoc(pArticle,pCourse,pLanguage,pDomain) {
         var vVersion = "?.?.?";
         var vFetchExists = false;
         if (wtf_fetch) {
@@ -205,7 +233,7 @@
               // doc contains the download
               //alert(JSON.stringify(doc.wiki))
               var markup = doc.wiki;
-              processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+              processWikiDoc(pArticle,pCourse,pLanguage,pDomain,markup);
               //console.log(doc);
             });
         } else {
@@ -213,7 +241,7 @@
         }
       }
 
-      function onlineWikiDoc_wtf(pArticle,pAuthor,pLanguage,pDomain) {
+      function onlineWikiDoc_wtf(pArticle,pCourse,pLanguage,pDomain) {
         var vWikiID = pLanguage+pDomain;
         var vVersion = "?.?.?";
         var vFetchExists = false;
@@ -240,7 +268,7 @@
           if (vFetchExists == true) {
             wtf.fetch(pArticle, vWikiID, function(err, doc) {
               var markup = doc.wiki;
-              processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,markup);
+              processWikiDoc(pArticle,pCourse,pLanguage,pDomain,markup);
             });
           }
         } else {
@@ -248,10 +276,10 @@
         };
       }
 
-      function processWikiDoc(pArticle,pAuthor,pLanguage,pDomain,pMarkup) {
+      function processWikiDoc(pArticle,pCourse,pLanguage,pDomain,pMarkup) {
         // el("divslides").innerHTML = wtf.reveal(markup);
         // vOptions = update_options(vOptions);
-        var htmlout = getWiki2Reveal(pMarkup,vTitle, vAuthor, vLanguage, vDomain, vOptions);
+        var htmlout = getWiki2Reveal(pMarkup,vTitle, pCourse, pLanguage, pDomain, vOptions);
         // store JSON parse result in textarea
         el("divslides").innerHTML = htmlout; //el("revealsource").value;
         //el("divslides").innerHTML = el("revealsource").value;

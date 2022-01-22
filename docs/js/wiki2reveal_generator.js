@@ -82,6 +82,7 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   var htmlout =  pMarkdown;
 
   htmlout = addSectionReveal(htmlout,pOptions);
+  htmlout = insertVerticalSlides4Reveal(htmlout,pOptions);
   htmlout = postprocessMath4Reveal(htmlout,pOptions);
   htmlout = htmlout.replace(/<imgXXX /g,"<img ");
   htmlout = htmlout.replace(/___aXXX___ /g,"<a ");
@@ -191,6 +192,194 @@ function addSectionReveal(pMarkdown,pOptions) {
     pMarkdown = pMarkdown.replace(/<XXXXX/g,"<section");
     return pMarkdown;
 };
+
+function getTimeStampID() {
+  return "s"+Date.now()+"r"+Math.floor(Math.random() * 1000);
+}
+
+function find_header_splitter(pSection,pPrefix) {
+  var vRet = {
+    "section":pSection,
+    "verticals":null
+  };
+  //alert("find_header_splitter() - verticals pSection='"+pSection+"'");
+  var vPrefix = pPrefix || "<section id=\"" + getTimeStampID() + "\">";
+  if (vResult = pSection.match(/<\/h[1-9]>/)) {
+    var vPos = pSection.indexOf(vResult);
+    vResult = vResult + "";
+    console.log("vPos="+vPos+" vResult.length="+vResult.length);
+    //console.log("find_h_splitter() - Header "+vResult+" found with vPrefix='"+vPrefix+"'");
+    var vVerticalSection = pSection.substr(vPos+(vResult.length));
+    console.log("find_header_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
+    vRet.verticals = {
+      "tag": vResult,
+      "pos": vPos,
+      "prefix": vPrefix,
+      "section": vVerticalSection
+    };
+  };
+  return vRet;
+}
+
+function find_ul_begin_splitter(pSection,pPrefix) {
+  var vRet = {
+    "section":pSection,
+    "verticals":null
+  };
+  //alert("find_header_splitter() - verticals pSection='"+pSection+"'");
+  var vPrefix = pPrefix || "<section id=\"" + getTimeStampID() + "\">";
+  if (vResult = pSection.match(/<ul[^>]*>/)) {
+    var vPos = pSection.indexOf(vResult);
+    vResult = vResult + "";
+    console.log("vPos="+vPos+" vResult.length="+vResult.length);
+    //console.log("find_h_splitter() - Header "+vResult+" found with vPrefix='"+vPrefix+"'");
+    //var vVerticalSection = pSection.substr(vPos+(vResult.length))
+    var vVerticalSection = pSection.substr(vPos);
+    console.log("find_ul_begin_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
+    vRet.verticals = {
+      "tag": vResult,
+      "pos": vPos,
+      "prefix": vPrefix,
+      "section": vVerticalSection
+    };
+  };
+  return vRet;
+}
+
+function find_ul_end_splitter(pSection,pPrefix) {
+  var vRet = {
+    "section":pSection,
+    "verticals":null
+  };
+  //alert("find_header_splitter() - verticals pSection='"+pSection+"'");
+  var vPrefix = pPrefix || "<section id=\"" + getTimeStampID() + "\">";
+  if (vResult = pSection.match(/<\/ul>/)) {
+    var vPos = pSection.indexOf(vResult);
+    vResult = vResult + "";
+    console.log("vPos="+vPos+" vResult.length="+vResult.length);
+    //console.log("find_h_splitter() - Header "+vResult+" found with vPrefix='"+vPrefix+"'");
+    var vVerticalSection = pSection.substr(vPos+(vResult.length))
+    //var vVerticalSection = pSection.substr(vPos);
+    console.log("find_ul_end_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
+    vRet.verticals = {
+      "tag": vResult,
+      "pos": vPos,
+      "prefix": vPrefix,
+      "section": vVerticalSection
+    };
+  };
+  return vRet;
+}
+
+
+function getSectionTag4Vertical(pIndex,pCount) {
+  return "\n<section id=\""+pIndex+"c"+ pCount + "\">\n";
+}
+
+function body_splitter(pIndex,pSection,pCount) {
+  var vCount = pCount || 0;
+  var vOut = "";
+  var vVertArr = [];
+  // check if header splitter find heading
+  vCount++;
+  var vPrefix = getSectionTag4Vertical(pIndex,vCount);
+  //alert("header_splitter() - verticals pSection='"+pSection+"'");
+  var ul1 = find_ul_begin_splitter(pSection,vPrefix);
+  if (ul1 && ul1.verticals) {
+    vCount++;
+    vVertArr.push(ul1);
+    var ul2 = find_ul_end_splitter(pSection,vPrefix);
+    if (ul2 && ul2.verticals) {
+      vCount++;
+      vVertArr.push(ul2);
+    } else {
+      console.error("Closing Tag for 'ul'-tag is missing!");
+    }
+  }
+  if (vVertArr.length > 0) {
+    vVertArr.sort(function(a, b){return a.pos - b.pos});
+    for (var i = 0; i < vVertArr.length; i++) {
+      //console.log("Verticals in vVertArr["+i+"] "+vVertArr[i].verticals.tag+" found with section='"+vVertArr[i].verticals.section+"'");
+      vOut += vVertArr[i].verticals.prefix + vVertArr[i].verticals.section;
+      //vOut += body_splitter(pIndex+"body",vVertArr[i].verticals.section,vCount);
+    }
+  }
+  //vOut += "\n<section id=\"sec"+pIndex+"subsec"+ vCount + "\">\n" + pSection;
+
+  return vOut;
+}
+
+
+function slide_splitter(pIndex,pSection) {
+  var vCount = 0;
+  var vOut = "";
+  // append horizontal slide
+  vOut += getSectionTag4Vertical(pIndex,vCount) + pSection;
+  vCount++;
+  var vPrefix = getSectionTag4Vertical(pIndex,vCount);
+  // check if header splitter find heading
+  //alert("header_splitter() - verticals pSection='"+pSection+"'");
+  var vHeader = find_header_splitter(pSection,vPrefix);
+  //vOut += "\n<section id=\"sec"+pIndex+"subsec"+ vCount + "\">\n" + pSection;
+  if (vHeader.verticals) {
+    // header found split at header
+    console.log("Verticals in Header "+vHeader.verticals.tag+" found with section='"+vHeader.verticals.section+"'");
+    vOut += vHeader.verticals.prefix + vHeader.verticals.section;
+    vOut += body_splitter(pIndex+"body",vHeader.verticals.section);
+  }
+  return vOut;
+}
+
+function  createVerticalSlide4Section(pIndex,pSectionTag,pSection) {
+  var vOut = pSectionTag || "";
+  // pSection alway contains a closing </section>
+  if (pSection) {
+    //result = text.match(/ain/gi);
+    //alert("verticals pSection='"+pSection+"'");
+    // the closing section-tag of horizontal slide is used as closing tag for all vertical slides
+    vOut += slide_splitter("sec"+pIndex,pSection);
+    // add an empty slide at the end for annotations
+    vOut += getSectionTag4Vertical("sec"+pIndex+"empty",pIndex);
+    vOut += "\n  </section>";
+    // add closing section horizontal slide
+    vOut += "\n</section>";
+  } else {
+    console.error("pSection not defined in createVerticalSlide4Section()");
+  }
+  return vOut;
+}
+function insertVerticalSlides4Reveal(pMarkdown,pOptions) {
+    var vSearch = /(<section[^>]*>)/gi;
+    var vResult;
+    var vCount = 0;
+    var vTagInsert = "";
+    var vSectionTagArray =[];
+    var vSectionArray = null;
+    var vOut = "";
+    while (vResult = vSearch.exec(pMarkdown)) {
+      vCount++;
+      vSectionTagArray.push(vResult[1]);
+      //console.log("Section "+vCount+": '" + vResult[1] + "' found");
+    };
+    vSearch = /<section[^>]*>/i;
+    if (pMarkdown && (pOptions.slidetype == "reveal")) {
+      vSectionArray = pMarkdown.split(vSearch);
+      //console.log("vSectionTagArray[0]="+vSectionTagArray[0]);
+      //console.log("vSectionArray[1]="+vSectionArray[1])
+      vOut += vSectionArray[0];
+      for (var i = 1; i < vSectionArray.length; i++) {
+        //vSectionArray[i]
+        vOut += createVerticalSlide4Section((i+1),vSectionTagArray[i-1],vSectionArray[i]);
+      }
+      //console.log("vSectionArray.length="+vSectionArray.length);
+    } else {
+      // DZSlides used
+      vOut = pMarkdown;
+    }
+    //return pMarkdown;
+    return vOut;
+};
+
 
 function replaceMathNewLines(pMath) {
   var vMath = " undefined mathematical expression in replaceMathNewLines()-call";
@@ -489,6 +678,7 @@ function tokenizeCitation (wiki, data, options) {
   */
   var vRefList = getCiteLabel(data,"REFERENCES");
   wiki = replaceString(wiki,"<references/>",vRefList);
+  wiki = replaceString(wiki,"{{Reflist}}",vRefList);
   data.references.push(getReference4Label(vRefList,"<references/>",'reflist'));
 
   var refsplit = wiki.split("<ref");
@@ -840,6 +1030,9 @@ function createTitleSlide(pTitle,pAuthor,pOptions) {
     console.log("Prefix: '"+vSearch+"' removed!");
   } else {
     console.log("Prefix: '"+vSearch+"' not found!");
+  }
+  if (pOptions && pOptions.shorttitle) {
+    pTitle = pOptions.shorttitle;
   }
   var slide0 = "\n<section id=\"titleslide\">";
   slide0 += "\n  <h1 class=\"title\"><a href='https://" + pOptions.language+ "." + pOptions.domain + ".org/wiki/" + encodeURIComponent(vWikiLink) + "' target='_blank'>"+pTitle+"</a></h1>";

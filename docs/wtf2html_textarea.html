@@ -13,6 +13,8 @@
   <script src="js/indent.js"></script>
   <script src="js/audioplayer.js"></script>
   <script src="js/showhide.js"></script>
+  <script src="js/wiki2links.js"></script>
+
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/main.css">
 
@@ -21,7 +23,9 @@
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Normen, Metriken, Topologie";
+  var vShortTitle = "";
   var vAuthor = "Wikiversity DE";
+  var vCourseTitle ="";
   var vLanguage = "de";
   var vDomain = "wikiversity";
   var vAudioSlide = "yes";
@@ -38,7 +42,8 @@
     "domain": "wikiversity",
     "language": "en",
     "audioslide":"no",
-    "slidetype":"reveal"
+    "slidetype":"reveal",
+    "shorttitle":""
   };
 //---------------------------------------
 
@@ -113,6 +118,10 @@ Converter used in Offline mode without internet connectivity!
     if (vLinkParam.exists("title")) {
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vTitle= vLinkParam.getValue("title");
+    };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle= vLinkParam.getValue("shorttitle");
     };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {

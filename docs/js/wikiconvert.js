@@ -412,6 +412,7 @@ function WikiConvert () {
 				if (line) {
 				 	console.log("Line "+(i+1)+" Checker");
 					//if (line.match(/^[\:]+.*?<math[^>]*>/)) {
+					/*
 					if ((lines[i]).match(/^[\:]+\s*?<math[^>]*>/i)) {
 						console.log("Indent MATH BLOCK found");
 						(lines[i]).replace(/^[\:]+\s*?/i,"&nbsp;");
@@ -445,7 +446,8 @@ function WikiConvert () {
 								i++;
 							};
 						};
-					}  else if (line.match(/^======/)!=null && line.match(/======$/)!=null) {
+					}  else */
+					if (line.match(/^======/)!=null && line.match(/======$/)!=null) {
 						level = 6;
 						title = line.substring(level,line.length-level);
 						html += this.convert_section(title,level);
@@ -1718,15 +1720,15 @@ this.process_normal = function(wikitext) {
 				//vAudioPlayPause += '<a href="#" onclick="play_audio(\\"' + vAudioID + '\\");return false">&#9658;</a>';
 				//vAudioPlayPause += '<input type="button" onclick="play_audio(\\"' + vAudioID + '\\")" value="&#9658">';
 				//vAudioPlayPause += '<input type="button" onclick="play_audio(\'' + vAudioID + '\');console.log(\'Play ' + vAudioID + '\')" value="&#9658">';
-				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="play_audio(\'' + vAudioID + '\');" value="&#9658">';
+				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="play_audio(\'' + vAudioID + '\');" value="&#9658" />';
 				vAudioPlayPause += '</td><td>';
 				//vAudioPlayPause += '<a href="#" onclick="document.getElementById(\\"' + vAudioID + '\\").pause();return false">&#10074;&#10074;</a> &nbsp; ';
 				//vAudioPlayPause += '<a href="#" onclick="pause_audio(\\"' + vAudioID + '\\");return false">&#10074;&#10074;</a> &nbsp; ';
-				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="pause_audio(\'' + vAudioID + '\');" value="&#10074;&#10074;">';
+				vAudioPlayPause += '<input class="buttonaudioplayer" type="button" onclick="pause_audio(\'' + vAudioID + '\');" value="&#10074;&#10074;" />';
 				vAudioPlayPause += '</td></tr></table> ';
 				if (isFirefox == true) {
 					// Firefox Browser
-					vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					vAudioTag =  ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> &nbsp;';
 					if (this.check_audio_slide(pWikiCode) == "dzslides") {
 						// DZSlides with Audio
 						//replace_str = vAudioTag;
@@ -1734,11 +1736,11 @@ this.process_normal = function(wikitext) {
 					} else {
 						// RevealJS with Audio
 						//vAudioTag = '<p class="fragment" data-audio-src="' + vURL + '"></p>';
-						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+						vAudioTag = ' <audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> &nbsp;';
 					}
 				} else {
 					// Chrome or Safari
-					vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> ';
+					vAudioTag = '<audio id="' + vAudioID + '" controls ><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> ';
 					if (this.check_chrome() == true) {
 						// Audio OK
 						//alert("Browser is Chrome");
@@ -1759,14 +1761,14 @@ this.process_normal = function(wikitext) {
 					replace_str = vAudioTag + vAudioPlayPause;
 				} else if (vAudioSlide == "controls") {
 					console.log("AUDIOSLIDES: Use Controls" );
-					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> ';
+					vAudioTag = ' <audio id="' + vAudioID + '" controls><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> ';
 				} else {
 					console.log("AUDIOSLIDES: no audio" );
 					// vAudioSlide = "no"
 					// replace_str = ' <a href="'+ vURL + '" target="_blank" style="text-decoration:none">&#9658;</a>';
 					replace_str = " ";
-					//vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
-					//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '"></audio> &nbsp;';
+					//vAudioTag = '<audio id="' + vAudioID + '" autoplay ><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> &nbsp;';
+					//replace_str = '<audio id="' + vAudioID + '"><source src="' + vURL + '" type="audio/' + vAudioType+ '" /></audio> &nbsp;';
 
 				};
 				console.log("Audio Found: "+vURL+" with Type: "+vFileType + " AudioSlides='" + vAudioSlide + "' with Audio Tag: "+vAudioTag);
@@ -1777,7 +1779,7 @@ this.process_normal = function(wikitext) {
 				//----------------------------------------------
 				var vVideoTag = '<div class="videodiv">';
 				vVideoTag += '<video width="80%" controls>';
-				vVideoTag += '<source  src="'+vURL+'">';
+				vVideoTag += '<source  src="'+vURL+'" />';
 				vVideoTag += '</video>'
 				vVideoTag += '</div>';
 				console.log("Video Found: "+vURL+" with Type: "+vFileType);

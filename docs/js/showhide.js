@@ -73,7 +73,7 @@ function hide(pID) {
 	var vNode = document.getElementById(pID);
 	if (vNode) {
 		vNode.style.display = "none";
-		vNode.style.visibility = "hidden";
+		//vNode.style.visibility = "hidden";
 	} else {
 		console.log("hide()-Call pID="+pID+" does not exist!");
 	}
@@ -98,15 +98,16 @@ function hideElement(pID) {
 		alert("hideElement()-Call pID="+pID+" was undefined");
 	}
 };
-function showElement(pID) {
-    show(pID,"inline");
+function showElement(pID,pDisplay) {
+	var vDisplay = pDisplay || "";
+  show(pID,pDisplay);
 }
 function showNode(pNode,pDisplay) {
-	var vDisplay = pDisplay || "inline";
+	var vDisplay = pDisplay || "";
 	if (pNode) {
 		pNode.style.display = vDisplay;
-		//pNode.style.display = "inline"; // "block"
-		pNode.style.visibility = "visible";
+		//pNode.style.display = "inline"; // "block" // ""
+		//pNode.style.visibility = "visible";
 	};
 };
 function show(pID,pDisplay) {

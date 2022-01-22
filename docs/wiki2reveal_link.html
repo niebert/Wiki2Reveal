@@ -10,6 +10,7 @@
   <script src="js/string.js"></script>
   <script src="js/showhide.js"></script>
   <script src="js/writedom.js"></script>
+  <script src="js/wiki2links.js"></script>
   <!-- Printing and PDF exports -->
     <!--[if lt IE 9]>
   <script src="reveal/lib/js/html5shiv.js"></script>
@@ -21,8 +22,9 @@
   //------DEFAULT VALUES-------------------
   //---------------------------------------
   var vTitle = "Kurs:Funktionalanalysis/Normen, Metriken, Topologie";
-  var vAuthor = "Kurs:Funktionanalysis";
-  var vShortTitle ="undefined";
+  var vShortTitle ="";
+  var vCourse = "Kurs:Funktionanalysis";
+  var vCourseTitle = "";
   var vLanguage = "de";
   var vDomain = "wikiversity";
   var vDomainName = "Wikiversity";
@@ -48,38 +50,6 @@
     el("wikiid").value = el("sWikiLanguage").value + el("sWikiDomain").value
   };
 
-
-  function replace_marker(pTemplate) {
-    var vTemplate = pTemplate || "undefined replace_marker template";
-    vTemplate = replaceString(vTemplate,"___AUDIO___",vAudioSlide);
-    vTemplate = replaceString(vTemplate,"___COURSE___",vAuthor);
-    vTemplate = replaceString(vTemplate,"___COURSE_ENCODED___",encodeURI(vAuthor));
-    vTemplate = replaceString(vTemplate,"___DOMAIN___",vDomain);
-    vTemplate = replaceString(vTemplate,"___DOMAINNAME___",vDomainName);
-    vTemplate = replaceString(vTemplate,"___LANGUAGE___",vLanguage);
-    vTemplate = replaceString(vTemplate,"___TITLE___",vTitle);
-    vTemplate = replaceString(vTemplate,"___SHORT_TITLE___",vShortTitle);
-    vTemplate = replaceString(vTemplate,"___TITLE_ENCODED___",encodeURI(vTitle));
-    return vTemplate;
-  }
-
-  function getWikiDisplayURL() {
-    return replace_marker("https://___LANGUAGE___.___DOMAIN___.org/wiki/___TITLE_ENCODED___");
-  };
-
-  function getWiki2RevealURL() {
-    return replace_marker("https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___");
-  }
-
-  function getWikiCourseURL() {
-    return replace_marker("https://___LANGUAGE___.___DOMAIN___.org/wiki/___COURSE_ENCODED___");
-  }
-
-  function callWikiDisplay() {
-    var vURL = getWikiDisplayURL();
-    document.location.href=vURL;
-  };
-
   function setDomainName() {
     switch (vDomain) {
       case "wikipedia":
@@ -93,33 +63,14 @@
     }
   }
 
-  function back2startpage() {
-    document.location=replace_marker("index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___")
-  }
 
-  function getShortTitle(pTitle) {
-    var vShort = pTitle;
-    if (pTitle) {
-      vShort = pTitle.replace(/_/g," ");
-      var vSearch = vAuthor+"/";
-      if (vTitle.indexOf(vSearch) >= 0) {
-        vShort = replaceString(pTitle,vSearch,"");
-        console.log("Prefix: '"+vSearch+"' removed!");
-      } else {
-        console.log("Prefix: '"+vSearch+"' not found!");
-      }
-    } else {
-      console.warn("getShortTitle(pTitle) - parameter pTitle not defined");
-    }
-    return vShort;
-  }
 </script>
 
 </head>
 <body  style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
   <H2 class="slides" id="headerlink">
     <img height="30px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
-    Generator for Wiki2Reveal on Course Page <span id4marker="version">2.1.19</span>
+    Generator for Wiki2Reveal on Course Page <span id4marker="version">2.1.20</span>
   </H2>
   <H2 class="slides" id="headerdemo" style="display:none">
       Generator for Wiki2Reveal Demo Page
@@ -146,18 +97,46 @@
       <tr>
         <td>
           <b>Article</b>
+          <button onclick="toggle('trShortTitle');return false">
+            <img height="14px" src="img/icons-svg/edit-black.svg">
+            <img height="14px" src="img/icons-svg/fa-globe-black.svg">
+          </button>
         </td>
         <td>
-          <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie"  onchange="update_links()">
+          <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie" onchange="update_short_title();update_dom_links()">
+        </td>
+      </tr>
+      <tr id="trShortTitle" style="display:none">
+        <td>
+          <b>Short Title</b>
+        </td>
+        <td>
+          <input type="text" size="60" name="shorttitle" id="tShortTitle" value="" onchange="onchange_short_title(); update_dom_links()">
+          <br>
+          Short title can be used if default title exceeds space on RevealJS title slide
         </td>
       </tr>
       <tr>
         <td>
-          <b>Course/Author</b>
+          <b>Course Wiki-Link</b>
+          <button onclick="toggle('trCourseTitle');return false" style="display:none">
+            <img height="14px" src="img/icons-svg/edit-black.svg">
+            <img height="14px" src="img/icons-svg/home-black.svg">
+          </button>
         </td>
         <td>
-          <input type="text" size="80" name="author" id="tAuthor" value="Kurs:Funktionalanalysis"  onchange="update_links()">
+          <input type="text" size="80" name="author" id="tCourse" value="Kurs:Funktionalanalysis"  onchange="update_course_title();update_dom_links()">
         </td>
+      </tr>
+      <tr id="trCourseTitle" style="display:none">
+        <td>
+          <b>Course Title</b>
+        </td>
+        <td>
+          <input type="text" size="80" name="coursetitle" id="tCourseTitle" value="">
+          <br>
+          Use the course title to replace the course title by an alternative course name for the title slide
+        </tr>
       </tr>
       <tr>
           <td>
@@ -239,7 +218,7 @@
       <b>Wikiversity Page:</b> The Wiki source article for Wiki2Reveal will be defined on <a id="wikiurl" href="undefined" target="_blank">Undefined Wiki Page</a>
     </li>
     <li>
-      <b>Wiki2Reveal Page:</b> The Wiki2Reveal presentation will be defined on <a id="wiki2revealurl" href="undefined" target="_blank">Undefined Wiki2URL Page</a>
+      <b>Wiki2Reveal Page:</b> The Wiki2Reveal presentation can tested the following Link: <a id="wiki2revealurl" href="undefined" target="_blank">Undefined Wiki2URL Page</a>
     </li>
   </ul>
 
@@ -247,22 +226,22 @@
 <div style="display:none">
   <b>Footer Wiki Source EN:</b></br>
     <textarea id="wikisrc" rows="3" cols="120">
-* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Wiki2Reveal slides]) [[File:Wiki2Reveal Logo.png|35px]]
+* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]) [[File:Wiki2Reveal Logo.png|35px]]
   </textarea>
   <b>Footer Wiki Source DE:</b></br>
     <textarea id="wikisrc_de" rows="12" cols="120">
-* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ Foliensatz]) [[Datei:Wiki2Reveal Logo.png|35px]]
+* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Foliensatz]) [[Datei:Wiki2Reveal Logo.png|35px]]
   </textarea>
 
   <b>Footer Wiki Source FR:</b></br>
     <textarea id="wikisrc_fr" rows="12" cols="120">
-* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ diapositives Wiki2Reveal]) [[File:Wiki2Reveal Logo.png|35px]]
+* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ diapositives Wiki2Reveal]) [[File:Wiki2Reveal Logo.png|35px]]
   </textarea>
 
 
   <b>Footer Wiki Source ES:</b></br>
     <textarea id="wikisrc_es" rows="12" cols="120">
-* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___ diapositivas de Wiki2Reveal]) [[File:Wiki2Reveal Logo.png|35px]]
+* '''[[___TITLE___|___SHORT_TITLE___]]''' - ([https://niebert.github.io/Wiki2Reveal/wiki2reveal.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ diapositivas de Wiki2Reveal]) [[File:Wiki2Reveal Logo.png|35px]]
 </textarea>
 
 </div>
@@ -272,21 +251,19 @@
     <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank">
       <img height="20px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
       Wikiversity: Wiki2Reveal</a><br>
-    <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.19</span> </a>
-     - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/09 1:06:20</span> <br/>
+    <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.20</span> </a>
+     - Engelbert Niehaus - Date: <span id4marker="datetime">2022/01/17 22:26:03</span> <br/>
     <a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download Wiki2Reveal - GitHub (<span id4marker="year">2021</span>)</a><br/>
   </div>
 </p>
 <hr>
-</body>
 
   <!--
   <script src="reveal/lib/js/head.min.js"></script>
   <script src="reveal/js/reveal.js"></script>
 -->
-    </body>
-
-    <script>
+</body>
+<script type="text/javascript">
     //---------------------------------------
     //------READ LINKPARAMETER---------------
     //---------------------------------------
@@ -298,15 +275,32 @@
       vTitle= vLinkParam.getValue("title");
       el("tTitle").value = vLinkParam.getValue("title");
     };
+    if (vLinkParam.exists("shorttitle")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vShortTitle = vLinkParam.getValue("shorttitle");
+      el("tShortTitle").value = vLinkParam.getValue("shorttitle");
+    } else {
+      vShortTitle = getShortTitle(vTitle);
+      el("tShortTitle").value = vShortTitle;
+    };
     //------ AUTHOR -------------------------
     if (vLinkParam.exists("author")) {
       // e.g. index.html?author=Engelbert_Niehaus
-      vAuthor = vLinkParam.getValue("author");
-      el("tAuthor").value = vLinkParam.getValue("author");
+      vCourse = vLinkParam.getValue("author");
+      el("tCourse").value = vLinkParam.getValue("author");
     };
-    //------CALC SHORT TiTLE --------------------------
-    vShortTitle = getShortTitle(vTitle);
-
+    //------ COURSE ---------------------
+    if (vLinkParam.exists("course")) {
+      // e.g. index.html?course=Functional_Analysis
+      vCourse = vLinkParam.getValue("course");
+      el("tCourse").value = vLinkParam.getValue("course");
+    };
+    //------ COURSETITLE -------------------------
+    if (vLinkParam.exists("coursetitle")) {
+      // e.g. index.html?coursetitle=My special Funtional_Analysis
+      vCourseTitle = vLinkParam.getValue("coursetitle");
+      el("tCourseTitle").value = vLinkParam.getValue("coursetitle");
+    };
     //------ Demo -------------------------
     if (vLinkParam.exists("demo")) {
       // e.g. index.html?author=Engelbert_Niehaus
@@ -373,35 +367,6 @@
       vTemplate = replace_marker(vTemplate);
       el("footerout").value = vTemplate
     };
-
-
-    function update_dom_links() {
-      var vID = "courseurl"; // wikiurl, wiki2revealurl
-      var vCourse = vAuthor;
-
-      //----- set the Wiki URLs in DOM ------
-      write2innerHTML(vID,vCourse);
-      write2attribute(vID,"href",getWikiCourseURL());
-      vID = "wikiurl"; // wikiurl, wiki2revealurl
-      write2innerHTML(vID,vTitle);
-      write2attribute(vID,"href",getWikiDisplayURL());
-      vID = "wiki2revealurl"; // wikiurl, wiki2revealurl
-      write2innerHTML(vID,"Wiki2Reveal "+vShortTitle);
-      write2attribute(vID,"href",getWiki2RevealURL());
-
-      createFooter();
-    }
-
-    function update_links() {
-      vLanguage = el("sWikiLanguage").value;
-      vCourse = el("tAuthor").value;
-      vDomain = el("sWikiDomain").value;
-      vDomainName = firstUpperCase(vDomain);
-      vTitle = el("tTitle").value;
-      vShortTitle = getShortTitle(vTitle);
-      vAudioSlide = el("sAudioSlide").value;
-      update_dom_links();
-    }
 
     update_dom_links();
     </script>

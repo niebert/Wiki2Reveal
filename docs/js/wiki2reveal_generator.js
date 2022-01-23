@@ -232,16 +232,20 @@ function find_ul_begin_splitter(pSection,pPrefix) {
     var vPos = pSection.indexOf(vResult);
     vResult = vResult + "";
     console.log("vPos="+vPos+" vResult.length="+vResult.length);
+    var vPrefixSection = pSection.substr(0,vPos);
+    vPrefixSection = vPrefixSection.replace(/\s+/g, '');
     //console.log("find_h_splitter() - Header "+vResult+" found with vPrefix='"+vPrefix+"'");
     //var vVerticalSection = pSection.substr(vPos+(vResult.length))
-    var vVerticalSection = pSection.substr(vPos);
-    console.log("find_ul_begin_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
-    vRet.verticals = {
-      "tag": vResult,
-      "pos": vPos,
-      "prefix": vPrefix,
-      "section": vVerticalSection
-    };
+    if (vPrefixSection.length > 2) {
+      var vVerticalSection = pSection.substr(vPos);
+      console.log("find_ul_begin_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
+      vRet.verticals = {
+        "tag": vResult,
+        "pos": vPos,
+        "prefix": vPrefix,
+        "section": vVerticalSection
+      };
+    }
   };
   return vRet;
 }
@@ -259,6 +263,7 @@ function find_ul_end_splitter(pSection,pPrefix) {
     console.log("vPos="+vPos+" vResult.length="+vResult.length);
     //console.log("find_h_splitter() - Header "+vResult+" found with vPrefix='"+vPrefix+"'");
     var vVerticalSection = pSection.substr(vPos+(vResult.length))
+    var vPostfixSection = vVerticalSection.replace(/\s+/g, '');
     //var vVerticalSection = pSection.substr(vPos);
     console.log("find_ul_end_splitter(vPos="+vPos+") - verticals vVerticalSection='"+vVerticalSection+"'");
     vRet.verticals = {

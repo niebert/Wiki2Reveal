@@ -41,12 +41,14 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   // by a remote image url [[File:https://en.wikipedia.org/wiki/Special:Redirect/file/my_image.png]]
   var data = {
     "mathexpr": [],
+    "tables": [],
     "references": []
   };
   // does not tokenize all <math> tags - see Kurs:Funktionalanalysis/Hahn-Banach - reeller Fall
   pMarkdown = tokenizeMath(pMarkdown,data,pOptions);
   //pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions);
   pMarkdown = tokenizeCitation(pMarkdown, data, pOptions);
+  pMarkdown = tokenizeTables(pMarkdown, data, pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   // replace the Math-Tags for Reveal output
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
@@ -71,6 +73,7 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   pMarkdown = wtf.wikiconvert.clean_unsupported_wiki(pMarkdown,pOptions);
   // create a Title slide and place the slide before output
   pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
+  pMarkdown = replaceToken2Table(pMarkdown,data,pOptions);
   pMarkdown = replaceToken2Ref(pMarkdown,data,pOptions);
   console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   pMarkdown = createTitleSlide(pTitle,pAuthor,pOptions) + "\n" + pMarkdown;
@@ -281,21 +284,20 @@ function getSectionTag4Vertical(pIndex,pCount) {
   return "\n<section id=\""+pIndex+"c"+ pCount + "\">\n";
 }
 
-function body_splitter(pIndex,pSection,pCount) {
-  var vCount = pCount || 0;
+function getImageTag4Vertical(pIndex,pCount,pURL) {
+  return "\n<section id=\""+pIndex+"c"+ pCount + "\" data-background-size=\"contain\" data-background-image=\"" + pURL+ "\">\n";
+}
+
+function append_ul_splitter(pSection,pCount,pPrefix) {
   var vOut = "";
   var vVertArr = [];
-  // check if header splitter find heading
-  vCount++;
-  var vPrefix = getSectionTag4Vertical(pIndex,vCount);
-  //alert("header_splitter() - verticals pSection='"+pSection+"'");
-  var ul1 = find_ul_begin_splitter(pSection,vPrefix);
+  var ul1 = find_ul_begin_splitter(pSection,pPrefix);
   if (ul1 && ul1.verticals) {
-    vCount++;
+    pCount++;
     vVertArr.push(ul1);
-    var ul2 = find_ul_end_splitter(pSection,vPrefix);
+    var ul2 = find_ul_end_splitter(pSection,pPrefix);
     if (ul2 && ul2.verticals) {
-      vCount++;
+      pCount++;
       vVertArr.push(ul2);
     } else {
       console.error("Closing Tag for 'ul'-tag is missing!");
@@ -308,6 +310,57 @@ function body_splitter(pIndex,pSection,pCount) {
       vOut += vVertArr[i].verticals.prefix + vVertArr[i].verticals.section;
       //vOut += body_splitter(pIndex+"body",vVertArr[i].verticals.section,vCount);
     }
+  }
+  return vOut;
+}
+
+function body_splitter(pIndex,pSection,pCount) {
+  var vCount = pCount || 0;
+  var vOut = "";
+  // check if header splitter find heading
+  pCount++;
+  var vPrefix = getSectionTag4Vertical(pIndex,pCount);
+  //alert("header_splitter() - verticals pSection='"+pSection+"'");
+  if (pSection) {
+    var vPosUL = pSection.indexOf("<ul");
+    var vPosIMG = pSection.indexOf("<img");
+    //alert("vPosUL="+vPosUL+" vPosIMG="+vPosIMG);
+    if (vPosIMG > vPosUL) {
+      if (vPosUL>=0) {
+        // Image after UL
+        vOut += append_ul_splitter(pSection,vCount,vPrefix);
+        var vPosEnd = pSection.indexOf("</ul>");
+        if (vPosEnd >= 0) {
+            pSection = pSection.substr(vPosEnd+5);
+            pCount = pCount+2;
+            vOut +=  body_splitter(pIndex,pSection,pCount);
+        }
+      } else {
+        // UL after Image
+        pSection = pSection.replace(/<img[^>]+>/," ");
+        pCount++;
+        vOut +=  body_splitter(pIndex,pSection,pCount);
+      }
+      // append image
+    } else if (vPosIMG < vPosUL) {
+      if (vPosIMG>=0) {
+        pSection = pSection.replace(/<img[^>]+>/," ");
+        pCount++;
+        vOut +=  body_splitter(pIndex,pSection,pCount);
+      } else {
+        // Image after UL
+        vOut += append_ul_splitter(pSection,vCount,vPrefix);
+        var vPosEnd = pSection.indexOf("</ul>");
+        if (vPosEnd >= 0) {
+            pSection = pSection.substr(vPosEnd+5);
+            pCount = pCount+2;
+            vOut +=  body_splitter(pIndex,pSection,pCount);
+        }
+      }
+    }
+
+  } else {
+    console.log("pSection is not defined");
   }
   //vOut += "\n<section id=\"sec"+pIndex+"subsec"+ vCount + "\">\n" + pSection;
 
@@ -331,6 +384,17 @@ function slide_splitter(pIndex,pSection) {
     console.log("Verticals in Header "+vHeader.verticals.tag+" found with section='"+vHeader.verticals.section+"'");
     vOut += vHeader.verticals.prefix + vHeader.verticals.section;
     vOut += body_splitter(pIndex+"body",vHeader.verticals.section);
+  }
+  var vImages = wtf.wikiconvert.getImages4URL(pSection);
+  if (vImages.length > 0) {
+    //alert("append fullscreen images "+JSON.stringify(vImages,null,4));
+    for (var i = 0; i < vImages.length; i++) {
+      vCount++;
+      vOut += getImageTag4Vertical(pIndex,vCount,vImages[i])+"</section>";
+    }
+
+  } else {
+    //alert("No images on slide "+vCount+"\n"+pSection)
   }
   return vOut;
 }
@@ -462,6 +526,7 @@ function getMathInlineTag4Reveal(pCount,pMath) {
 }
 
 
+
 function replaceToken2Math(pMarkdown,pData,pOptions) {
   var vSearch = "";
   var vReplace = "";
@@ -495,7 +560,7 @@ function tokenizeMath(wiki, data, pOptions) {
   var timeid = data.timeid;
   var vCount = 0;
   console.log("tokenizeMathBlock() - wtf_wikipedia - Time ID="+data.timeid);
-  wiki = wiki.replace(/\n[:]+<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+  wiki = wiki.replace(/\n[:]+<math([^>]*?)>([\s\S]+?)<\/math>/g, function (pMatch, attrs, inside) {
     vCount++;
     vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
     data.mathexpr.push({
@@ -507,7 +572,7 @@ function tokenizeMath(wiki, data, pOptions) {
     return "\n" + vLabel;
   });
   console.log("tokenizeMathInline() - wtf_wikipedia - Time ID="+data.timeid);
-  wiki = wiki.replace(/<math([^>]*?)>([\s\S]+?)<\/math>/g, function (_, attrs, inside) {
+  wiki = wiki.replace(/<math([^>]*?)>([\s\S]+?)<\/math>/g, function (pMatch, attrs, inside) {
     vCount++;
     vLabel = "___MATH_INLINE_"+data.timeid+"_ID_"+vCount+"___";
     data.mathexpr.push({
@@ -521,128 +586,164 @@ function tokenizeMath(wiki, data, pOptions) {
   return wiki;
 }
 
-function XtokenizeMath (wikicode, data, pOptions) {
+function tokenizeTables(wiki, data, pOptions) {
   var vNow = new Date();
   data.timeid = data.timeid || vNow.getTime();
   var timeid = data.timeid;
-  var vFound = "";
-  var vMathExpr = "";
-  console.log("tokenizeMathBlock() Time ID="+data.timeid);
-  if (wikicode) {
-    // create the mathexpr array if
-    //var vSearch = /(<math[^>]*?>)(.*?)(<\/math>)/gi;
-    data = data || {};
-    data.mathexpr = data.mathexpr || {};
-    var vResult;
-    var vCount =0;
-    var vLabel = "";
-    console.log("wikicode defined");
-    //----- MATH BLOCK TOKENIZE -----
-    var vSearchBlock = new RegExp("\n([:]+[\s]*?<math[^>]*?>)(.*?)(<\/math>)","i");
-    //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
-    // \n            # newline
-    // [:]+          # one or more colons
-    // [\s]*?        # (optional) tabs and white space
-    // <math[^>]*?>  # opening <math> tag
-    // (.*?)         # enclosed math expression
-    //(<\/math>)     # closing </math> tag
-    //
-    // gi            # g global, i ignore caps
-    while (vResult = vSearchBlock.exec(wikicode)) {
-      vCount++;
-      vLabel = "___MATH_BLOCK_"+data.timeid+"_ID_"+vCount+"___";
-      vFound = vResult[1] + vResult[2] + vResult[3];
-      vMathExpr = vResult[2];
-      console.log("Tokenize Math Expression Block"+vCount+": '" + vFound + "' found");
-      //console.log("Push Block Data JSON="+JSON.stringify(data,null,4));
-      data.mathexpr.push({
-        "type":"block",
-        "label":vLabel,
-        "math": vMathExpr
-      });
-      console.log("Push Block Data" + vCount + " - done");
-      //wikicode = replaceString(wikicode,vResult[0],vLabel);
-      //wikicode = replaceString(wikicode,vFound,vLabel);
-      //console.log("Execute replace on wikicode for '" + vFound + "'");
-      //wikicode = wikicode.replace(vFound,vLabel);
-      wikicode = replaceString(wikicode,vFound,vLabel);
-      //console.log("Replace on wikicode executed for '" + vFound + "'");
+  var vCount = 0;
+  console.log("tokenizeTables() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/\{\|([^\n]+)\n([\s\S]+?)\|\}/g, function (pMatch, attrs, inside) {
+    vCount++;
+    vLabel = "___TABLE_TOKEN_"+data.timeid+"_ID_"+vCount+"___";
+    var prefix = "";
+    var nested_tab_pos = inside.lastIndexOf("{|");
+    if ( nested_tab_pos >= 0) {
+      prefix = "{| "+ attrs + "\n" + inside.substr(0,nested_tab_pos);
+      inside = inside.substr(nested_tab_pos+2);
+      attrs = inside.substr(0,inside.indexOf("\n"));
+      inside = inside.substr(inside.indexOf("\n")+1)
+    }
+    var vTable = {
+      "type":"table",
+      "attrs": attrs,
+      "caption": null,
+      "header": null,
+      "rows": {
+        "length":0
+      },
+      "label": vLabel
     };
-    //----- MATH INLINE TOKENIZE -----
-    // console.log("Tokenize Inline Math JSON:" + JSON.stringify(data,null,4));
-    var vSearchInline = new RegExp("(<math[^>]*?>)(.*?)(<\/math>)","i");
-    //var vSearch = /\n[:]+[\s]*?(<math>)(.*?)(<\/math>)/gi;
-    // <math[^>]*?>  # opening <math> tag
-    // (.*?)         # enclosed math expression
-    //(<\/math>)     # closing </math> tag
-    //
-    // i            #  i ignore caps, g global
-    //console.log("Tokenize Inline Math - RegExp defined");
-    while (vResult = vSearchInline.exec(wikicode)) {
-      vCount++;
-      vLabel = "___MATH_INLINE_"+data.timeid+"_ID_"+vCount+"___";
-      //console.log("Tokenize Inline Math - Label: '" + vLabel + "'");
-
-      vFound = vResult[1] + vResult[2] + vResult[3];
-      vMathExpr = vResult[2];
-      console.log("Tokenize Math Expression Inline"+vCount+": '" + vFound + "' found");
-      //console.log("Push Data JSON="+JSON.stringify(data,null,4));
-      data.mathexpr.push({
-        "type":"inline",
-        "label":vLabel,
-        "math": vMathExpr
-      });
-      // console.log("Tokenize Math Expression - Push Inline Data" + vCount + "  - done");
-      //wikicode = replaceString(wikicode,vResult[0],vLabel);
-      //wikicode = replaceString(wikicode,vFound,vLabel);
-     //  console.log("Execute replace on wikicode for '" + vFound + "'");
-      wikicode = wikicode.replace(vFound,vLabel);
-      //console.log("Replace on wikicode executed for '" + vFound + "'");
-    };
-    //console.log("DONE Tokenize Inline Math JSON:" + JSON.stringify(data,null,4));
-
-  }
-  return wikicode;
-}
-
-function X_tokenizeCitation (wiki, data, options) {
-  var references = [];
-  if (options && options.parse && options.parse.citations && options.parse.citations == false) {
-    console.log("tokenize citations was not performed - options.parse.citations=false");
-    //wiki = tokenizeRefs(wiki, data, options);
-    // (1) References without a citation label
-    wiki = wiki.replace(/ ?<ref>([\s\S]{0,1000}?)<\/ref>/gi, function(a, tmpl){
-      // getCiteLabel(data,pid) returns  ___CITE_8234987294_5___
-      var vLabel = getCiteLabel(data,data.references.length);
-      return vLabel;
-    });
-    // (2) Cite a reference by a label WITHOUT reference
-    // replace <ref name="my book label"/> by "___CITE_7238234792_my_book_label___"
-    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?\/>/gi,function(a, tmpl) {
-      var vLabel = getCiteLabel(data,data.references.length);
-      return vLabel;
-    });
-    // (3) Reference with citation label that is used multiple time in a document by (2)
-    //wiki = wiki.replace(/<ref [\s]+name=["']([^"'])["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
-    wiki = wiki.replace(/ ?<ref[\s]+name=["']([^"']+)["'][^>]{0,200}?>([\s\S]{0,3000}?)<\/ref>/gi, function(a, name, tmpl) {
-        //let vLabel = getCiteLabel(data,name2label(tmpl));
-      var vLabel = name2label(name);
-      if (vLabel) {
-        console.log("tokenizeRefs() created cite label='"+vLabel+"' from name='"+name+"'");
-        vLabel = getCiteLabel(data,vLabel);
-      } else {
-        // convert a standard label with the reference length of the array as unique ID generator
-        vLabel = getCiteLabel(data,data.references.length);
-      }
-      return vLabel;
-    });
-
-  } else {
-    console.log("tokenize citations performed");
-    wiki = tokenizeRefs(wiki, data, options,references);
-  }
+    parseTableInside(vTable,inside);
+    data.tables.push(vTable);
+    return prefix + "\n" + vLabel;
+  });
   return wiki;
 }
+
+function parseTableInside(pTable,pInside) {
+  //alert(pInside);
+  pTable = pTable || {};
+  //pTable['rows'] = [];
+  if (pInside) {
+    var lines = pInside.split("\n|-");
+    for (var i = 0; i < lines.length; i++) {
+      var line =lines[i];
+      if (i == 0) {
+        var vPos = line.indexOf("|+")>=0;
+        if (vPos >= 0) {
+          var vCaption = line.substr(vPos+2);
+          var vEnd = vCaption.indexOf("\n");
+          if (vEnd >= 0) {
+              vCaption = vCaption.substr(0,vEnd);
+          }
+          vCaption = vCaption.trim();
+          pTable.caption = vCaption;
+          console.log("wiki2reveal_generator.js:572 - Caption='"+vCaption+"'");
+        } else {
+          parseTableLine(pTable,line)
+        }
+      } else {
+        parseTableLine(pTable,line)
+      }
+    }
+  }
+  return pInside;
+}
+
+function parseTableLine(pTable,pLine) {
+  var vCols = [];
+  if (pLine) {
+    // check if column is a header
+    if ((pLine.indexOf("\n!") >= 0) || (pLine.indexOf("!!") > 0)) {
+      // this is a header
+      pLine = pLine.replace(/!!/g,"\n!");
+      var arr = pLine.split("\n!");
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = (arr[i]).replace(/\n/g," ");
+        arr[i] = (arr[i]).trim();
+      }
+      pTable["header"] = arr;
+    } else {
+      pLine = pLine.replace(/\|\|/g,"\n|");
+      var arr = pLine.split("\n|");
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = (arr[i]).replace(/\n/g," ");
+        arr[i] = (arr[i]).trim();
+      }
+      pTable.rows["R"+pTable.rows.length] = arr;
+      pTable.rows.length++
+    }
+  } else {
+    console.warn("W2R: parseTableLine(pLine) pLine is not defined");
+  }
+  return vCols;
+}
+
+function replaceToken2Table(pMarkdown,pData,pOptions) {
+  var vSearch = "";
+  var vReplace = "";
+  var vInside = "";
+  var vCaption = "";
+  var vHeader = [];
+  var vRows = [];
+  var vCount = 0;
+  console.log("replace tokens back to mathematical expression for RevealJS");
+  for (var i = 0; i < pData.tables.length; i++) {
+    vCount++;
+    vSearch = pData.tables[i].label;
+    vReplace = "";
+    vTableAttrs = pData.tables[i].attrs;
+    vCaption = pData.tables[i].caption;
+    vHeader  = pData.tables[i].header;
+    vRows = pData.tables[i].rows || vRows;
+    //vInside  = pData.tables.inside || "undefined table";
+    vReplace += "\n<table "+vTableAttrs+">";
+    if (vCaption) {
+      vReplace += "\n  <caption>"+vCaption+"</caption>";
+    }
+    vReplace += "\n  <tbody>";
+    if (vHeader && vHeader.length > 0) {
+      vReplace += "\n  <tr>\n     <th>";
+      vReplace += vHeader.join("\n     </th>\n     <th>");
+      vReplace += "\n     </th>\n  </tr>";
+    }
+    if (vRows && vRows.length > 0) {
+      for (var r = 0; r < vRows.length; r++) {
+        var row = vRows["R"+r]
+        vReplace += "\n  <tr>\n     <td>";
+        vReplace += row.join("\n     </td>\n     <td>");
+        vReplace += "\n     </td>\n  </tr>";
+      }
+    }
+    vReplace += "\n  </tbody>";
+    vReplace += "\n</table>"
+    /*
+
+  <caption>Caption text</caption>
+  <tbody>
+    <tr>
+      <th>Header text</th>
+      <th>Header text</th>
+      <th>Header text</th>
+    </tr>
+    <tr>
+      <td>Example</td>
+      <td>Example</td>
+      <td>Example</td>
+    </tr>
+    <tr>
+      <td>Example</td>
+      <td>Example</td>
+      <td>Example</td>
+    </tr>
+  </tbody>
+</table>
+    */
+    pMarkdown = replaceString(pMarkdown,vSearch,vReplace);
+  }
+  return pMarkdown;
+}
+
 
 function getReference4Label(pLabel,pInnerRef,pType) {
   console.log("getReference4Label('"+pLabel+"','"+pInnerRef+"','"+pType+"')");

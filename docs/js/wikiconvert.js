@@ -599,6 +599,19 @@ function WikiConvert () {
      return html;
 	}
 
+	this.check_audio_slide = function (pMarkdown) {
+			var vLoc = document.location.href || "nolocation.html";
+			var vReturn = "undefined_type";
+			if (vLoc.indexOf("dzslides") >= 0) {
+				console.log("Slide Type: DZSlides");
+				vReturn = "dzslides"
+			} else {
+				console.log("Slide Type: RevealJS");
+				vReturn = "reveal"
+			}
+		  return vReturn;
+	}
+
 	this.open_indent_block = function() {
 		switch (this.aOutFormat) {
 			case "reveal":
@@ -616,19 +629,6 @@ function WikiConvert () {
 		}
 	}
 
-
-	this.check_audio_slide = function (pMarkdown) {
-		var vLoc = document.location.href || "nolocation.html";
-		var vReturn = "undefined_type";
-		if (vLoc.indexOf("dzslides") >= 0) {
-			console.log("Slide Type: DZSlides");
-			vReturn = "dzslides"
-		} else {
-			console.log("Slide Type: RevealJS");
-			vReturn = "reveal"
-		}
-	  return vReturn;
-	}
 
 	this.close_indent_block = function() {
 		switch (this.aOutFormat) {
@@ -1650,7 +1650,91 @@ this.process_normal = function(wikitext) {
 		// Chrome 1 - 71
     return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 	}
+	this.getWikiFiles = function (pWikiCode) {
+		var vFiles = [];
+		return vFiles;
+	};
 
+	this.getImages4URL = function (pWikicode) {
+		var vImages = [];
+		if (pWikicode) {
+			//var rex = /<img[\s]+class="[a-zA-Z0-9\- ]+"[\s]+src=["']([^"']]+)"/gi;
+			var rex = /<img[\s]+class="([^"]+)"[\s]+src="([^"]+)"/gi;
+			while(tokens = rex.exec(pWikicode)) {
+				vImages.push(tokens[2]);
+			}
+		} else {
+			console.warn("pWikiCode undefined");
+		}
+		return vImages;
+	}
+
+	this.getWikiImages = function (pWikiCode) {
+		var vImages = [];
+		var image = /\[\[File:(.[^\]]*)\]\]/g;
+		var vSizeRE = /[0-9]+px/;
+		var vTitle = "";
+		var vAltText = "";
+		var vClass = "image";
+		var vURL = "";
+		var vCaption = "";
+		var tokens;
+		var replace_str="";
+		var vAudioCount = 0;
+		var vAudioID = "";
+		var vAudioType = "ogg";
+		var vAudioTag = " "
+		var vAudioPlayPause = "";
+		var isFirefox = this.check_firefox();
+		while(tokens = image.exec(pWikiCode)) {
+			vTitle = "";
+			vAltText = "";
+			//[[File:my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment]]
+			//tokens[0]=my Image.png|thumb|alt=Alternative Text|<a href="test.html">Test Comment</a> Image Comment
+			var vLinkSplit = (tokens[0]).split("|");
+			vURL = this.getWikiMediaURL(vLinkSplit[0]);
+			var vFileType = this.getMediaFileType(vURL);
+			//----------- MEDIATYPE: IMAGE -----------------
+			if ((vFileType == "img") || (vFileType == "svg")) {
+				var vImg = {
+					"url":"undefined-url",
+					"caption":"",
+					"width": "",
+					"size":"",
+					"center":false
+				}
+				for (var i = 1; i < (vLinkSplit.length); i++) {
+							console.log("vLinkSplit["+i+"]="+vLinkSplit[i]);
+							if ((vLinkSplit[i]).match(/^[0-9]+px$/)) {
+								//vFileSplit[i] = "350px"
+								vImg.size = " width: "+vLinkSplit[i]+";";
+								vImg.width = (vLinkSplit[i]).replace(/[^0-9]/g,"");
+								console.log("Image: '" + vLinkSplit[0] + "' with Width="+vImg.width);
+								//vFileSplit[i] = "350"
+							} else if ((vLinkSplit[i] == "center") || (vLinkSplit[i] == "middle")) {
+								vImg.center = true;
+							};
+				};
+				if (vLinkSplit.length == 1) {
+					console.log("IMAGE SPLIT 1: "+vURL+" with Type: "+vFileType+ " Width="+vWidth);
+					vImages.push(vImg);
+				} else {
+					if (vLinkSplit.length == 2) {
+						console.log("IMAGE SPLIT 2: "+vURL+" with Type: "+vFileType +" Width="+vWidth);
+						vImg.caption = this.checkCaption(vLinkSplit[1]);
+						vImages.push(vImg);
+					} else {
+						// var vMediaParam = "";
+						console.log("IMAGE SPLIT 3: "+vURL+" with Type: "+vFileType +" Width="+vWidth);
+						var vSize = "";
+						vImg.caption = this.checkCaption(vLinkSplit[vLinkSplit.length-1]);
+						vImages.push(vImg);
+					}
+				}; // else if vLineSplit.length
+			}
+		}
+		return vImages;
+  };
 	//#################################################################
 	//# PUBLIC Method: replaceImages()
 	//#    used in Class: WikiConvert

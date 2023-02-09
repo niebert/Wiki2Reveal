@@ -1,5 +1,5 @@
-# Wiki2Reveal <span id4marker="version">2.1.21</span>
-**Version Date: <span id4marker="datetime">2023/01/02 22:11:52</span>**
+# Wiki2Reveal <span id4marker="version">2.1.20</span>
+**Version Date: <span id4marker="datetime">2023/02/09 10:38:12</span>**
 Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentation. The main challenges is the cross-origine call to retrieve the wiki source text of an article in the MediaWiki. Transcoding of the wiki syntax to other formats like [PanDoc](https://pandoc.org/try)
 
 ## [Wiki2Reveal Online-Demo](http://niebert.github.io/Wiki2Reveal/)
@@ -183,9 +183,9 @@ Requirement: [NPM](https://docs.npmjs.com/getting-started/installing-node) is in
 
 `npm install -g browserify watchify uglify-js doctoc node-lint`
 
-This is recommended because your will not install Browserfy, Watchify and UglifyJS for all your repositories separately.
+This is recommended because you will not (want to) install Browserfy, Watchify and UglifyJS for all your repositories separately.
 * ***Browserfy*** converts `node_modules` in a single library, that can be imported in WebApp. Browserify resolves dependencies and included the required libraries into the bundled javascript code.
-* ***Watchify*** watches changes in the source code and runs the build process whenever it detects changes in the your source code.
+* ***Watchify*** watches changes in the source code and runs the build process whenever it detects changes in your source code.
 * ***UglifyJS*** compresses the source code of ```class_editor_uml.js``` into ```class_editor_uml.min.js``` to reduce download time and WebApp performance during load.
 * ***DocToc*** is used to create a helpful table of contents in the README (see [DocToc-Installation]https://github.com/thlorenz/doctoc#installation) for further details on [NPM DocToc](https://www.npmjs.com/package/doctoc) ). Run `doctoc README.md` for updating the table of contents.
 * ***jsLint*** is used to check the Javascript code, quality of code can be improved by application of jsLint

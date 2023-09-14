@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc EN">
-  <title>W2R Footer - Wiki2Reveal</title>
+  <title>W2R Header - Wiki2Reveal</title>
   <link rel="stylesheet" href="css/main.css">
   <!-- Original Settings do not have the following CSS inserted directly -->
   <script src="js/linkparam.js"></script>
@@ -11,7 +11,7 @@
   <script src="js/showhide.js"></script>
   <script src="js/writedom.js"></script>
   <script src="js/wiki2links.js"></script>
-  <!-- Printing and PDF exports -->
+    <!-- Printing and PDF exports -->
     <!--[if lt IE 9]>
   <script src="reveal/lib/js/html5shiv.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
@@ -30,6 +30,7 @@
   var vDomainName = "Wikiversity";
   var vAudioSlide = "no";
   var vSlideType = "reveal";
+  var vHeader = "yes";
   var vDemo = "no";
   //---------------------------------------
   var vOffline = false; // set to true for Debugging in offline mode
@@ -59,7 +60,7 @@
 <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
   <H2 class="slides" id="headerfooter">
     <img height="30px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
-    Generator for Wiki FOOTER - Version: <span id4marker="version">2.1.22</span>
+    Generator for Wiki HEADER - Version: <span id4marker="version">2.1.22</span>
   </H2>
   <H2 class="slides" id="headerdemo" style="display:none">
       Generator for Wiki2Reveal Demo Page
@@ -73,7 +74,7 @@
         <b>Wiki Domain</b>
       </td>
       <td>
-        <select name="domain" id="sWikiDomain" onchange="update_links('footer')">
+        <select name="domain" id="sWikiDomain" onchange="update_links('header')">
              <option value="wikiversity" selected>Wikiversity</option>
              <option value="wikipedia">Wikipedia</option>
              <option value="wikibook">WikiBook</option>
@@ -132,11 +133,11 @@
           <b>Audio Slides</b>
         </td>
         <td>
-          <select name="slidetype" id="sSlideType"  onchange="update_links('footer')">
+          <select name="slidetype" id="sSlideType"  onchange="update_links('header')">
                <option value="reveal" selected>Reveal JS</option>
                <option value="dzslides">DZ Slides</option>
           </select>
-          <select name="audioslide" id="sAudioSlide"  onchange="update_links('footer')">
+          <select name="audioslide" id="sAudioSlide"  onchange="update_links('header')">
             <option value="yes">Use Player for Audio Slides</option>
             <option value="no">NO Audio Slides</option>
           </select>
@@ -147,7 +148,7 @@
           <b>Language</b>
         </td>
         <td>
-          <select name="language" id="sWikiLanguage"  onchange="update_links('footer')">
+          <select name="language" id="sWikiLanguage"  onchange="update_links('header')">
                <option value="en">English</option>
                <option value="es">Spanish</option>
                <option value="de" selected="selected">German</option>
@@ -211,22 +212,33 @@
   </ul>
   <hr>
 
-  <textarea id="footerout" rows="35" cols="90"></textarea>
+  <textarea id="headerout" rows="35" cols="90"></textarea>
 
   <div style="display:none">
   <b>Header Wiki Source EN:</b></br>
 <textarea id="wikiheader" rows="12" cols="120">
 == Introduction ==
-This page can be displayed as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''.
+This page about ''___TITLE___'' can be displayed as '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal slides]'''.
 Single sections are regarded as slides and modifications on the slides will immediately affect the content of the slides.
+The following aspects of ''___TITLE___'' are considered in detail:
+* (1)
+* (2)
+* (3)
 
 == Objective ==
-This learning resource in Wikiversity has the objective to ...
+This learning resource about ''___TITLE___'' in Wikiversity has the objective to ...
 
 == Target Group ==
-The target group of the learning resource is
+The target group for ''___TITLE___'' of the learning resource is
+
+The target groups for ''___TITLE___'' of the learning resource are:
+* Bachelor/Master students with the subsect
+*
 
 == Learning Tasks / Activities ==
+Learning activies focus on
+*
+*
 
 == References ==
 &lt;references/&gt;
@@ -261,16 +273,26 @@ The '''[https://niebert.github.io/Wiki2Reveal/index.html?domain=___DOMAIN___&tit
   <b>Header Wiki Source DE:</b></br>
 <textarea id="wikiheader_de" rows="12" cols="120">
 == Einleitung ==
-Diese Seite kann als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal Folien]''' angezeigt werden.
+Diese Seite zum Thema ''___TITLE___'' kann als '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___ Wiki2Reveal Folien]''' angezeigt werden.
 Einzelne Abschnitte werden als Folien betrachtet und Änderungen an den Folien wirken sich sofort auf den Inhalt der Folien aus.
+Dabei werden die folgenden Teilaspekte im Detail behandelt:
+* (1)
+* (2)
+* (3)
 
 == Zielsetzung ==
-Diese Lernressource in der Wikiversity hat das Ziel, ...
+Diese Lernressource zu ''___TITLE___'' in der Wikiversity hat das Ziel, ...
 
 == Zielgruppe ==
-Die Zielgruppe der Lernressource ist
+Die Zielgruppe der Lernressource zum Thema  ''___TITLE___'' ist
+
+Die Zielgruppen der Lernressource zum Thema  ''___TITLE___'' sind
+* Studierende im Fach
+* Schüler:innen im Fach
+
 
 == Aufgaben für Lernende / Studierende ==
+Mit den folgenden Aufgaben zum Thema ''___TITLE___'' werden
 
 == Literatur/Quellennachweise ==
 &lt;references/&gt;
@@ -484,53 +506,11 @@ Este conjunto de '''[https://niebert.github.io/Wiki2Reveal/wiki2___SLIDETYPE___.
       el("sAudioSlide").value = vLinkParam.getValue("audioslide");
     };
     //--------------------------------------
-    function XcreateFooter() {
-      var vTemplate = "";
-      console.log("Check vDemo='" + vDemo +"'");
-      if (vDemo == "yes") {
-        switch (vLanguage) {
-          case "de":
-            vTemplate += el("wikiheader_de").value
-          break;
-          case "en":
-            vTemplate += el("wikiheader").value
-          break;
-          case "es":
-            vTemplate += el("wikiheader_es").value
-          break;
-          case "fr":
-            vTemplate += el("wikiheader_fr").value
-          break;
-          default:
-            vTemplate += el("wikiheader").value
-        };
-        for (var i = 1; i < 4; i++) {
-          //vTemplate += "== Header " + i + " ==\nText of Slide " + i + "\n\n"
-        }
-      }
-      switch (vLanguage) {
-        case "de":
-          vTemplate += el("wikisrc_de").value
-        break;
-        case "en":
-          vTemplate += el("wikisrc").value
-        break;
-        case "es":
-          vTemplate += el("wikisrc_es").value
-        break;
-        case "fr":
-          vTemplate += el("wikisrc_fr").value
-        break;
-        default:
-          vTemplate += el("wikisrc").value
-      };
-      setDomainName();
-      vTemplate = replace_marker(vTemplate);
-      el("footerout").value = vTemplate
-    };
+
+    //alert("createFooter(2) CALLED???")
 
     // defined in js/wiki2links.js
-    update_links('footer');
+    update_links('header');
     </script>
 
 </html>

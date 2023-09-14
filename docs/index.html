@@ -130,9 +130,9 @@
         window.open(vURL);
       };
 
-      function callWikiFooter() {
-        console.log("Title='" + el("tTitle").value + "'");
-        var vURL = "wiki2reveal_footer.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
+      function callWikiTemplate(pType) {
+          console.log("Title='" + el("tTitle").value + "'");
+        var vURL = "wiki2reveal_"+pType+".html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         if (el("tShortTitle")) {
           if (el("tShortTitle").value) {
@@ -151,7 +151,19 @@
         window.open(vURL);
       };
 
+      function callWikiFooter() {
+        callWikiTemplate("footer");
+      }
+
+      function callWikiHeader() {
+        callWikiTemplate("header");
+      }
+
       function callWikiLink() {
+        callWikiTemplate("link");
+      }
+
+      function XcallWikiLink() {
         var vURL = "wiki2reveal_link.html?language="+el("sWikiLanguage").value + "&domain=" + el("sWikiDomain").value;
         vURL += "&title="+encodeURI(el("tTitle").value);
         if (el("tShortTitle")) {
@@ -219,7 +231,7 @@
       <center>
         <h2>
           <img height="30px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
-          Wiki2Reveal Starter - Version: <span id4marker="version">2.1.20</span></h2>
+          Wiki2Reveal Starter - Version: <span id4marker="version">2.1.22</span></h2>
         <h3><i>based on Library: <a href="https://www.npmjs.com/package/wtf_wikipedia" target="_blank">wtf_wikipedia NPM</a></i></h3>
       </center>
     <hr>
@@ -379,6 +391,7 @@
         <td>
           <!-- <img height="14px" src="img/icons-svg/info-black.svg">  -->
            <img height="14px" src="img/icons-svg/edit-black.svg"><input type="button" id="bWikiLink" value="Course Page Link Creator" onclick="callWikiLink()">
+           <img height="14px" src="img/icons-svg/edit-black.svg"><input type="button" id="bWikiHeader" value="Wiki2Reveal Header" onclick="callWikiHeader()">
            <img height="14px" src="img/icons-svg/edit-black.svg"><input type="button" id="bWikiFooter" value="Wiki2Reveal Footer" onclick="callWikiFooter()">
            <img height="14px" src="img/icons-svg/edit-black.svg"><input type="button" id="bWikiDemoPage" value="Create Demo Page" onclick="callWikiDemoPage()">
           <!--
@@ -404,8 +417,8 @@
         <a href="https://en.wikiversity.org/wiki/Wiki2Reveal" target="_blank">
           <img height="20px" src="img/icons-svg/i4m-wiki2reveal-black.svg">
           Wikiversity: Wiki2Reveal</a><br>
-        <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.20</span> </a>
-         - Engelbert Niehaus - Date: <span id4marker="datetime">2023/02/09 10:38:12</span> <br/>
+        <a href="https://www.github.com/niebert/Wiki2Reveal" target="_blank">GitHub-Repo- Version: <span id4marker="version">2.1.22</span> </a>
+         - Engelbert Niehaus - Date: <span id4marker="datetime">2023/09/14 18:42:15</span> <br/>
 				<a href="https://github.com/niebert/Wiki2Reveal/archive/master.zip" target="_blank">Download Wiki2Reveal - GitHub (<span id4marker="year">2021</span>)</a><br/>
 			</div>
     </p>

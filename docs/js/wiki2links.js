@@ -97,7 +97,8 @@ function update_course_title() {
   el("tCourseTitle").value = vCourseTitle;
 }
 
-function update_links() {
+function update_links(pType) {
+  console.log("update_links('"+pType+"')");
   vLanguage = el("sWikiLanguage").value;
   vCourse = el("tCourse").value;
   vCourseTitle = el("tCourseTitle").value;
@@ -106,11 +107,65 @@ function update_links() {
   vSlideType = el("sSlideType").value;
   vTitle = el("tTitle").value;
   vShortTitle = el("tShortTitle").value;
+  if (!vShortTitle) {
+    vShortTitle = vTitle;
+  }
   vAudioSlide = el("sAudioSlide").value;
-  update_dom_links();
+  update_dom_links(pType);
 }
 
-function update_dom_links() {
+function createHeader() {
+  console.log("createHeader()-CALL");
+  var vTemplate = "";
+  //console.log("Check vDemo='" + vDemo +"'");
+  switch (vLanguage) {
+      case "de":
+        vTemplate += el("wikiheader_de").value
+      break;
+      case "en":
+        vTemplate += el("wikiheader").value
+      break;
+      case "es":
+        vTemplate += el("wikiheader_es").value
+      break;
+      case "fr":
+        vTemplate += el("wikiheader_fr").value
+      break;
+      default:
+        vTemplate += el("wikiheader").value
+  };
+  setDomainName();
+  vTemplate = replace_marker(vTemplate);
+  el("headerout").value = vTemplate
+};
+
+
+function createFooter() {
+  console.log("createFooter()-CALL");
+  var vTemplate = "";
+  var id4lang = "en";
+  // ---- DEMO PAGE ------------
+  if (vDemo == "yes") {
+    if (vDataJSON.page4demo[vLanguage]) {
+      id4lang = vLanguage;
+    }
+    vTemplate += vDataJSON.page4demo[id4lang];
+  }
+  // ---- FOOTER ---------------
+  id4lang = "en";
+  if (vDataJSON.footer4lang[vLanguage]) {
+    id4lang = vLanguage;
+  }
+  vTemplate += vDataJSON.footer4lang[id4lang];
+  // ---- PROCESS TEMPLATE ------
+  setDomainName();
+  vTemplate = replace_marker(vTemplate);
+  el("footerout").value = vTemplate
+};
+
+
+function update_dom_links(pType) {
+  console.log("update_dom_links('"+pType+"')");
   var vID = "courseurl"; // wikiurl, wiki2revealurl
 
   //----- set the Wiki URLs in DOM ------
@@ -123,7 +178,20 @@ function update_dom_links() {
   write2innerHTML(vID,"Wiki2Reveal - "+vShortTitle);
   write2attribute(vID,"href",getWiki2RevealURL());
 
-  createFooter();
+  if (pType && (pType == "header")) {
+    if (window.createHeader) {
+      createHeader()
+    } else {
+      alert("Function createHeader() is not defined")
+    }
+
+  } else {
+    if (window.createFooter) {
+      createFooter();
+    } else {
+      alert("Function createFooter() is not defined")
+    }
+  }
 }
 
 function setDomainName() {

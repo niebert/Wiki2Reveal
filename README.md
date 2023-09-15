@@ -1,5 +1,5 @@
 =======
-# Wiki2Reveal <span id4marker="version">2.1.22</span>
+# Wiki2Reveal <span id4marker="version">2.1.23</span>
 **Version Date: <span id4marker="datetime">2023/09/14 18:42:15</span>**
 
 Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentation. The main challenges is the cross-origine call to retrieve the wiki source text of an article in the MediaWiki. Transcoding of the wiki syntax to other formats like [PanDoc](https://pandoc.org/try)

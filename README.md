@@ -36,6 +36,15 @@ Convert a MediaWiki source document e.g. in Wikiversity into a Reveal Presentati
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Header, Footer, Course Link
+With Wiki2Reveal you are able to create
+* [Header for Wikiversity page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_header.html),
+* [Footer for Wikiversity page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_footer.html) and a
+* [Course Link for Wikiversity main course page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_header.html),
+With the course link you can either start
+* the preview of the Wikiversity source content and
+* RevealJS rendering of the slides with the possibility to annotate the slides in lectures and seminars  
+
 ## Call of MediaWiki API
 The following URL is an example call for retrieving the source of an MediaWiki article:
 

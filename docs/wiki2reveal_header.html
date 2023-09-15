@@ -93,7 +93,7 @@
         </button>
       </td>
       <td>
-        <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie" onchange="update_short_title();update_dom_links()">
+        <input type="text" size="80" name="title" id="tTitle" value="Normen, Metriken, Topologie" onchange="update_short_title();update_dom_links('header')">
       </td>
     </tr>
     <tr id="trShortTitle" style="display:none">
@@ -101,7 +101,7 @@
         <b>Short Title</b>
       </td>
       <td>
-        <input type="text" size="60" name="shorttitle" id="tShortTitle" value="" onchange="onchange_short_title(); update_dom_links()">
+        <input type="text" size="60" name="shorttitle" id="tShortTitle" value="" onchange="onchange_short_title(); update_dom_links('header')">
         <br>
         Short title can be used if default title exceeds space on RevealJS title slide
       </td>
@@ -115,7 +115,7 @@
         </button>
       </td>
       <td>
-        <input type="text" size="80" name="author" id="tCourse" value="Kurs:Funktionalanalysis"  onchange="update_course_title();update_dom_links()">
+        <input type="text" size="80" name="author" id="tCourse" value="Kurs:Funktionalanalysis"  onchange="update_course_title();update_dom_links('header')">
       </td>
     </tr>
     <tr id="trCourseTitle" style="display:none">

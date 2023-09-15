@@ -812,7 +812,7 @@ function tokenizeCitation (wiki, data, options) {
             // TYPE: "<ref name="....">...</ref>"
             console.log("CALL: tokenizeRefs() with name='label' reference='<ref"+vPart.substring(0,100)+"...'");
             var found = vPart.match(/^[\s]+name=["']/);
-            if (found.length > 0) {
+            if (found && (found.length > 0)) {
               vMatch += found[0];
               // vMatch: <ref name=" or <ref name='
               var vChar = getLastChar4String(vMatch);
@@ -858,7 +858,7 @@ function tokenizeCitation (wiki, data, options) {
           var vMatch = "<ref"+vPart.slice(0,vPosNameEnd + vNameEnd.length);
           console.log("vNameEnd vMatch='"+vMatch+"'");
           var found = vPart.match(/^[\s]+name=["']/);
-          if (found && found.length > 0) {
+          if (found && (found.length > 0)) {
             var vPrefix = found[0];
             //var vChar = vPrefix.charAt(vPrefix.length-1);
             var vChar = getLastChar4String(vPrefix);

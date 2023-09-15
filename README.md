@@ -41,6 +41,7 @@ With Wiki2Reveal you are able to create
 * [Header for Wikiversity page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_header.html),
 * [Footer for Wikiversity page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_footer.html) and a
 * [Course Link for Wikiversity main course page](http://niebert.github.io/Wiki2Reveal/wiki2reveal_header.html),
+
 With the course link you can either start
 * the preview of the Wikiversity source content and
 * RevealJS rendering of the slides with the possibility to annotate the slides in lectures and seminars  

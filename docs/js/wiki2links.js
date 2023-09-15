@@ -66,6 +66,10 @@ function callWikiDisplay() {
   document.location.href=vURL;
 };
 
+function goto2page(pPageID) {
+    document.location=replace_marker("wiki2reveal_"+pPageID+".html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___")
+}
+
 function back2startpage() {
     document.location=replace_marker("index.html?domain=___DOMAIN___&title=___TITLE_ENCODED___&author=___COURSE_ENCODED___&language=___LANGUAGE___&audioslide=___AUDIO___&shorttitle=___SHORT_TITLE_ENCODED___&coursetitle=___COURSE_TITLE_ENCODED___")
 }

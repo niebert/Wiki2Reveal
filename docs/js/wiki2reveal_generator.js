@@ -49,6 +49,7 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   //pMarkdown = tokenizeCitation(pMarkdown, vDocJSON, pOptions);
   pMarkdown = tokenizeCitation(pMarkdown, data, pOptions);
   pMarkdown = tokenizeTables(pMarkdown, data, pOptions);
+  pMarkdown = tokenizeCode(pMarkdown, data, pOptions);
   console.log("tokenizeMath(pMarkdown,data,pOptions) DONE");
   // replace the Math-Tags for Reveal output
   pMarkdown = wtf.wikiconvert.removeMathNewlines(pMarkdown);
@@ -74,6 +75,7 @@ function get_wiki2reveal(pMarkdown,pTitle, pAuthor, pLanguage, pDomain, pOptions
   // create a Title slide and place the slide before output
   pMarkdown = replaceToken2Math(pMarkdown,data,pOptions);
   pMarkdown = replaceToken2Table(pMarkdown,data,pOptions);
+  pMarkdown = replaceToken2Code(pMarkdown,data,pOptions);
   pMarkdown = replaceToken2Ref(pMarkdown,data,pOptions);
   console.log("wiki2reveal.js:30 - Math4Reveal replaced!");
   pMarkdown = createTitleSlide(pTitle,pAuthor,pOptions) + "\n" + pMarkdown;
@@ -586,6 +588,117 @@ function tokenizeMath(wiki, data, pOptions) {
   return wiki;
 }
 
+function parseLanguage4Code (pAttribs) {
+  var vLang = "";
+  var vResult;
+  if (pAttribs) {
+    pAttribs = pAttribs.trim();
+  }
+  console.log("parseLanguage4Code('"+pAttribs+"')");
+  if (pAttribs) {
+    pAttribs = pAttribs.trim();
+    console.log("parseLanguage4Code('"+pAttribs+"') - check regular expression");
+      vResult = pAttribs.replace(/(language|lang)=["']([^\'"]+)["\']/i, function (pMatch, pPrefix,pLang) {
+      console.log("parseLanguage4Code('"+pAttribs+"') pMatch='"+pMatch+"' with Language of Code '"+pLang+"'");
+      return pLang;
+    });
+    if (vResult) {
+      vLang = vResult;
+    }
+  }
+  return vLang;
+};
+
+
+function setPrefixPostfix4Token (options) {
+  options = options || {};
+  if (options.hasOwnProperty("prefix4token")) {
+    console.log("options.prefix4token='"+options.prefix4token+"' defined.");
+  } else {
+    options.prefix4token = "XXX";
+  }
+  if (options.hasOwnProperty("postfix4token")) {
+    console.log("options.postfix4token='"+options.postfix4token+"' defined");
+  } else {
+    options.postfix4token = "XXX";
+  }
+  return options;
+}
+
+function convert2alphanumeric(pLabel,pOptions) {
+  if (pLabel) {
+    if (pOptions && pOptions.alphanumeric && (pOptions.alphanumeric == true)) {
+        pLabel = pLabel.replace(/[^A-Za-z0-9]/g,"X");
+    }
+  }
+  return pLabel;
+}
+
+function tokenizeCode(wiki, data, options) {
+  options = setPrefixPostfix4Token(options);
+  var vNow = new Date();
+  data = data || {};
+  data.expr4code = data.expr4code || [];
+  data.timeid = data.timeid || vNow.getTime();
+  var timeid = data.timeid;
+  var vCount = 0;
+  var vLabel = "";
+  var vCode = "";
+  var vLang = "";
+  console.log("tokenizeCodeBlock() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/<syntaxhighlight([^>]*?)>([\s\S]+?)<\/syntaxhighlight>/g, function (pMatch, attrs, inside) {
+    vCount++;
+    vLabel = options.prefix4token + "CODE_BLOCK_"+data.timeid+"_ID_"+vCount+options.postfix4token;
+    vLabel = convert2alphanumeric(vLabel,options);
+    vLang = parseLanguage4Code(attrs);
+    console.log("tokenizeCodeBlock() FOUND='"+pMatch+"' Language='"+vLang+"' with vCode='"+inside+"'");
+    data.expr4code.push({
+      "type":"block",
+      "label":vLabel,
+      "lang": vLang,
+      "code": inside
+    });
+    return vLabel;
+  });
+  console.log("tokenizeCodeInline() - wtf_wikipedia - Time ID="+data.timeid);
+  wiki = wiki.replace(/<code([^>]*?)>([\s\S]+?)<\/code>/g, function (pMatch, attrs, inside) {
+    vCount++;
+    vLabel = options.prefix4token + "CODE_INLINE_"+data.timeid+"_ID_"+vCount+options.postfix4token;
+    vLabel = convert2alphanumeric(vLabel,options);
+    vLang = parseLanguage4Code(attrs);
+    console.log("tokenizeCodeInline() FOUND='"+pMatch+"' with vCode='"+inside+"'");
+    data.expr4code.push({
+      "type":"inline",
+      "lang": vLang,
+      "label":vLabel,
+      "code": inside
+    });
+    return vLabel;
+  });
+  return wiki;
+}
+
+function replaceToken2Code(text, data, options) {
+  if (data.hasOwnProperty("expr4code")) {
+    for (var i = 0; i < data.expr4code.length; i++) {
+      var detok = data.expr4code[i];
+      var vLang = "";
+      if (detok.lang) {
+        vLang = " language=\""+detok.lang+"\" "
+      }
+      if (detok.type=="block") {
+        //text = replaceString(text,detok.label,"<syntaxhighlight"+vLang+">"+detok.code+"</syntaxhighlight>");
+        text = replaceString(text,detok.label,"<pre><code "+vLang+">"+detok.code+"</code></pre>");
+      } else if (detok.type=="inline") {
+        text = replaceString(text,detok.label,"<code"+vLang+">"+detok.code+"</code>");
+      }
+    }
+  }
+  return text;
+}
+
+
+
 function tokenizeTables(wiki, data, pOptions) {
   var vNow = new Date();
   data.timeid = data.timeid || vNow.getTime();
@@ -858,7 +971,7 @@ function tokenizeCitation (wiki, data, options) {
           var vMatch = "<ref"+vPart.slice(0,vPosNameEnd + vNameEnd.length);
           console.log("vNameEnd vMatch='"+vMatch+"'");
           var found = vPart.match(/^[\s]+name=["']/);
-          if (found && (found.length > 0)) {
+          if (found && found.length > 0) {
             var vPrefix = found[0];
             //var vChar = vPrefix.charAt(vPrefix.length-1);
             var vChar = getLastChar4String(vPrefix);

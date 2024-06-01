@@ -118,56 +118,6 @@ function update_links(pType) {
   update_dom_links(pType);
 }
 
-function createHeader() {
-  console.log("createHeader()-CALL");
-  var vTemplate = "";
-  //console.log("Check vDemo='" + vDemo +"'");
-  switch (vLanguage) {
-      case "de":
-        vTemplate += el("wikiheader_de").value
-      break;
-      case "en":
-        vTemplate += el("wikiheader").value
-      break;
-      case "es":
-        vTemplate += el("wikiheader_es").value
-      break;
-      case "fr":
-        vTemplate += el("wikiheader_fr").value
-      break;
-      default:
-        vTemplate += el("wikiheader").value
-  };
-  setDomainName();
-  vTemplate = replace_marker(vTemplate);
-  el("headerout").value = vTemplate
-};
-
-
-function createFooter() {
-  console.log("createFooter()-CALL");
-  var vTemplate = "";
-  var id4lang = "en";
-  // ---- DEMO PAGE ------------
-  if (vDemo == "yes") {
-    if (vDataJSON.page4demo[vLanguage]) {
-      id4lang = vLanguage;
-    }
-    vTemplate += vDataJSON.page4demo[id4lang];
-  }
-  // ---- FOOTER ---------------
-  id4lang = "en";
-  if (vDataJSON.footer4lang[vLanguage]) {
-    id4lang = vLanguage;
-  }
-  vTemplate += vDataJSON.footer4lang[id4lang];
-  // ---- PROCESS TEMPLATE ------
-  setDomainName();
-  vTemplate = replace_marker(vTemplate);
-  el("footerout").value = vTemplate
-};
-
-
 function update_dom_links(pType) {
   console.log("update_dom_links('"+pType+"')");
   var vID = "courseurl"; // wikiurl, wiki2revealurl
@@ -197,6 +147,68 @@ function update_dom_links(pType) {
     }
   }
 }
+
+function createHeader() {
+  console.log("createHeader()-CALL");
+  var vTemplate = "";
+  //console.log("Check vDemo='" + vDemo +"'");
+  if (vDataJSON.header4lang[vLanguage]) {
+    vTemplate += vDataJSON.header4lang[vLanguage]
+  } else {
+    if (vDataJSON.header4lang.en) {
+      vTemplate += vDataJSON.header4lang.en
+    } else {
+      alert("ERROR: No headers defined in vDataJSON.header4lang")
+    }
+  }
+  /*
+  switch (vLanguage) {
+      case "de":
+        vTemplate += el("wikiheader_de").value;
+        vTemplate += vDataJSON.
+      break;
+      case "en":
+        vTemplate += el("wikiheader").value
+      break;
+      case "es":
+        vTemplate += el("wikiheader_es").value
+      break;
+      case "fr":
+        vTemplate += el("wikiheader_fr").value
+      break;
+      default:
+        vTemplate += el("wikiheader").value
+  };
+  */
+  setDomainName();
+  vTemplate = replace_marker(vTemplate);
+  el("headerout").value = vTemplate
+};
+
+
+function createFooter() {
+  console.log("createFooter()-CALL");
+  var vTemplate = "";
+  var id4lang = "en";
+  // ---- DEMO PAGE ------------
+  if (vDemo == "yes") {
+    if (vDataJSON.page4demo[vLanguage]) {
+      id4lang = vLanguage;
+    }
+    vTemplate += vDataJSON.page4demo[id4lang];
+  }
+  // ---- FOOTER ---------------
+  id4lang = "en";
+  if (vDataJSON.footer4lang[vLanguage]) {
+    id4lang = vLanguage;
+  }
+  vTemplate += vDataJSON.footer4lang[id4lang];
+  // ---- PROCESS TEMPLATE ------
+  setDomainName();
+  vTemplate = replace_marker(vTemplate);
+  el("footerout").value = vTemplate
+};
+
 
 function setDomainName() {
     switch (vDomain) {

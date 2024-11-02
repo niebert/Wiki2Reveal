@@ -3,9 +3,9 @@ function getShortTitle(pTitle) {
   if (pTitle) {
     vShort = pTitle.replace(/_/g," ");
     //var vSearch = vCourse+"/";
-    if (vTitle.lastIndexOf("/") >= 0) {
+    if (pTitle.lastIndexOf("/") >= 0) {
       //vShort = replaceString(pTitle,vSearch,"");
-      var arr = vTitle.split("/");
+      var arr = pTitle.split("/");
       vShort = arr[arr.length-1];
       console.log("pTitle: '"+pTitle+"' ShortTitle='"+vShort+"'");
     } else {
@@ -15,6 +15,20 @@ function getShortTitle(pTitle) {
     console.warn("getShortTitle(pTitle) - parameter pTitle not defined");
   }
   return vShort;
+}
+
+
+function underscore_fix(pDOMID) {
+  var vNode = document.getElementById(pDOMID);
+  var value = "undefined value '"+pDOMID+"'";
+  if (vNode) {
+    value = vNode.value;
+    value = value.replace(/_/g," ");
+    vNode.value = value;
+  } else {
+    console.error("DOM Node '"+pDOMID+"' does not exist!")
+  }
+  return value;
 }
 
 function getCourseTitle(pTitle,pCourse) {
@@ -76,8 +90,8 @@ function back2startpage() {
 
 function update_short_title() {
   console.log("update_short_title()");
-  vTitle = el("tTitle").value;
-  vCourse = el("tCourse").value;
+  vTitle = underscore_fix("tTitle"); //el("tTitle").value;
+  vCourse = underscore_fix("tCourse"); //(el("tCourse").value;
   vShortTitle = getShortTitle(vTitle,vCourse);
   el("tShortTitle").value = vShortTitle;
   if (vTitle && vTitle.indexOf("/")) {
@@ -89,12 +103,12 @@ function update_short_title() {
 
 function onchange_short_title() {
   console.log("onchange_short_title()");
-  vShortTitle = el("tShortTitle").value;
+  vShortTitle = underscore_fix("tShortTitle");
 }
 
 function update_course_title() {
   console.log("update_course_title()");
-  vCourse = el("tCourse").value;
+  vCourse = underscore_fix("tCourse");
   vCourseTitle = vCourse;
   //vCourse = vCourseTitle;
   el("tCourse").value = vCourseTitle;
@@ -104,13 +118,13 @@ function update_course_title() {
 function update_links(pType) {
   console.log("update_links('"+pType+"')");
   vLanguage = el("sWikiLanguage").value;
-  vCourse = el("tCourse").value;
-  vCourseTitle = el("tCourseTitle").value;
+  vCourse = underscore_fix("tCourse"); //el("tCourse").value;
+  vCourseTitle = underscore_fix("tCourseTitle");
   vDomain = el("sWikiDomain").value;
   vDomainName = firstUpperCase(vDomain);
   vSlideType = el("sSlideType").value;
   vTitle = el("tTitle").value;
-  vShortTitle = el("tShortTitle").value;
+  vShortTitle = underscore_fix("tShortTitle");
   if (!vShortTitle) {
     vShortTitle = vTitle;
   }
